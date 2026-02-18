@@ -1,1 +1,21 @@
-<p>login works!</p>
+<div class="login-wrapper"> <!--contenedor principal-->
+  <div class="login-card"> <!--caja blanca del formulario -->
+    <h1>Iniciar sesión</h1>
+    <p class="subtitle">¡Tu equipo te espera! Inicia sesión para volver a la aventura y atraparlos a todos en el mundo de Xuxemon.</p>
+
+    <!-- loginForm: Vincula el formulario HTML con la variable que esta en el ts. Esto permite a Angular controlar todo el formulario. -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="userId">ID de jugador</label>
+        <input
+          id="userId"
+          type="text"
+          formControlName="userId"
+          placeholder="#Nombre0000"
+        />
+        @if (loginForm.get('userId')?.invalid && loginForm.get('userId')?.touched) {
+          <span class="error-text">El ID es obligatorio</span>
+        }
+        <!-- Muestra mensaje de error si el campo es invalido -->
+      </div>
