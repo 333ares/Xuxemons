@@ -18,7 +18,7 @@ class User extends Authenticatable
         'name',
         'surname',
         'email',
-        'password',
+        'password'
     ];
 
     /**
@@ -28,12 +28,9 @@ class User extends Authenticatable
         'password',
     ];
 
-    /**
-     * Casts de atributos.
-     */
-    protected function casts(): array
+    public function getIdAttribute($value)
     {
-        return [
-        ];
+        // str_pad(variable, largo, con_que_rellenar, donde_rellenar)
+        return str_pad($value, 4, '0', STR_PAD_LEFT);
     }
 }
