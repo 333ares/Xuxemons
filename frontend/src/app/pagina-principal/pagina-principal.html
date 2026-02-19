@@ -1,0 +1,71 @@
+<div class="contenedor">
+
+  <!-- Recompensas diarias -->
+  <section class="recompensas">
+    <h2>Recompensas de hoy</h2>
+
+    <div class="dias">
+      <div class="dia" *ngFor="let d of recompensas">
+        <span>{{ d.dia }}</span>
+        <img src="assets/gift.png" alt="gift" />
+      </div>
+    </div>
+
+    <button class="btn-principal">Recoger la recompensa de hoy</button>
+  </section>
+
+  <!-- Coleccion de Xuxemons -->
+  <section class="coleccion">
+    <h2>Tu colección</h2>
+
+    <div class="stats">
+      <p><strong>{{ coleccion.total }}</strong> xuxemons totales</p>
+      <p><strong>{{ coleccion.enfermos }}</strong> xuxemons enfermos</p>
+      <p><strong>{{ coleccion.evoluciones }}</strong> evolución</p>
+    </div>
+  </section>
+
+  <!-- Actividad (solicitudes de amistad, peticiones de combate...) -->
+  <section class="actividad">
+    <h2>Actividad</h2>
+
+    <h3>Solicitudes de amistad</h3>
+    <div class="card" *ngFor="let s of solicitudesAmistad">
+      <span>{{ s.nombre }}</span>
+      <div>
+        <button class="btn-aceptar">Aceptar</button>
+        <button class="btn-rechazar">Rechazar</button>
+      </div>
+    </div>
+
+    <h3>Peticiones de batalla</h3>
+    <div class="card" *ngFor="let b of solicitudesBatalla">
+      <span>{{ b.nombre }}</span>
+      <div>
+        <button class="btn-aceptar">Aceptar</button>
+        <button class="btn-rechazar">Rechazar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estadisticas del jugador -->
+  <section class="estadisticas">
+    <h2>Estadísticas de hoy</h2>
+
+    <p>Batallas ganadas: <strong>{{ estadisticas.ganadas }}</strong></p>
+    <p>Batallas jugadas: <strong>{{ estadisticas.jugadas }}</strong></p>
+    <p>Mejor racha: <strong>{{ estadisticas.racha }}</strong></p>
+  </section>
+
+  <!-- Xuxemon listo para la batalla -->
+  <section class="batalla">
+    <h2>Xuxemon listo para la batalla!</h2>
+
+    <div class="xuxemon-card">
+      <img src="assets/boohoot.png" alt="Boo-Hoot" />
+      <h3>{{ xuxemon.nombre }}</h3>
+      <button class="btn-principal">Luchar</button>
+    </div>
+  </section>
+
+</div>

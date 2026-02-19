@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { PaginaPrincipal } from './pagina-principal/pagina-principal';
 import { Login } from './login/login';
 import { Registro } from './registro/registro';
 
@@ -22,5 +23,9 @@ export const routes: Routes = [
   // Si alguien entra a una pagina inexistente lo reedirige al login.
   { path: '**',
     redirectTo: 'login'
+  },
+  {
+    path: '',
+    component: PaginaPrincipal
   }
 ];
