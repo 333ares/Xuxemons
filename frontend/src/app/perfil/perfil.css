@@ -1,0 +1,150 @@
+/* ===== LAYOUT GENERAL ===== */
+
+.perfil-contenedor {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 25px;
+  padding: 20px;
+}
+
+/* ===== MENU LATERAL ===== */
+
+.menu-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.btn-lateral {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #ffffffcc;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-lateral.activo {
+  background: #ff9f6a;
+  color: white;
+}
+
+.btn-lateral.danger {
+  background: #ff6b6b;
+  color: white;
+}
+
+/* ===== CONTENIDO PRINCIPAL ===== */
+
+.contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* ===== CABECERA ===== */
+
+.cabecera {
+  display: flex;
+  gap: 20px;
+  background: #ffffffcc;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.info-usuario h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.info-usuario p {
+  margin: 4px 0;
+  color: #4a3f7a;
+}
+
+/* ===== FORMULARIO ===== */
+
+.formulario {
+  background: #ffffffcc;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.formulario h3 {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin-top: 5px;
+}
+
+.botones {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-secundario {
+  background: #ddd;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-principal {
+  background: #ff7b5c;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===== ESTADÍSTICAS ===== */
+
+.estadisticas {
+  background: #ffffffcc;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.stat strong {
+  color: #ff7b5c;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 900px) {
+  .perfil-contenedor {
+    grid-template-columns: 1fr;
+  }
+}
