@@ -1,1 +1,58 @@
-<p>registro works!</p>
+<div class="registro-wrapper">
+  <div class="registro-card">
+    <!-- Logo del proyecto-->
+    <img src="assets/logo.png" alt="Logo Xuxemons" class="logo" />
+
+    <h1>Crea una cuenta</h1>
+    <p class="subtitle">¡La aventura es mejor entre amigos! Únete a nuestro equipo, comparte estrategias y crece junto a nosotros en el universo Xuxemon. ¡Regístrate y empieza hoy mismo!</p>
+
+    <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+
+      <!-- Fila con nombre y apellidos en paralelo -->
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input
+            id="nombre"
+            type="text"
+            formControlName="nombre"
+            placeholder="Tu nombre"
+          />
+          @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
+            <span class="error-text">Obligatorio</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="apellidos">Apellidos</label>
+          <input
+            id="apellidos"
+            type="text"
+            formControlName="apellidos"
+            placeholder="Tus apellidos"
+          />
+          @if (registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched) {
+            <span class="error-text">Obligatorio</span>
+          }
+        </div>
+
+      </div>
+
+      <!-- Campo de email con dos posibles mensajes de error: vacío o formato incorrecto -->
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Tu correo"
+        />
+        @if (registroForm.get('email')?.errors?.['required'] && registroForm.get('email')?.touched) {
+          <span class="error-text">El email es obligatorio</span>
+        }
+        @if (registroForm.get('email')?.errors?.['email'] && registroForm.get('email')?.touched) {
+          <span class="error-text">Introduce un email válido</span>
+        }
+      </div>
+
