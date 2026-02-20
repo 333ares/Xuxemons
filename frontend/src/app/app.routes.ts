@@ -23,7 +23,7 @@ export const routes: Routes = [
 
   // Ruta Pagina Principal
   {
-    path: '',
+    path: 'paginaPrincipal',
     component: PaginaPrincipal,
   },
 
