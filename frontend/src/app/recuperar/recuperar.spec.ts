@@ -8,9 +8,8 @@ describe('Recuperar', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Recuperar]
-    })
-    .compileComponents();
+      imports: [Recuperar],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Recuperar);
     component = fixture.componentInstance;
