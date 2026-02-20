@@ -6,34 +6,27 @@ import { Recuperar } from './recuperar/recuperar';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
-  { path: '',
+  {
+    path: '',
     redirectTo: 'login',
-    pathMatch: 'full' //Solo aplica si es / (Eso significa que si el / tiene algo mas detras no reedirigiria a Login)
-  },
-
-  // Si alguien entra a una pagina inexistente lo reedirige al login.
-  { path: '**',
-    redirectTo: 'login'
+    pathMatch: 'full', //Solo aplica si es / (Eso significa que si el / tiene algo mas detras no reedirigiria a Login)
   },
 
   // Ruta Login
-  { path: 'login',
-    component: Login
-  },
+  { path: 'login', component: Login },
 
   // Ruta Registro
-  { path: 'registro',
-    component: Registro
-  },
+  { path: 'registro', component: Registro },
 
   // Ruta Recuperar
-  { path: 'recuperar',
-    component: Recuperar
-  },
+  { path: 'recuperar', component: Recuperar },
 
   // Ruta Pagina Principal
   {
     path: '',
-    component: PaginaPrincipal
-  }
+    component: PaginaPrincipal,
+  },
+
+  // Si alguien entra a una pagina inexistente lo reedirige al login. (Esto se tiene que dejar al final de las rutas)
+  { path: '**', redirectTo: 'login' },
 ];
