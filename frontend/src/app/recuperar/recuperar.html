@@ -1,0 +1,33 @@
+<div class="recuperar-wrapper">
+  <!--contenedor principal-->
+  <div class="recuperar-card">
+    <img src="logo.png" alt="Logo Xuxemons" class="logo" />
+    <h1>Recuperar contraseña</h1>
+    <p class="subtitle">
+      Introduce tu correo electrónico y te enviaremos las instrucciones para restablecer tu
+      contraseña
+    </p>
+
+    <form [formGroup]="recuperarForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="userId">ID</label>
+        <input id="userId" type="text" formControlName="userId" placeholder="#Nombre0000" />
+      </div>
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input id="email" type="email" formControlName="email" placeholder="Tu correo" />
+      </div>
+
+      <!-- Botón de submit: [disabled] lo desactiva si el formulario tiene algún error -->
+      <button type="submit" [disabled]="recuperarForm.invalid" class="btn-primary">
+        Recuperar Contraseña
+      </button>
+    </form>
+
+    <!-- Separador visual entre el botón principal y el enlace al registro -->
+    <div class="divider"><span>o</span></div>
+
+    <p class="redirect-text">¿Aún no tienes cuenta?</p>
+    <a routerLink="/registro" class="btn-secondary">Regístrate</a>
+  </div>
+</div>

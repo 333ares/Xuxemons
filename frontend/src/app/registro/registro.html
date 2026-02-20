@@ -4,21 +4,17 @@
     <img src="logo.png" alt="Logo Xuxemons" class="logo" />
 
     <h1>Crea una cuenta</h1>
-    <p class="subtitle">¡La aventura es mejor entre amigos! Únete a nuestro equipo, comparte estrategias y crece junto a nosotros en el universo Xuxemon. ¡Regístrate y empieza hoy mismo!</p>
+    <p class="subtitle">
+      ¡La aventura es mejor entre amigos! Únete a nuestro equipo, comparte estrategias y crece junto
+      a nosotros en el universo Xuxemon. ¡Regístrate y empieza hoy mismo!
+    </p>
 
     <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
-
       <!-- Fila con nombre y apellidos en paralelo -->
       <div class="form-row">
-
         <div class="form-group">
           <label for="nombre">Nombre</label>
-          <input
-            id="nombre"
-            type="text"
-            formControlName="nombre"
-            placeholder="Tu nombre"
-          />
+          <input id="nombre" type="text" formControlName="nombre" placeholder="Tu nombre" />
           @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
             <span class="error-text">Obligatorio</span>
           }
@@ -36,19 +32,15 @@
             <span class="error-text">Obligatorio</span>
           }
         </div>
-
       </div>
 
       <!-- Campo de email con dos posibles mensajes de error: vacío o formato incorrecto -->
       <div class="form-group">
         <label for="email">Correo electrónico</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="Tu correo"
-        />
-        @if (registroForm.get('email')?.errors?.['required'] && registroForm.get('email')?.touched) {
+        <input id="email" type="email" formControlName="email" placeholder="Tu correo" />
+        @if (
+          registroForm.get('email')?.errors?.['required'] && registroForm.get('email')?.touched
+        ) {
           <span class="error-text">El email es obligatorio</span>
         }
         @if (registroForm.get('email')?.errors?.['email'] && registroForm.get('email')?.touched) {
@@ -67,28 +59,60 @@
             formControlName="password"
             placeholder="Tu contraseña"
           />
-          <button type="button" class="toggle-password" (click)="mostrarPassword = !mostrarPassword">
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="mostrarPassword = !mostrarPassword"
+          >
             <!-- Ojo abierto: se muestra cuando la contraseña está oculta -->
             @if (!mostrarPassword) {
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
             }
             <!-- Ojo tachado: se muestra cuando la contraseña es visible -->
             @if (mostrarPassword) {
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                <line x1="1" y1="1" x2="23" y2="23"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"
+                />
+                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                <line x1="1" y1="1" x2="23" y2="23" />
               </svg>
             }
           </button>
         </div>
-        @if (registroForm.get('password')?.errors?.['required'] && registroForm.get('password')?.touched) {
+        @if (
+          registroForm.get('password')?.errors?.['required'] &&
+          registroForm.get('password')?.touched
+        ) {
           <span class="error-text">La contraseña es obligatoria</span>
         }
-        @if (registroForm.get('password')?.errors?.['minlength'] && registroForm.get('password')?.touched) {
+        @if (
+          registroForm.get('password')?.errors?.['minlength'] &&
+          registroForm.get('password')?.touched
+        ) {
           <span class="error-text">Mínimo 8 caracteres</span>
         }
       </div>
@@ -102,50 +126,67 @@
             [type]="mostrarConfirm ? 'text' : 'password'"
             formControlName="confirmPassword"
             placeholder="Tu contraseña"
-            [class.input-error]="registroForm.get('confirmPassword')?.errors?.['passwordMismatch'] && registroForm.get('confirmPassword')?.touched"
+            [class.input-error]="
+              registroForm.get('confirmPassword')?.errors?.['passwordMismatch'] &&
+              registroForm.get('confirmPassword')?.touched
+            "
           />
           <button type="button" class="toggle-password" (click)="mostrarConfirm = !mostrarConfirm">
             @if (!mostrarConfirm) {
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
             }
             @if (mostrarConfirm) {
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                <line x1="1" y1="1" x2="23" y2="23"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"
+                />
+                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                <line x1="1" y1="1" x2="23" y2="23" />
               </svg>
             }
           </button>
         </div>
-        @if (registroForm.get('confirmPassword')?.errors?.['passwordMismatch'] && registroForm.get('confirmPassword')?.touched) {
+        @if (
+          registroForm.get('confirmPassword')?.errors?.['passwordMismatch'] &&
+          registroForm.get('confirmPassword')?.touched
+        ) {
           <span class="error-text">Las contraseñas no coinciden</span>
         }
       </div>
-
 
       <!-- Botón de submit: [disabled] lo desactiva si el formulario tiene algún error -->
       <button type="submit" [disabled]="registroForm.invalid" class="btn-primary">
         Regístrate
       </button>
-
-
     </form>
-
 
     <!-- Separador visual entre el botón principal y el enlace al login -->
     <div class="divider"><span>o</span></div>
 
-
     <p class="redirect-text">¿Ya tienes cuenta?</p>
     <a routerLink="/login" class="btn-secondary">Inicia sesión</a>
-
-
   </div>
 </div>
-
-
-
-
