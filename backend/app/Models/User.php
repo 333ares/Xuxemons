@@ -27,10 +27,4 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
-
-    public function getIdAttribute($value)
-    {
-        // str_pad(variable, largo, con_que_rellenar, donde_rellenar)
-        return str_pad($value, 4, '0', STR_PAD_LEFT);
-    }
 }

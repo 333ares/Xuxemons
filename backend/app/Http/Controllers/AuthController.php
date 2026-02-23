@@ -31,11 +31,23 @@ class AuthController extends Controller
         }
 
         // Creamos usuario
-        User::create($request->only([
-            'name',
-            'surname',
-            'email',
-            'id'
-        ]));
+        $usuario = User::create([
+            'name' => $request->name,
+            'surname' => $request->surname,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        // Formateamos el id (Pasa de 1, 2, 3... a 0001, 0002, 0003...)
+        $idFormateado = str_pad($usuario->id, 4, '0', STR_PAD_LEFT);
+        // Actualizamos el campo public_id, con #NombreXXXX
+        $usuario->public_id = "#" . $usuario->name . $idFormateado;
+
+        // Guardamos el usuario
+        $usuario->save();
+    }
+
+    public function verUsuario(){
+        
     }
 }
