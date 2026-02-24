@@ -26,7 +26,7 @@ export class Recuperar {
   ) {
     this.recuperarForm = this.fb.group({
       userId: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 

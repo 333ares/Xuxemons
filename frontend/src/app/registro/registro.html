@@ -14,7 +14,15 @@
       <div class="form-row">
         <div class="form-group">
           <label for="nombre">Nombre</label>
-          <input id="nombre" type="text" formControlName="nombre" placeholder="Tu nombre" />
+          <input
+            id="nombre"
+            type="text"
+            formControlName="nombre"
+            placeholder="Tu nombre"
+            [class.input-error]="
+              registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched
+            "
+          />
           @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
             <span class="error-text">Obligatorio</span>
           }
@@ -27,6 +35,9 @@
             type="text"
             formControlName="apellidos"
             placeholder="Tus apellidos"
+            [class.input-error]="
+              registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched
+            "
           />
           @if (registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched) {
             <span class="error-text">Obligatorio</span>
@@ -37,7 +48,15 @@
       <!-- Campo de email con dos posibles mensajes de error: vacío o formato incorrecto -->
       <div class="form-group">
         <label for="email">Correo electrónico</label>
-        <input id="email" type="email" formControlName="email" placeholder="Tu correo" />
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Tu correo"
+          [class.input-error]="
+            registroForm.get('email')?.invalid && registroForm.get('email')?.touched
+          "
+        />
         @if (
           registroForm.get('email')?.errors?.['required'] && registroForm.get('email')?.touched
         ) {
@@ -58,6 +77,9 @@
             [type]="mostrarPassword ? 'text' : 'password'"
             formControlName="password"
             placeholder="Tu contraseña"
+            [class.input-error]="
+              registroForm.get('password')?.invalid && registroForm.get('password')?.touched
+            "
           />
           <button
             type="button"

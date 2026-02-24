@@ -2,7 +2,7 @@
   background: url('/registrologin.png');
   background-size: cover; /* La imagen cubre toda la pantalla sin dejar huecos */
   background-position: center;
-  background-repeat: no-repeat;  /* Evita que la imagen se repita si es pequeña */
+  background-repeat: no-repeat; /* Evita que la imagen se repita si es pequeña */
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -19,8 +19,8 @@
 }
 
 .registro-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px); /* Desenfoca el fondo visible detrás de la card */
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(10px); /* Desenfoca el fondo visible detrás de la card */
   border-radius: 20px;
   padding: 40px 36px;
   max-width: 520px;
@@ -43,4 +43,172 @@ h1 {
   font-size: 0.9rem;
   margin-bottom: 24px;
   line-height: 1.5; /* Interlineado para mejorar la legibilidad - MPO */
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* Contenedor de cada campo del formulario (label + input + error) */
+.form-group {
+  display: flex;
+  flex-direction: column; /* Apila label, input y error verticalmente */
+  text-align: left; /* El texto del label se alinea a la izquierda */
+  margin-bottom: 16px;
+}
+
+/* Etiqueta de cada campo */
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* Estilos base de todos los inputs del formulario */
+input {
+  padding: 12px 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  outline: none; /* Quitamos el outline por defecto del navegador */
+  background-color: rgba(255, 255, 255, 0.9);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+  width: 100%;
+}
+
+/* Estado focus: cuando el usuario hace click en el input */
+input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 170, 74, 0.2);
+}
+
+/* Estado de error: se aplica con [class.input-error] desde el HTML */
+input.input-error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+}
+
+/* Wrapper del input de contraseña para poder posicionar el botón del ojo dentro */
+.input-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* El input de contraseña tiene padding extra a la derecha para que el texto no quede tapado por el botón del ojo */
+.input-password input {
+  padding-right: 44px;
+}
+
+/* Botón del ojo para mostrar/ocultar la contraseña. Está posicionado de forma absoluta dentro del .input-password */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover {
+  color: var(--color-primary);
+}
+
+/* Mensaje de error que aparece debajo del input cuando la validación falla */
+.error-text {
+  font-size: 0.78rem;
+  color: #e74c3c;
+  margin-top: 4px;
+}
+
+/* Botón principal naranja para acciones como Acceder o Registrarse */
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 8px;
+}
+
+/* Hover del botón principal: oscurece ligeramente y sube un píxel */
+.btn-primary:hover:not(:disabled) {
+  background-color: #e8962e;
+  transform: translateY(-1px);
+}
+
+/* Estado desactivado: cuando el formulario tiene errores */
+.btn-primary:disabled {
+  background-color: #f5d4a0;
+  cursor: not-allowed;
+}
+
+/* Botón secundario con borde naranja y fondo transparente*/
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  /* La transición ahora incluye también el color del texto para que el cambio sea suave */
+  transition: background-color 0.2s ease, color 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Al hacer hover se invierten los colores: fondo naranja, texto y borde blancos */
+.btn-secondary:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+/* Separador visual con la palabra "o" entre el botón principal y el secundario. Los ::before y ::after generan las líneas horizontales a cada lado */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 12px;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1; /* Cada línea ocupa el espacio disponible a su lado */
+  height: 1px;
+  background-color: #ddd;
+}
+
+/* Texto informativo encima del botón secundario */
+.redirect-text {
+  font-size: 0.88rem;
+  color: #555;
+  margin-bottom: 10px;
 }
