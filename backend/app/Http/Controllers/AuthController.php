@@ -56,46 +56,38 @@ class AuthController extends Controller
     }
 
     public function loginUsuario(Request $request)
-    {
-        // Validamos que las credenciales sean correctas
-        $validator = Validator::make($request->all(), [
-            'public_id' => 'required|string',
-            'password' => 'required',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'public_id' => 'required|string',
+        'password'  => 'required',
+    ]);
 
-        // Si el validador falla, mosrtamos error
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'error',
-                'errors' => $validator->errors()
-            ], 400);
-        }
-
-        $credenciales = $request->only('public_id', 'password');
-
-        try {
-            // Intentamos generar el token con las credenciales
-            if (!$token = JWTAuth::attempt($credenciales)) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors'  => 'El ID o la contraseña no son correctos'
-                ], 400);
-            }
-        } catch (JWTException $e) {
-            return response()->json([
-                'message' => 'error',
-                'errors'  => 'No se pudo generar el token'
-            ], 500);
-        }
-
-        $usuario = Auth::user();
-
+    if ($validator->fails()) {
         return response()->json([
-            'message' => 'Inicio de sesión correcto',
-            'token'   => $token,
-            'usuario' => $usuario
-        ], 200);
+            'message' => 'error',
+            'errors'  => $validator->errors()
+        ], 400);
     }
+
+    // Buscamos el usuario por public_id manualmente
+    $usuario = User::where('public_id', $request->public_id)->first();
+
+    if (!$usuario || !Hash::check($request->password, $usuario->password)) {
+        return response()->json([
+            'message' => 'error',
+            'errors'  => 'El ID o la contraseña no son correctos'
+        ], 400);
+    }
+
+    // Generamos el token a partir del usuario encontrado
+    $token = JWTAuth::fromUser($usuario);
+
+    return response()->json([
+        'message' => 'Inicio de sesión correcto',
+        'token'   => $token,
+        'usuario' => $usuario
+    ], 200);
+}
 
     public function logoutUsuario()
     {
