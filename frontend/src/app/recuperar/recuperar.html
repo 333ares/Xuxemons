@@ -32,6 +32,14 @@
             recuperarForm.get('email')?.invalid && recuperarForm.get('email')?.touched
           "
         />
+         @if (
+          recuperarForm.get('email')?.errors?.['required'] && recuperarForm.get('email')?.touched
+        ) {
+          <span class="error-text">El email es obligatorio</span>
+        }
+        @if (recuperarForm.get('email')?.errors?.['email'] && recuperarForm.get('email')?.touched) {
+          <span class="error-text">Introduce un email válido</span>
+        }
       </div>
 
       <!-- Botón de submit: [disabled] lo desactiva si el formulario tiene algún error -->
