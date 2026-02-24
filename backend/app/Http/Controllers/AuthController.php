@@ -59,7 +59,7 @@ class AuthController extends Controller
     {
         // Validamos que las credenciales sean correctas
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'public_id' => 'required|string',
             'password' => 'required',
         ]);
 
@@ -71,14 +71,14 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $credenciales = $request->only('email', 'password');
+        $credenciales = $request->only('public_id', 'password');
 
         try {
             // Intentamos generar el token con las credenciales
             if (!$token = JWTAuth::attempt($credenciales)) {
                 return response()->json([
                     'message' => 'error',
-                    'errors'  => 'El correo o la contraseña no son correctos'
+                    'errors'  => 'El ID o la contraseña no son correctos'
                 ], 400);
             }
         } catch (JWTException $e) {
