@@ -56,38 +56,38 @@ class AuthController extends Controller
     }
 
     public function loginUsuario(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'public_id' => 'required|string',
-        'password'  => 'required',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'public_id' => 'required|string',
+            'password'  => 'required',
+        ]);
 
-    if ($validator->fails()) {
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => $validator->errors()
+            ], 400);
+        }
+
+        // Buscamos el usuario por public_id manualmente
+        $usuario = User::where('public_id', $request->public_id)->first();
+
+        if (!$usuario || !Hash::check($request->password, $usuario->password)) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'El ID o la contraseña no son correctos'
+            ], 400);
+        }
+
+        // Generamos el token a partir del usuario encontrado
+        $token = JWTAuth::fromUser($usuario);
+
         return response()->json([
-            'message' => 'error',
-            'errors'  => $validator->errors()
-        ], 400);
+            'message' => 'Inicio de sesión correcto',
+            'token'   => $token,
+            'usuario' => $usuario
+        ], 200);
     }
-
-    // Buscamos el usuario por public_id manualmente
-    $usuario = User::where('public_id', $request->public_id)->first();
-
-    if (!$usuario || !Hash::check($request->password, $usuario->password)) {
-        return response()->json([
-            'message' => 'error',
-            'errors'  => 'El ID o la contraseña no son correctos'
-        ], 400);
-    }
-
-    // Generamos el token a partir del usuario encontrado
-    $token = JWTAuth::fromUser($usuario);
-
-    return response()->json([
-        'message' => 'Inicio de sesión correcto',
-        'token'   => $token,
-        'usuario' => $usuario
-    ], 200);
-}
 
     public function logoutUsuario()
     {
