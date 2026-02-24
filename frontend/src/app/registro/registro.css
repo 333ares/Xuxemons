@@ -44,3 +44,33 @@ h1 {
   margin-bottom: 24px;
   line-height: 1.5; /* Interlineado para mejorar la legibilidad - MPO */
 }
+
+/* Contenedor de cada campo del formulario (label + input + error) */
+.form-group {
+  display: flex;
+  flex-direction: column; /* Apila label, input y error verticalmente */
+  text-align: left; /* El texto del label se alinea a la izquierda */
+  margin-bottom: 16px;
+}
+
+/* Etiqueta de cada campo */
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* Estilos base de todos los inputs del formulario */
+input {
+  padding: 12px 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  outline: none; /* Quitamos el outline por defecto del navegador */
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  width: 100%;
+}
+
