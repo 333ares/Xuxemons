@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -45,9 +46,63 @@ class AuthController extends Controller
 
         // Guardamos el usuario
         $usuario->save();
+
+        if ($usuario) {
+            return response()->json([
+                'message' => 'Usuario creado correctamente'
+            ], 201);
+        }
     }
 
-    public function verUsuario(){
+    public function loginUsuario(Request $request)
+    {
+        // Validamos que las credenciales sean correctas
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        // Si el validador falla, mosrtamos error
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        // Buscamos el usuario por email
+        $usuario = User::where('email', $request->email)->first();
+
+        // Validamos credenciales
+        if (!$usuario || !Hash::check($request->password, $usuario->password)) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'El correo o la contraseña no son correctos'
+            ], 400);
+        }
+
+        // Generamos token
+        $token = $usuario->createToken('auth_token')->plainTextToken;
+
+        // Mostramos mensaje de exito y pasamos el token y el usuario
+        return response()->json([
+            'message' => 'Inicio de sesión correcto',
+            'token' => $token,
+            'usuario' => $usuario
+        ], 200);
+    }
+
+    public function logoutUsuario(Request $request)
+    {
+        // Cerramos sesión
+        Auth::logout();
         
+        // Revocar todos los tokens Sanctum del usuario
+        $request->user()->tokens()->delete();
+
+        // Mostramos mensaje de exito
+        return response()->json([
+            'message' => 'Cierre de sesión correcto'
+        ], 200);
     }
 }
