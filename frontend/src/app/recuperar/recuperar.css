@@ -78,7 +78,7 @@ input {
 
 /* Estado focus: cuando el usuario hace click en el input */
 input:focus {
-  border-color: #ffaa4a;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(255, 170, 74, 0.2);
 }
 
@@ -88,14 +88,9 @@ input.input-error {
   box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
 }
 
-/* Wrapper del input de contraseña para poder posicionar el botón del ojo dentro */
-.input-password {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-/* El input de contraseña tiene padding extra a la derecha para que el texto no quede tapado por el botón del ojo */
-.input-password input {
-  padding-right: 44px;
+/* Mensaje de error que aparece debajo del input cuando la validación falla */
+.error-text {
+  font-size: 0.78rem;
+  color: #e74c3c;
+  margin-top: 4px;
 }
