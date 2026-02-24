@@ -132,17 +132,21 @@ input.input-error {
   color: var(--color-primary);
   font-size: 1rem;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   border: 2px solid var(--color-primary);
   border-radius: 12px;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.2s ease;
-  box-sizing: border-box; /* Incluye el borde en el ancho total */
+  /* La transición ahora incluye también el color del texto para que el cambio sea suave */
+  transition: background-color 0.2s ease, color 0.2s ease;
+  box-sizing: border-box;
 }
 
+/* Al hacer hover se invierten los colores: fondo naranja, texto y borde blancos */
 .btn-secondary:hover {
-  background-color: rgba(255, 170, 74, 0.08); /* Fondo naranja muy suave al hacer hover */
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
 }
 
 /* Separador visual con la palabra "o" entre el botón principal y el secundario. Los ::before y ::after generan las líneas horizontales a cada lado */
