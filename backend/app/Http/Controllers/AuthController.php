@@ -16,25 +16,24 @@ class AuthController extends Controller
     {
         // Validamos que los datos sean correctos
         $validator = Validator::make($request->all(), [
+            'public_id' => 'nullable',
             'name' => 'required|string',
             'surname' => 'required|string',
-            'email' => 'required|unique',
+            'email' => 'required|unique:users,email',
             'password' => 'required'
         ]);
 
         // Si falla mostramos error
         if ($validator->fails()) {
-            return response(
-                [
-                    'message' => 'error',
-                    'errors' => $validator->errors()
-                ],
-                400
-            );
+            return response()->json([
+                'message' => 'error',
+                'errors' => $validator->errors()
+            ], 400);
         }
 
         // Creamos usuario
         $usuario = User::create([
+            'public_id' => '#NombreXXXX',
             'name' => $request->name,
             'surname' => $request->surname,
             'email' => $request->email,
@@ -98,7 +97,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function logoutUsuario(Request $request)
+    public function logoutUsuario()
     {
         try {
             // Invalidamos el token JWT
