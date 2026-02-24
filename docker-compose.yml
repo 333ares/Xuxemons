@@ -16,7 +16,7 @@ services:
     networks:
       - xuxemons_network
 
-# Podriamos añadir un healthcheck
+  # Podriamos añadir un healthcheck
 
   backend:
     container_name: xuxemons_laravel
@@ -46,7 +46,7 @@ services:
     networks:
       - xuxemons_network
     command: >
-     bash -c "npm install && npm start -- --host 0.0.0.0"
+      bash -c "npm install && npm start -- --host 0.0.0.0"
 
 volumes:
   db_data:
