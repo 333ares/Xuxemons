@@ -19,8 +19,8 @@
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px); /* Desenfoca el fondo visible detrás de la card */
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(10px); /* Desenfoca el fondo visible detrás de la card */
   border-radius: 20px;
   padding: 40px 36px;
   max-width: 520px;
@@ -129,4 +129,102 @@ input.input-error {
 .forgot-password {
   text-align: right;
   margin-bottom: 16px;
+}
+
+.forgot-password a {
+  font-size: 0.82rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Caja de error general, se muestra cuando el backend devuelve un error como credenciales incorrectas */
+.alert-error {
+  background-color: #fdecea;
+  border: 1px solid #f5c6cb;
+  color: #c0392b;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+/* Botón principal naranja para acciones como Acceder o Registrarse */
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 8px;
+}
+
+/* Hover del botón principal: oscurece ligeramente y sube un píxel */
+.btn-primary:hover:not(:disabled) {
+  background-color: #e8962e;
+  transform: translateY(-1px);
+}
+
+/* Estado desactivado: cuando el formulario tiene errores */
+.btn-primary:disabled {
+  background-color: #f5d4a0;
+  cursor: not-allowed;
+}
+
+/* Botón secundario con borde naranja y fondo transparente*/
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  box-sizing: border-box; /* Incluye el borde en el ancho total */
+}
+
+.btn-secondary:hover {
+  background-color: rgba(255, 170, 74, 0.08); /* Fondo naranja muy suave al hacer hover */
+}
+
+/* Separador visual con la palabra "o" entre el botón principal y el secundario. Los ::before y ::after generan las líneas horizontales a cada lado */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 12px;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1; /* Cada línea ocupa el espacio disponible a su lado */
+  height: 1px;
+  background-color: #ddd;
+}
+
+/* Texto informativo encima del botón secundario */
+.redirect-text {
+  font-size: 0.88rem;
+  color: #555;
+  margin-bottom: 10px;
 }
