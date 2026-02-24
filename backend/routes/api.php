@@ -1,10 +1,14 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
-Route::post('/registroUsuario', [AuthController::class, 'registroUsuario']);
-Route::post('/loginUsuario',    [AuthController::class, 'loginUsuario']);
+Route::post('/registro', [AuthController::class, 'registroUsuario']);
+Route::post('/login', [AuthController::class, 'loginUsuario']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/logoutUsuario', [AuthController::class, 'logoutUsuario']);
+    Route::post('/logout', [AuthController::class, 'logoutUsuario']);
+    Route::get('/usuario/{id}', [UserController::class, 'listarInfo']);
+    Route::put('/usuario/{id}', [UserController::class, 'actualizarUsuario']);
 });

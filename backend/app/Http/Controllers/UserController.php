@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -20,6 +21,43 @@ class UserController extends Controller
             ], 400);
         }
         // Si se encuentra se muestra su información
+        return response()->json([
+            'message' => 'success',
+            'usuario' => $usuario
+        ], 200);
+    }
+
+    public function actualizarUsuario(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string',
+            'surname' => 'nullable|string',
+            'email' => 'nullable|unique:users,email',
+            'password' => 'nullable'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $usuario = User::find($id);
+        if (!$usuario) {
+            return response()->json([
+                'message' => 'error',
+                'animal' => 'No existe ningún usuario con ese ID'
+            ], 404);
+        }
+
+        $usuario->update($request->only([
+            'name',
+            'surname',
+            'email',
+            'password'
+        ]));
+
         return response()->json([
             'message' => 'success',
             'usuario' => $usuario
