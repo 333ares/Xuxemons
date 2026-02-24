@@ -3,8 +3,8 @@
 :root {
   --font-body: 'Inter', sans-serif;
   --font-display: 'Lexend', sans-serif;
-  --color-primary: #FFAA4A;
-  --color-secondary: #F4F3F3;
+  --color-primary: #ffaa4a;
+  --color-secondary: #f4f3f3;
 }
 
 * {
