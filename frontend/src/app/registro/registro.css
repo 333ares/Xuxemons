@@ -45,6 +45,15 @@ h1 {
   line-height: 1.5; /* Interlineado para mejorar la legibilidad - MPO */
 }
 
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
 /* Contenedor de cada campo del formulario (label + input + error) */
 .form-group {
   display: flex;
