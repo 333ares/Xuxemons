@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -70,37 +72,44 @@ class AuthController extends Controller
             ], 400);
         }
 
-        // Buscamos el usuario por email
-        $usuario = User::where('email', $request->email)->first();
+        $credenciales = $request->only('email', 'password');
 
-        // Validamos credenciales
-        if (!$usuario || !Hash::check($request->password, $usuario->password)) {
+        try {
+            // Intentamos generar el token con las credenciales
+            if (!$token = JWTAuth::attempt($credenciales)) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors'  => 'El correo o la contraseña no son correctos'
+                ], 400);
+            }
+        } catch (JWTException $e) {
             return response()->json([
                 'message' => 'error',
-                'errors' => 'El correo o la contraseña no son correctos'
-            ], 400);
+                'errors'  => 'No se pudo generar el token'
+            ], 500);
         }
 
-        // Generamos token
-        $token = $usuario->createToken('auth_token')->plainTextToken;
+        $usuario = Auth::user();
 
-        // Mostramos mensaje de exito y pasamos el token y el usuario
         return response()->json([
             'message' => 'Inicio de sesión correcto',
-            'token' => $token,
+            'token'   => $token,
             'usuario' => $usuario
         ], 200);
     }
 
     public function logoutUsuario(Request $request)
     {
-        // Cerramos sesión
-        Auth::logout();
-        
-        // Revocar todos los tokens Sanctum del usuario
-        $request->user()->tokens()->delete();
+        try {
+            // Invalidamos el token JWT
+            JWTAuth::invalidate(JWTAuth::getToken());
+        } catch (JWTException $e) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'No se pudo cerrar la sesión'
+            ], 500);
+        }
 
-        // Mostramos mensaje de exito
         return response()->json([
             'message' => 'Cierre de sesión correcto'
         ], 200);
