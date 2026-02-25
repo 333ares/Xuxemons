@@ -57,38 +57,30 @@ class AuthController extends Controller
 
     public function loginUsuario(Request $request)
     {
-        // Validamos que las credenciales sean correctas
         $validator = Validator::make($request->all(), [
             'public_id' => 'required|string',
-            'password' => 'required',
+            'password'  => 'required',
         ]);
 
-        // Si el validador falla, mosrtamos error
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'error',
-                'errors' => $validator->errors()
+                'errors'  => $validator->errors()
             ], 400);
         }
 
-        $credenciales = $request->only('public_id', 'password');
+        // Buscamos el usuario por public_id manualmente
+        $usuario = User::where('public_id', $request->public_id)->first();
 
-        try {
-            // Intentamos generar el token con las credenciales
-            if (!$token = JWTAuth::attempt($credenciales)) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors'  => 'El ID o la contraseña no son correctos'
-                ], 400);
-            }
-        } catch (JWTException $e) {
+        if (!$usuario || !Hash::check($request->password, $usuario->password)) {
             return response()->json([
                 'message' => 'error',
-                'errors'  => 'No se pudo generar el token'
-            ], 500);
+                'errors'  => 'El ID o la contraseña no son correctos'
+            ], 400);
         }
 
-        $usuario = Auth::user();
+        // Generamos el token a partir del usuario encontrado
+        $token = JWTAuth::fromUser($usuario);
 
         return response()->json([
             'message' => 'Inicio de sesión correcto',
