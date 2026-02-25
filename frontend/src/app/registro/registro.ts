@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -9,10 +16,8 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
   const password = control.get('password');
   const confirmPassword = control.get('confirmPassword');
 
-
   // Si alguno de los dos campos no existe todavía, no hacemos nada
   if (!password || !confirmPassword) return null;
-
 
   if (password.value !== confirmPassword.value) {
     // Las contraseñas no coinciden: marcamos el error en confirmPassword
@@ -32,7 +37,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './registro.html',
-  styleUrl: './registro.css'
+  styleUrl: './registro.css',
 })
 export class Registro {
   registroForm: FormGroup;
@@ -41,15 +46,21 @@ export class Registro {
   mostrarPassword: boolean = false;
   mostrarConfirm: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+  ) {
     // Definimos el formulario con sus campos y validadores individuales.
-    this.registroForm = this.fb.group({
-      nombre: ['', [Validators.required]],
-      apellidos: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]]
-    }, { validators: passwordMatchValidator }); // El validador passwordMatchValidator se aplica al grupo entero (no a un campo solo) porque necesita comparar dos campos a la vez.
+    this.registroForm = this.fb.group(
+      {
+        nombre: ['', [Validators.required]],
+        apellidos: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: passwordMatchValidator },
+    ); // El validador passwordMatchValidator se aplica al grupo entero (no a un campo solo) porque necesita comparar dos campos a la vez.
   }
 
   onSubmit() {

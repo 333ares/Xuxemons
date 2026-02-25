@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@700;800&display=swap');
+
+:root {
+  --font-body: 'Inter', sans-serif;
+  --font-display: 'Lexend', sans-serif;
+  --color-primary: #ffaa4a;
+  --color-secondary: #f4f3f3;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-secondary);
+  color: #1a1a1a;
+}

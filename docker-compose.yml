@@ -16,7 +16,7 @@ services:
     networks:
       - xuxemons_network
 
-# Podriamos añadir un healthcheck
+  # Podriamos añadir un healthcheck
 
   backend:
     container_name: xuxemons_laravel
@@ -30,9 +30,11 @@ services:
     networks:
       - xuxemons_network
     command: >
-      bash -c "docker-php-ext-install pdo pdo_mysql && 
+      bash -c "
+      docker-php-ext-install pdo pdo_mysql &&
       a2enmod rewrite &&
-      sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf &&
+      sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf &&
+      sed -i 's|<Directory /var/www/html>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf &&
       apache2-foreground"
 
   frontend:
@@ -46,7 +48,7 @@ services:
     networks:
       - xuxemons_network
     command: >
-     bash -c "npm install && npm start -- --host 0.0.0.0"
+      bash -c "npm install && npm start -- --host 0.0.0.0"
 
 volumes:
   db_data:
