@@ -186,3 +186,23 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.battle .icon {
+  width: 150px;   
+  height: auto;   
+}
+
+.box .icon {
+  width: 80px;
+  height: 80px;
+}
+
+.box1 .icon {
+  width: 65px;
+  height: 65px;
+}
+
+.box2 .icon {
+  width: 70px;
+  height: 70px;
+}
