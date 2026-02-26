@@ -13,16 +13,16 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Campo ID: el usuario introduce su identificador único (#Nombre0000) -->
       <div class="form-group">
-        <label for="userId">ID</label>
+        <label for="public_id">ID</label>
         <input
-          id="userId"
+          id="public_id"
           type="text"
-          formControlName="userId"
+          formControlName="public_id"
           placeholder="#Nombre0000"
-          [class.input-error]="loginForm.get('userId')?.invalid && loginForm.get('userId')?.touched"
+          [class.input-error]="loginForm.get('public_id')?.invalid && loginForm.get('public_id')?.touched"
         />
         <!-- Muestra el error solo si el usuario ya ha tocado el campo -->
-        @if (loginForm.get('userId')?.invalid && loginForm.get('userId')?.touched) {
+        @if (loginForm.get('public_id')?.invalid && loginForm.get('public_id')?.touched) {
           <span class="error-text">El ID es obligatorio</span>
         }
       </div>

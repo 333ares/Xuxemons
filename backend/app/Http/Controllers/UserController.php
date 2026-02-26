@@ -47,17 +47,30 @@ class UserController extends Controller
         if (!$usuario) {
             return response()->json([
                 'message' => 'error',
-                'animal' => 'No existe ningún usuario con ese ID'
+                'usuario' => 'No existe ningún usuario con ese ID'
             ], 404);
         }
 
-        $usuario->update($request->only([
-            'name',
-            'surname',
+        // Cogemos los datos que nos haya pasado el usuario
+        $datos = $request->only([
+            'usuario',
+            'nombre',
+            'apellidos',
             'email',
             'password'
-        ]));
+        ]);
 
+        // Si la password no esta vacia, la encriptamos
+        if (!empty($datos['password'])) {
+            $datos['password'] = bcrypt($datos['password']);
+        } else {
+            unset($datos['password']);
+        }
+
+        // Actualizamos datos
+        $usuario->update($datos);
+
+        // Mostramos usuario actualizado
         return response()->json([
             'message' => 'success',
             'usuario' => $usuario
