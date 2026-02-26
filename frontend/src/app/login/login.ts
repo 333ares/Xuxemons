@@ -40,7 +40,7 @@ export class Login {
     this.authService.login(public_id, password).subscribe({
       next: (res) => {
         // Guardamos el token y redirigimos
-        this.authService.guardarToken(res.token);
+        this.authService.guardarToken(res.token, res.usuario);
         this.router.navigate(['/paginaPrincipal']);
       },
       error: (err) => {
