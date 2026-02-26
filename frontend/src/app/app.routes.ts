@@ -27,8 +27,9 @@ export const routes: Routes = [
     path: 'paginaPrincipal',
     component: PaginaPrincipal,
   },
+  // Ruta Perfil del Usuario
   {
-    path: 'perfil',
+    path: 'perfilUsuario',
     component: PerfilUsuario,
   },
 

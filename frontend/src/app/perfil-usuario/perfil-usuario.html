@@ -1,1 +1,34 @@
-<p>perfil-usuario works!</p>
+<div class="perfil-wrapper">
+
+  <!-- Contenedor principal dividido en dos columnas -->
+  <div class="perfil-layout">
+
+    <!-- COLUMNA IZQUIERDA: datos del usuario -->
+    <aside class="perfil-lateral">
+
+      <!-- Avatar del usuario -->
+      <div class="avatar-wrapper">
+        <img
+          src="avatar-default.png"
+          alt="Avatar de {{ usuario?.name }}"
+          class="avatar-img"
+        />
+      </div>
+
+      <!-- El nombre completo combina name + surname-->
+      <h1 class="usuario-nombre">{{ usuario?.name }} {{ usuario?.surname }}</h1>
+      <p class="usuario-id">ID: {{ usuario?.public_id }}</p>
+
+      <span class="badge-rol">{{ usuario?.rol ?? 'Jugador/a' }}</span>
+
+      <!-- Datos de contacto -->
+      <div class="usuario-datos">
+        <div class="dato-row">
+          <!-- Icono email (SVG) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <span>{{ usuario?.email }}</span>
+        </div>
