@@ -3,7 +3,7 @@ import { PaginaPrincipal } from './pagina-principal/pagina-principal';
 import { Login } from './login/login';
 import { Registro } from './registro/registro';
 import { Recuperar } from './recuperar/recuperar';
-import { Perfil } from './perfil/perfil';
+import { PerfilUsuario } from './perfil-usuario/perfil-usuario';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -29,10 +29,9 @@ export const routes: Routes = [
   },
   {
     path: 'perfil',
-    component: PerfilComponent
-  }
+    component: PerfilUsuario,
+  },
 
   // Si alguien entra a una pagina inexistente lo reedirige al login. (Esto se tiene que dejar al final de las rutas)
   { path: '**', redirectTo: 'login' },
 ];
-
