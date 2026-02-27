@@ -25,7 +25,7 @@ export class PerfilUsuario implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: Auth,
-  ) {}
+  ) { }
 
   ngOnInit() {
     // TODO: Cuando el backend esté conectado, eliminar el usuario mock
@@ -97,5 +97,22 @@ export class PerfilUsuario implements OnInit {
     // this.authService.darseDebaja().subscribe({ next: () => { ... } })
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  onLogout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        // Limpiamos localStorage y redirigimos al login
+        this.authService.eliminarToken();
+        this.authService.eliminarUsuario();
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        // Aunque falle el backend, limpiamos igualmente
+        this.authService.eliminarToken();
+        this.authService.eliminarUsuario();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }
