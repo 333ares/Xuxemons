@@ -93,9 +93,6 @@ export class PerfilUsuario implements OnInit {
   }
 
   confirmarBaja() {
-    // TODO: Sustituir por la llamada real cuando el backend esté listo:
-    // this.authService.darseDebaja().subscribe({ next: () => { ... } })
-    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }
