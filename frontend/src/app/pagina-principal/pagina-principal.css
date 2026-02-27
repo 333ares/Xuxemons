@@ -1,162 +1,208 @@
-/* ======== LAYOUT GENERAL ======== */
+/* --- Estilo Base --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-.contenedor {
+body {
+  font-family: system-ui, sans-serif;
+  background: #ffffff;
+  color: #000000;
+  padding: 30px;
+}
+
+/* --- Layout --- */
+.layout {
   display: grid;
-  grid-template-columns: 1.2fr 1fr; /* izquierda más ancha */
-  grid-template-rows: auto auto auto;
-  gap: 25px;
-  align-items: start; /* 🔥 CLAVE: alinea ambas columnas arriba */
-  padding: 20px;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
 }
 
-/* ======== UBICACIÓN DE CADA BLOQUE ======== */
-
-/* Recompensas arriba ocupando todo el ancho */
-.recompensas {
-  grid-column: 1 / 3;
-}
-
-/* Columna izquierda */
-.coleccion {
-  grid-column: 1;
-  grid-row: 2; /* 🔥 Asegura que empieza justo debajo de recompensas */
-}
-
-.actividad {
-  grid-column: 1;
-  grid-row: 3;
-}
-
-/* Columna derecha */
-.estadisticas {
-  grid-column: 2;
-  grid-row: 2; /* 🔥 Ahora empieza EXACTAMENTE a la misma altura que colección */
-}
-
-.batalla {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-/* ======== ESTILO DE TARJETAS ======== */
-
-section {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-/* ======== RECOMPENSAS ======== */
-
-.dias {
+.col {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.dia {
-  background: #fff;
-  padding: 12px;
-  border-radius: 16px;
-  width: 90px;
-  text-align: center;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-  font-size: 13px;
-  color: #6a5ca5;
-}
-
-.dia img {
-  width: 32px;
-  margin-top: 6px;
-}
-
-/* ======== COLECCIÓN ======== */
-
-.stats p {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 15px;
-  margin: 10px 0;
-  color: #4a3f7a;
-}
-
-.stats strong {
-  color: #ff7b5c;
-}
-
-/* ======== ACTIVIDAD ======== */
-
+/* --- Tarjetas --- */
 .card {
   background: #ffffff;
-  padding: 14px;
-  border-radius: 16px;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(172, 14, 14, 0.06);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.card h2 {
+  font-size: 18px;
   margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-}
-
-.btn-aceptar,
-.btn-rechazar {
-  border: none;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn-aceptar {
-  background: #7ed957;
-  color: white;
-  margin-right: 6px;
-}
-
-.btn-rechazar {
-  background: #ff6b6b;
-  color: white;
-}
-
-/* ======== ESTADÍSTICAS ======== */
-
-.estadisticas p {
-  font-size: 15px;
-  margin: 10px 0;
-  color: #4a3f7a;
-}
-
-.estadisticas strong {
-  color: #ff7b5c;
-}
-
-/* ======== XUXEMON ======== */
-
-.xuxemon-card {
   text-align: center;
 }
 
-.xuxemon-card img {
-  width: 140px;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+/* --- Grid y Filas --- */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
-.xuxemon-card h3 {
-  margin: 12px 0;
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 8px 10px;
+  border-radius: 10px;
+  margin-top: 14px;
+  margin-bottom: 10px;
+}
+
+/* --- Elementos Reutilizables --- */
+.box {
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.box b {
+  font-size: 20px;
+}
+
+.box span {
+  font-size: 11px;
+  color: #000000;
+}
+
+/* --- Recompensas --- */
+.day {
+  background: #ffb867;
+  padding: 8px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.day p {
+  font-size: 12px;
+  color: #000000;
+}
+
+.gift {
+  width: 26px;
+  height: 26px;
+  margin: 6px auto 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #8f8f8f, #02c6e0);
+}
+
+/* --- Botones --- */
+.btn {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.primary {
+  background: linear-gradient(135deg, rgb(218, 248, 227), #a1ff6a);
+  color: #1b1020;
+}
+
+.success {
+  background: #4de4a5;
+  color: #041015;
+}
+
+.danger {
+  background: #fd6767;
+  color: #fff;
+}
+
+.small {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.full {
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* --- Botón independiente: Recoger recompensa --- */
+.btn-recompensa {
+  margin-top: 14px;
+}
+
+/* --- Botón independiente: Luchar --- */
+.btn-luchar {
+  margin-top: 10px;
+  display: inline-block;
+}
+
+/* --- Parte del Xuxemon listo --- */
+.battle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 20px;
+  background: #ffAA4A;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+}
+
+/* --- Texto debajo del recuadro naranja --- */
+.battle-text {
+  margin-top: 12px;
+  text-align: center; /* CENTRA TODO */
+}
+
+.battle-text h3 {
   font-size: 18px;
-  color: #4a3f7a;
 }
 
-/* ======== RESPONSIVE ======== */
+.battle-text p {
+  font-size: 13px;
+  color: #000000;
+  margin: 6px 0;
+}
 
+/* --- Responsive --- */
 @media (max-width: 900px) {
-  .contenedor {
-    display: block;
+  .layout {
+    grid-template-columns: 1fr;
   }
+}
 
-  section {
-    margin-bottom: 20px;
-  }
+.battle .icon {
+  width: 150px;   
+  height: auto;   
+}
+
+.box .icon {
+  width: 80px;
+  height: 80px;
+}
+
+.box1 .icon {
+  width: 65px;
+  height: 65px;
+}
+
+.box2 .icon {
+  width: 70px;
+  height: 70px;
 }
