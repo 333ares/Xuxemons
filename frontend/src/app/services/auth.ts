@@ -73,4 +73,14 @@ export class Auth {
   estaAutenticado(): boolean {
     return !!this.getToken();
   }
+
+  // Obtiene los datos del usuario autenticado desde el backend
+  getInfoUsuario(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/usuario`, { headers: this.getHeaders() });
+  }
+
+  // Elimina la cuenta del usuario autenticado
+  eliminarCuenta(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/usuario`, { headers: this.getHeaders() });
+  }
 }
