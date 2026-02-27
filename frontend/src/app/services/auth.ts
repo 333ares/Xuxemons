@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 export class Auth {
   private apiUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   /// Envía las credenciales al backend y recibe el token JWT
   login(public_id: string, password: string): Observable<any> {
@@ -18,6 +19,14 @@ export class Auth {
   // Guarda el token JWT en localStorage
   guardarToken(token: string): void {
     localStorage.setItem('token', token);
+    if (usuario) {
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+    }
+  }
+
+  // Devuelve el token guardado, o null si no hay sesión activa
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   // Guarda los datos del usuario en localStorage como JSON

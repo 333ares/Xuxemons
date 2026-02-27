@@ -1,0 +1,519 @@
+/* Fondo principal con el color secundario del proyecto */
+.perfil-wrapper {
+  background-color: #F4F3F3;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  padding: 32px 40px 100px; /* Padding inferior para que el contenido no quede tapado por la nav */
+  box-sizing: border-box;
+}
+
+/* Layout de dos columnas que ocupa todo el ancho disponible */
+.perfil-layout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 1900px;
+  align-items: flex-start;
+}
+
+/* COLUMNA IZQUIERDA */
+
+.perfil-lateral {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 28px;
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Avatar circular con borde naranja */
+.avatar-wrapper {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--color-primary);
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.usuario-nombre {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin: 0;
+}
+
+.usuario-id {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0;
+}
+
+/* Badge verde del rol */
+.badge-rol {
+  background-color: #e8f5e9;
+  color: #388e3c;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 5px 16px;
+  border-radius: 20px;
+  margin: 4px 0 10px;
+}
+
+.usuario-datos {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+/* Cada fila de dato con icono naranja */
+.dato-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  padding: 12px 16px;
+  background-color: #fafafa;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.dato-row svg {
+  flex-shrink: 0;
+}
+
+.fecha-registro {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 4px 0 14px;
+}
+
+.botones-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-editar {
+  width: 100%;
+  padding: 13px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-editar:hover {
+  background-color: #e8962e;
+  transform: translateY(-1px);
+}
+
+.btn-baja {
+  width: 100%;
+  padding: 13px;
+  background-color: #e74c3c;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-baja:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+}
+
+/* COLUMNA DERECHA */
+
+/* Ocupa todo el espacio restante y apila las dos tarjetas verticalmente */
+.perfil-contenido {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0; /* Evita que el flex desborde en pantallas pequeñas */
+}
+
+/* Tarjeta blanca: formulario y estadísticas */
+.card-perfil {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 44px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Título de cada tarjeta con subrayado como en el diseño de Figma */
+.card-titulo {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3b2101;
+  text-align: center;
+  text-decoration: underline;
+  margin-bottom: 28px;
+}
+
+/* Nombre y apellidos en la misma fila */
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Texto "(opcional)" en gris junto al label */
+.label-opcional {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: #aaa;
+}
+
+input {
+  padding: 13px 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  outline: none;
+  background-color: #ffffff;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 170, 74, 0.2);
+}
+
+input.input-error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+}
+
+/* Wrapper del input de contraseña para posicionar el botón del ojo dentro */
+.input-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-password input {
+  padding-right: 44px;
+}
+
+/* Botón del ojo para mostrar/ocultar contraseña */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover {
+  color: var(--color-primary);
+}
+
+.error-text {
+  font-size: 0.78rem;
+  color: #e74c3c;
+  margin-top: 4px;
+}
+
+.alert-exito {
+  background-color: #eafaf1;
+  border: 1px solid #a9dfbf;
+  color: #1e8449;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.alert-error {
+  background-color: #fdecea;
+  border: 1px solid #f5c6cb;
+  color: #c0392b;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+/* Botones del formulario alineados a la derecha */
+.form-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-descartar {
+  padding: 13px 28px;
+  background-color: transparent;
+  color: #555;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 1.5px solid #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-descartar:hover {
+  background-color: #f5f5f5;
+}
+
+/* Botón guardar naranja */
+.btn-guardar {
+  padding: 13px 28px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-guardar:hover:not(:disabled) {
+  background-color: #e8962e;
+  transform: translateY(-1px);
+}
+
+.btn-guardar:disabled {
+  background-color: #f5d4a0;
+  cursor: not-allowed;
+}
+/* ESTADÍSTICAS */
+
+.card-estadisticas {
+  flex-shrink: 0;
+}
+
+/* Tres columnas iguales para las estadísticas */
+.estadisticas-grid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Número e icono en la misma fila */
+.stat-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Número grande en naranja, igual que en el diseño */
+.stat-numero {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #555;
+  text-align: center;
+}
+
+/* DIÁLOGO DE CONFIRMACIÓN */
+
+/* Overlay que bloquea toda la pantalla mientras el diálogo está abierto */
+.dialogo-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialogo-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 44px;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dialogo-box h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin-bottom: 12px;
+}
+
+.dialogo-box p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.dialogo-botones {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* BARRA DE NAVEGACIÓN INFERIOR */
+
+/* Barra flotante fija en la parte inferior, igual que en el diseño */
+.nav-inferior {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  padding: 14px 32px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-item:hover {
+  color: var(--color-primary);
+}
+
+/* El icono activo tiene fondo naranja con el icono en blanco */
+.nav-activo {
+  color: #fff;
+}
+
+.nav-activo svg {
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  padding: 9px;
+  width: 42px;
+  height: 42px;
+  box-sizing: border-box;
+}
+
+/*  RESPONSIVE  */
+
+/* Pantallas medianas: tablet */
+@media (max-width: 1024px) {
+  .perfil-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .perfil-lateral {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+
+/* Pantallas pequeñas: móvil */
+@media (max-width: 600px) {
+  .perfil-wrapper {
+    padding: 20px 16px 90px;
+  }
+
+  .card-perfil {
+    padding: 24px 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .estadisticas-grid {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .nav-inferior {
+    gap: 18px;
+    padding: 12px 20px;
+  }
+}
