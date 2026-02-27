@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function listarInfo($id)
+    public function listarInfo(Request $request)
     {
         // Buscamos usuario por id
-        $usuario = User::find($id);
+        $usuario = $request->user();
 
         if (!$usuario) {
             // Si no lo encuentra, mostramos error
@@ -27,7 +27,7 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function actualizarUsuario(Request $request, $id)
+    public function actualizarUsuario(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string',
@@ -43,7 +43,7 @@ class UserController extends Controller
             ], 400);
         }
 
-        $usuario = User::find($id);
+        $usuario = $request->user();
         if (!$usuario) {
             return response()->json([
                 'message' => 'error',
@@ -77,9 +77,9 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function borrarUsuario($id)
+    public function borrarUsuario(Request $request)
     {
-        $usuario = User::find($id);
+        $usuario = $request->user();
 
         if (!$usuario) {
             return response()->json([
@@ -89,7 +89,7 @@ class UserController extends Controller
         }
 
         $usuario->delete();
-        
+
         return response()->json([
             'message' => 'success',
             'usuario' => 'El usuario se ha borrado correctamente'
