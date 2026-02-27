@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -9,22 +8,37 @@ import { tap } from 'rxjs/operators';
 export class Auth {
   private apiUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  /// Envía las credenciales al backend y recibe el token JWT
+  // Construye las cabeceras con el token JWT para rutas protegidas
+  private getHeaders() {
+    return {
+      Authorization: `Bearer ${this.getToken()}`,
+      'Content-Type': 'application/json',
+    };
+  }
+
+  // Envía las credenciales al backend y recibe el token JWT
   login(public_id: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { public_id, password });
+  }
+
+  // Registra un nuevo usuario en el backend
+  registro(datos: {
+    name: string;
+    surname: string;
+    email: string;
+    password: string;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/registro`, datos);
   }
 
   // Guarda el token JWT en localStorage
   guardarToken(token: string): void {
     localStorage.setItem('token', token);
-    if (usuario) {
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-    }
   }
 
-  // Devuelve el token guardado, o null si no hay sesión activa
+  // Obtiene el token JWT del localStorage
   getToken(): string | null {
     return localStorage.getItem('token');
   }
@@ -34,8 +48,14 @@ export class Auth {
     localStorage.setItem('usuario', JSON.stringify(usuario));
   }
 
-  // Obtiene el token JWT del localStorage
-  getToken(): string | null {
-    return localStorage.getItem('token');
+  // Obtiene los datos del usuario del localStorage y los parsea
+  getUsuario(): any {
+    const u = localStorage.getItem('usuario');
+    return u ? JSON.parse(u) : null;
+  }
+
+  // Comprueba si hay un token activo en localStorage
+  estaAutenticado(): boolean {
+    return !!this.getToken();
   }
 }
