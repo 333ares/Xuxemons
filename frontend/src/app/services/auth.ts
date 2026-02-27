@@ -29,4 +29,13 @@ export class Auth {
   getToken(): string | null {
     return localStorage.getItem('token');
   }
+
+  registro(datos: {
+    name: string;
+    surname: string;
+    email: string;
+    password: string;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/registro`, datos);
+  }
 }

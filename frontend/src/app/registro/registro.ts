@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Auth } from '../services/auth';
 
 // Validador que comprueba que los dos campos de contraseña coinciden
 // Va fuera de la clase porque es una función pura: no necesita acceder a nada del componente.
@@ -24,7 +25,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
     confirmPassword.setErrors({ passwordMismatch: true });
     return { passwordMismatch: true };
   } else {
-    // Coinciden: limpiamos el error passwordMismatch si lo había,
+    // Coinciden: limpiamos el error passwordMismatch si lo había
     const errors = { ...confirmPassword.errors };
     delete errors['passwordMismatch'];
     confirmPassword.setErrors(Object.keys(errors).length ? errors : null);
@@ -41,6 +42,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 })
 export class Registro {
   registroForm: FormGroup;
+  errorMessage: string = '';
 
   // Variables para controlar si se muestra u oculta la contraseña en cada campo
   mostrarPassword: boolean = false;
@@ -49,12 +51,13 @@ export class Registro {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private authService: Auth
   ) {
     // Definimos el formulario con sus campos y validadores individuales.
     this.registroForm = this.fb.group(
       {
-        nombre: ['', [Validators.required]],
-        apellidos: ['', [Validators.required]],
+        name: ['', [Validators.required]],
+        surname: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required]],
@@ -66,6 +69,23 @@ export class Registro {
   onSubmit() {
     if (this.registroForm.invalid) return;
 
-    const { nombre, apellidos, email, password } = this.registroForm.value;
+    const { name, surname, email, password } = this.registroForm.value;
+
+    // Pasamos datos
+    this.authService.registro({
+      name,
+      surname,
+      email,
+      password
+    }).subscribe({
+      next: () => {
+        // Redirigimos al login tras registrarse correctamente
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        // Mostramos el error del backend en el formulario
+        this.errorMessage = err.error?.errors ?? 'Error al registrarse';
+      }
+    });
   }
 }
