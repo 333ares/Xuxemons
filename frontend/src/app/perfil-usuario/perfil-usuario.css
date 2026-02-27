@@ -1,0 +1,87 @@
+/* Fondo principal con el color secundario del proyecto */
+.perfil-wrapper {
+  background-color: #F4F3F3;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  padding: 32px 40px 100px; /* Padding inferior para que el contenido no quede tapado por la nav */
+  box-sizing: border-box;
+}
+
+/* Layout de dos columnas que ocupa todo el ancho disponible */
+.perfil-layout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 1900px;
+  align-items: flex-start;
+}
+
+/* COLUMNA IZQUIERDA */
+
+.perfil-lateral {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 28px;
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Avatar circular con borde naranja */
+.avatar-wrapper {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--color-primary);
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.usuario-nombre {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin: 0;
+}
+
+.usuario-id {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0;
+}
+
+/* Badge verde del rol */
+.badge-rol {
+  background-color: #e8f5e9;
+  color: #388e3c;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 5px 16px;
+  border-radius: 20px;
+  margin: 4px 0 10px;
+}
+
+.usuario-datos {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 8px 0;
+}
