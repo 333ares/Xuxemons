@@ -45,7 +45,7 @@ export class Login {
       },
       error: (err) => {
         // Mostramos el error del backend en el formulario
-        this.errorMessage = err.error.errors ?? 'Error al iniciar sesión';
+        this.errorMessage = err.error.errors ?? 'Credenciales incorrectas';
       }
     });
   }
