@@ -4,7 +4,6 @@ import { Login } from './login/login';
 import { Registro } from './registro/registro';
 import { Recuperar } from './recuperar/recuperar';
 import { PerfilUsuario } from './perfil-usuario/perfil-usuario';
-import { PerfilComponent } from './perfil/perfil';
 import { AuthGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -28,12 +27,12 @@ export const routes: Routes = [
   {
     path: 'paginaPrincipal',
     component: PaginaPrincipal,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard] // Sirve para proteger la ruta, y que si el usuario no esta validado no pueda entrar a ciertas pantallas
   },
   // Ruta Perfil del Usuario
   {
     path: 'perfilUsuario',
-    component: PerfilComponent,
+    component: PerfilUsuario,
     canActivate: [AuthGuard]
   },
 
