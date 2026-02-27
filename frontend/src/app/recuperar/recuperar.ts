@@ -33,6 +33,6 @@ export class Recuperar {
   onSubmit() {
     if (this.recuperarForm.invalid) return;
 
-    const { userId, password } = this.recuperarForm.value;
+    const { userId, email } = this.recuperarForm.value;
   }
 }

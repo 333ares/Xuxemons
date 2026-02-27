@@ -180,6 +180,52 @@ body {
   margin: 6px 0;
 }
 
+/* BARRA DE NAVEGACIÓN INFERIOR */
+
+/* Barra flotante fija en la parte inferior, igual que en el diseño */
+.nav-inferior {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  padding: 14px 32px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-item:hover {
+  color: var(--color-primary);
+}
+
+/* El icono activo tiene fondo naranja con el icono en blanco */
+.nav-activo {
+  color: #fff;
+}
+
+.nav-activo svg {
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  padding: 9px;
+  width: 42px;
+  height: 42px;
+  box-sizing: border-box;
+}
+
+
 /* --- Responsive --- */
 @media (max-width: 900px) {
   .layout {
@@ -188,8 +234,8 @@ body {
 }
 
 .battle .icon {
-  width: 150px;   
-  height: auto;   
+  width: 150px;
+  height: auto;
 }
 
 .box .icon {
