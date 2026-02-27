@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -53,9 +52,8 @@ class UserController extends Controller
 
         // Cogemos los datos que nos haya pasado el usuario
         $datos = $request->only([
-            'usuario',
-            'nombre',
-            'apellidos',
+            'name',
+            'surname',
             'email',
             'password'
         ]);
