@@ -344,3 +344,90 @@ input.input-error {
   background-color: #f5d4a0;
   cursor: not-allowed;
 }
+/* ESTADÍSTICAS */
+
+.card-estadisticas {
+  flex-shrink: 0;
+}
+
+/* Tres columnas iguales para las estadísticas */
+.estadisticas-grid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Número e icono en la misma fila */
+.stat-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Número grande en naranja, igual que en el diseño */
+.stat-numero {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #555;
+  text-align: center;
+}
+
+/* DIÁLOGO DE CONFIRMACIÓN */
+
+/* Overlay que bloquea toda la pantalla mientras el diálogo está abierto */
+.dialogo-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialogo-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 44px;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dialogo-box h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin-bottom: 12px;
+}
+
+.dialogo-box p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.dialogo-botones {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
