@@ -10,21 +10,23 @@ export class Auth {
 
   constructor(private http: HttpClient) { }
 
+  /// Envía las credenciales al backend y recibe el token JWT
   login(public_id: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { public_id, password });
   }
 
-  // Guarda el token en localStorage
+  // Guarda el token JWT en localStorage
   guardarToken(token: string): void {
     localStorage.setItem('token', token);
   }
 
-  // Comprueba si hay sesión activa
-  estaAutenticado(): boolean {
-    return !!localStorage.getItem('token');
+  // Guarda los datos del usuario en localStorage como JSON
+  guardarUsuario(usuario: any): void {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
+  // Obtiene el token JWT del localStorage
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 }
