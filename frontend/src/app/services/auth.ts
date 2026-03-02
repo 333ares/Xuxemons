@@ -83,4 +83,9 @@ export class Auth {
   eliminarCuenta(): Observable<any> {
     return this.http.delete(`${this.apiUrl}/usuario`, { headers: this.getHeaders() });
   }
+
+  // Actualiza los datos del usuario autenticado
+  actualizarUsuario(datos: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/usuario`, datos, { headers: this.getHeaders() });
+  }
 }
