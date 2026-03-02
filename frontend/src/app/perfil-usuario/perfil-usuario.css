@@ -1,6 +1,6 @@
 /* Fondo principal con el color secundario del proyecto */
 .perfil-wrapper {
-  background-color: #F4F3F3;
+  background-color: #f4f3f3;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -16,7 +16,7 @@
   display: flex;
   gap: 24px;
   width: 100%;
-  max-width: 1900px;
+  max-width: 1900px; /* Preparado para pantallas grandes como la tuya de 2005px */
   align-items: flex-start;
 }
 
@@ -127,7 +127,9 @@
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .btn-editar:hover {
@@ -146,7 +148,9 @@
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .btn-baja:hover {
@@ -226,7 +230,9 @@ input {
   font-family: var(--font-body);
   outline: none;
   background-color: #ffffff;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
   width: 100%;
   box-sizing: border-box;
 }
@@ -252,7 +258,7 @@ input.input-error {
   padding-right: 44px;
 }
 
-/* Botón del ojo para mostrar/ocultar contraseña */
+/* Botón del ojo para mostrar/ocultar contraseña, igual que en login */
 .toggle-password {
   position: absolute;
   right: 12px;
@@ -321,7 +327,7 @@ input.input-error {
   background-color: #f5f5f5;
 }
 
-/* Botón guardar naranja */
+/* Botón guardar naranja, igual que btn-primary del login */
 .btn-guardar {
   padding: 13px 28px;
   background-color: var(--color-primary);
@@ -332,7 +338,9 @@ input.input-error {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .btn-guardar:hover:not(:disabled) {
@@ -344,6 +352,7 @@ input.input-error {
   background-color: #f5d4a0;
   cursor: not-allowed;
 }
+
 /* ESTADÍSTICAS */
 
 .card-estadisticas {
@@ -516,4 +525,30 @@ input.input-error {
     gap: 18px;
     padding: 12px 20px;
   }
+}
+
+/* Botón cerrar sesión: borde naranja, sin fondo (estilo secundario) */
+.btn-cerrar-sesion {
+  width: 100%;
+  padding: 13px;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-cerrar-sesion:hover {
+  background-color: var(--color-primary);
+  color: #fff;
 }

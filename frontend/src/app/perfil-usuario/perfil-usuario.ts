@@ -28,9 +28,6 @@ export class PerfilUsuario implements OnInit {
   ) {}
 
   ngOnInit() {
-    // TODO: Cuando el backend esté conectado, eliminar el usuario mock
-    // y descomentar: this.usuario = this.authService.getUsuario();
-
     // Datos de prueba para visualizar el componente sin backend
     this.usuario = {
       name: 'Aether',
@@ -49,7 +46,7 @@ export class PerfilUsuario implements OnInit {
       name: [this.usuario?.name ?? '', [Validators.required, Validators.minLength(2)]],
       surname: [this.usuario?.surname ?? '', [Validators.required, Validators.minLength(2)]],
       email: [this.usuario?.email ?? '', [Validators.required, Validators.email]],
-      // El teléfono es opcional, el usuario lo puede dejar vacío
+      // El teléfono es opcional, el usuario puede dejarlo vacío
       telefono: [this.usuario?.telefono ?? '', []],
       password: ['', [Validators.minLength(6)]],
     });
@@ -64,6 +61,7 @@ export class PerfilUsuario implements OnInit {
 
     const datos = { ...this.perfilForm.value };
     if (!datos.password) delete datos.password;
+
     // Simulación de guardado sin backend
     setTimeout(() => {
       this.mensajeExito = 'Cambios guardados correctamente.';
@@ -82,6 +80,11 @@ export class PerfilUsuario implements OnInit {
     });
     this.mensajeExito = '';
     this.mensajeError = '';
+  }
+
+  // Cierra la sesión sin eliminar la cuenta y redirige al login
+  cerrarSesion() {
+    this.router.navigate(['/login']);
   }
 
   abrirDialogoBaja() {
