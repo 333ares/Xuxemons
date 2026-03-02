@@ -19,6 +19,7 @@ export class PerfilUsuario implements OnInit {
   mensajeError: string = '';
   cargando: boolean = false;
 
+  // any permite que el template use ?. sin que Angular strict mode genere warnings
   usuario: any = null;
 
   constructor(
