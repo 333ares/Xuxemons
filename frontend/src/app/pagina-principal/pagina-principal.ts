@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Auth } from '../services/auth';
 
 @Component({
   selector: 'app-pagina-principal',
@@ -10,13 +11,8 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./pagina-principal.css'],
 })
 export class PaginaPrincipal implements OnInit {
-  // TODO: Cuando el backend esté listo, cargar desde authService.getUsuario()
-  // El tipo 'any' permite usar ?. en el template sin warnings de Angular strict mode
-  usuario: any = {
-    name: 'Aether',
-    surname: 'Byte',
-    public_id: '#AetherByte4821',
-  };
+  // Datos del usuario autenticado, cargados desde el backend
+  usuario: any = null;
 
   fechaHoy: string = '';
 
@@ -61,7 +57,6 @@ export class PaginaPrincipal implements OnInit {
     total: 20,
   };
 
-  // Genera los 20 slots de la mochila para la vista previa
   mochilaSlots = [
     { ocupado: true, tipo: 'apilable', emoji: '🍬' },
     { ocupado: true, tipo: 'apilable', emoji: '🍬' },
@@ -92,14 +87,34 @@ export class PaginaPrincipal implements OnInit {
     { nombre: 'Lumivex', online: false },
   ];
 
-  ngOnInit() {
-    // Formatea la fecha de hoy en castellano
+  constructor(private authService: Auth) {}
+
+  ngOnInit(): void {
+    this.calcularFechaHoy();
+    this.cargarUsuario();
+  }
+
+  // Formatea la fecha de hoy en castellano
+  private calcularFechaHoy(): void {
     const hoy = new Date();
     this.fechaHoy = hoy.toLocaleDateString('es-ES', {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
+    });
+  }
+
+  // Carga los datos del usuario autenticado desde el backend
+  private cargarUsuario(): void {
+    this.authService.getInfoUsuario().subscribe({
+      next: (res) => {
+        // El backend devuelve el usuario dentro de res.usuario o directamente en res
+        this.usuario = res.usuario ?? res;
+      },
+      error: (err) => {
+        console.error('Error al cargar los datos del usuario:', err);
+      },
     });
   }
 }
