@@ -53,22 +53,6 @@ export class Auth {
     localStorage.removeItem('token');
   }
 
-  // Guarda los datos del usuario en localStorage como JSON
-  guardarUsuario(usuario: any): void {
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-  }
-
-  // Obtiene los datos del usuario del localStorage y los parsea
-  getUsuario(): any {
-    const u = localStorage.getItem('usuario');
-    return u ? JSON.parse(u) : null;
-  }
-
-  // Elimina los datos del usuario del localStorage
-  eliminarUsuario(): void {
-    localStorage.removeItem('usuario');
-  }
-
   // Comprueba si hay un token activo en localStorage
   estaAutenticado(): boolean {
     return !!this.getToken();

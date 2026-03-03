@@ -44,7 +44,6 @@ export class PerfilUsuario implements OnInit {
     this.authService.getInfoUsuario().subscribe({
       next: (res) => {
         this.usuario = res.usuario;
-        this.authService.guardarUsuario(this.usuario);
 
         // Rellenamos el formulario con los datos
         this.perfilForm.patchValue({
@@ -76,7 +75,6 @@ export class PerfilUsuario implements OnInit {
         this.mensajeExito = 'Cambios guardados correctamente.';
         this.cargando = false;
         this.usuario = res.usuario;
-        this.authService.guardarUsuario(this.usuario);
         this.perfilForm.patchValue({ password: '' });
       },
       error: (err) => {
@@ -103,12 +101,10 @@ export class PerfilUsuario implements OnInit {
     this.authService.logout().subscribe({
       next: () => {
         this.authService.eliminarToken();
-        this.authService.eliminarUsuario();
         this.router.navigate(['/login']);
       },
       error: () => {
         this.authService.eliminarToken();
-        this.authService.eliminarUsuario();
         this.router.navigate(['/login']);
       }
     });
@@ -126,13 +122,11 @@ export class PerfilUsuario implements OnInit {
     this.authService.eliminarCuenta().subscribe({
       next: () => {
         this.authService.eliminarToken();
-        this.authService.eliminarUsuario();
         this.router.navigate(['/login']);
       },
       error: () => {
         // Aunque falle limpiamos igualmente
         this.authService.eliminarToken();
-        this.authService.eliminarUsuario();
         this.router.navigate(['/login']);
       }
     });
