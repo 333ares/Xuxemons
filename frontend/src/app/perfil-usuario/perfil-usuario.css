@@ -243,15 +243,6 @@ label {
   gap: 6px;
 }
 
-
-/* Texto "(opcional)" en gris junto al label */
-.label-opcional {
-  font-size: 1.05rem;
-  font-weight: 400;
-  color: #aaa;
-}
-
-
 input {
   padding: 13px 16px;
   border: 1.5px solid #e0e0e0;
