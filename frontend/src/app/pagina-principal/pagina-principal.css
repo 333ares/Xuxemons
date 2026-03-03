@@ -8,9 +8,11 @@
 .logo {
   width: 50px;
   height: 50px;
-  object-fit: contain; /* Mantiene las proporciones de la imagen */
+  object-fit: contain;
+  /* Mantiene las proporciones de la imagen */
   display: block;
-  margin: 0 auto 16px auto; /* Centrado horizontal con margen inferior */
+  margin: 0 auto 16px auto;
+  /* Centrado horizontal con margen inferior */
 }
 
 .boohoot {
@@ -105,14 +107,14 @@
 }
 
 .header-user-name {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #3b2101;
   line-height: 1.2;
 }
 
 .header-user-id {
-  font-size: 0.75rem;
+  font-size: 1rem;
   color: #999;
 }
 
@@ -150,13 +152,13 @@
 }
 
 .bienvenida-sub {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #777;
   margin: 0;
 }
 
 .fecha-texto {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: #999;
   white-space: nowrap;
   text-transform: capitalize;
@@ -220,14 +222,17 @@
   background: rgba(231, 76, 60, 0.1);
   color: #e74c3c;
 }
+
 .kpi-icono-verde {
   background: rgba(39, 174, 96, 0.1);
   color: #27ae60;
 }
+
 .kpi-icono-azul {
   background: rgba(52, 152, 219, 0.1);
   color: #3498db;
 }
+
 .kpi-icono-morado {
   background: rgba(155, 89, 182, 0.1);
   color: #9b59b6;
@@ -247,7 +252,7 @@
 }
 
 .kpi-label {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #888;
   margin-top: 3px;
 }
@@ -303,7 +308,7 @@
 }
 
 .card-link {
-  font-size: 0.82rem;
+  font-size: 1rem;
   color: #ffaa4a;
   text-decoration: none;
   font-weight: 600;
@@ -322,7 +327,7 @@
   border: none;
   border-radius: 20px;
   padding: 7px 16px;
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 600;
   font-family: var(--font-body, 'Inter', sans-serif);
   cursor: pointer;
@@ -364,7 +369,7 @@
 }
 
 .dia-nombre {
-  font-size: 0.72rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #888;
   text-transform: uppercase;
@@ -386,7 +391,7 @@
 }
 
 .recompensa-cantidad {
-  font-size: 0.65rem;
+  font-size: 1rem;
   color: #aaa;
   white-space: nowrap;
 }
@@ -409,7 +414,7 @@
 }
 
 .actividad-tipo {
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #555;
   text-transform: uppercase;
@@ -419,7 +424,7 @@
 .actividad-badge {
   background: #ffaa4a;
   color: white;
-  font-size: 0.7rem;
+  font-size: 1rem;
   font-weight: 700;
   padding: 2px 7px;
   border-radius: 10px;
@@ -445,7 +450,7 @@
   border-radius: 50%;
   background: linear-gradient(135deg, #ffaa4a, #ff8c00);
   color: white;
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -459,7 +464,7 @@
 
 .actividad-nombre {
   flex: 1;
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #333;
 }
@@ -475,7 +480,7 @@
   border: none;
   border-radius: 8px;
   padding: 5px 10px;
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 600;
   font-family: var(--font-body, 'Inter', sans-serif);
   cursor: pointer;
@@ -492,7 +497,7 @@
   border: none;
   border-radius: 8px;
   padding: 5px 10px;
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 600;
   font-family: var(--font-body, 'Inter', sans-serif);
   cursor: pointer;
@@ -504,7 +509,7 @@
 }
 
 .actividad-vacia {
-  font-size: 0.82rem;
+  font-size: 1rem;
   color: #bbb;
   text-align: center;
   padding: 12px 0;
@@ -532,9 +537,11 @@
 .tipo-agua {
   background: #eff6ff;
 }
+
 .tipo-tierra {
   background: #fefce8;
 }
+
 .tipo-aire {
   background: #f0fdf4;
 }
@@ -544,7 +551,7 @@
 }
 
 .tipo-nombre {
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #666;
 }
@@ -564,7 +571,7 @@
 .progreso-label {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #777;
   margin-bottom: 6px;
 }
@@ -617,7 +624,7 @@
 }
 
 .stat-lbl {
-  font-size: 0.78rem;
+  font-size: 1rem;
   color: #888;
 }
 
@@ -635,7 +642,7 @@
 .ratio-label-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.78rem;
+  font-size: 1rem;
   color: #777;
   margin-bottom: 6px;
 }
@@ -659,7 +666,7 @@
 .slot-ocupacion {
   display: flex;
   justify-content: space-between;
-  font-size: 0.82rem;
+  font-size: 1rem;
   color: #777;
   margin-bottom: 10px;
 }
@@ -742,7 +749,7 @@
 
 .tag-tipo,
 .tag-tamano {
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 600;
   padding: 4px 10px;
   border-radius: 99px;
@@ -752,13 +759,14 @@
   background: #e0f2fe;
   color: #0369a1;
 }
+
 .tag-tamano {
   background: #f0fdf4;
   color: #166534;
 }
 
 .batalla-sub {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: #888;
   margin: 0;
 }
@@ -852,13 +860,13 @@
 }
 
 .amigo-nombre {
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #333;
 }
 
 .amigo-estado {
-  font-size: 0.75rem;
+  font-size: 1rem;
   color: #aaa;
 }
 
@@ -868,7 +876,7 @@
   border: none;
   border-radius: 8px;
   padding: 5px 12px;
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 600;
   font-family: var(--font-body, 'Inter', sans-serif);
   cursor: pointer;
@@ -936,6 +944,7 @@
   .grid-principal {
     grid-template-columns: 1fr 1fr;
   }
+
   .col-der {
     grid-column: 1 / -1;
     display: grid;
@@ -947,25 +956,32 @@
   .kpi-row {
     flex-wrap: wrap;
   }
+
   .kpi-card {
     min-width: calc(50% - 8px);
   }
+
   .grid-principal {
     grid-template-columns: 1fr;
   }
+
   .col-der {
     display: flex;
     flex-direction: column;
   }
+
   .recompensas-grid {
     grid-template-columns: repeat(4, 1fr);
   }
+
   .dashboard-main {
     padding: 20px 16px;
   }
+
   .dashboard-header {
     padding: 14px 20px;
   }
+
   .bienvenida-titulo {
     font-size: 1.5rem;
   }
@@ -975,13 +991,16 @@
   .kpi-card {
     min-width: 100%;
   }
+
   .recompensas-grid {
     grid-template-columns: repeat(4, 1fr);
   }
+
   .nav-inferior {
     gap: 16px;
     padding: 12px 18px;
   }
+
   .mochila-grid {
     grid-template-columns: repeat(5, 1fr);
   }
