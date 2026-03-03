@@ -154,6 +154,18 @@ input.input-error {
   text-align: left;
 }
 
+/* Caja de mensaje de exito */
+.alert-exito {
+  background-color: #eafaf1;
+  border: 1px solid #a9dfbf;
+  color: #1e8449;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
 /* Botón principal naranja para acciones como Acceder o Registrarse */
 .btn-primary {
   width: 100%;

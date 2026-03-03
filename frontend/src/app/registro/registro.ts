@@ -78,13 +78,19 @@ export class Registro {
       email,
       password
     }).subscribe({
-      next: () => {
-        // Redirigimos al login tras registrarse correctamente
-        this.router.navigate(['/login']);
+      next: (res) => {
+        // Redirigimos al login con el public_id para mostrar el mensaje de éxito
+        this.router.navigate(['/login'], {
+          state: { registrado: true, public_id: res.public_id }
+        });
       },
       error: (err) => {
-        // Mostramos el error del backend en el formulario
-        this.errorMessage = err.error?.errors ?? 'Error al registrarse';
+        // Si el error es un objeto (validación de Laravel) lo aplanamos en un string legible
+        if (typeof err.error?.errors === 'object') {
+          this.errorMessage = Object.values(err.error.errors).flat().join(', ');
+        } else {
+          this.errorMessage = err.error?.errors ?? 'Ha habido un problema con tu registro.';
+        }
       }
     });
   }
