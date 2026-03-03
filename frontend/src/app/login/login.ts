@@ -44,8 +44,12 @@ export class Login {
         this.router.navigate(['/paginaPrincipal']);
       },
       error: (err) => {
-        // Mostramos el error del backend en el formulario
-        this.errorMessage = err.error?.errors ?? 'Credenciales incorrectas';
+        // Si el error es un objeto (validación de Laravel) lo aplanamos en un string legible
+        if (typeof err.error?.errors === 'object') {
+          this.errorMessage = Object.values(err.error.errors).flat().join(', ');
+        } else {
+          this.errorMessage = err.error?.errors ?? 'Error al guardar los cambios.';
+        }
       },
     });
   }
