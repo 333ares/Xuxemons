@@ -1,429 +1,303 @@
-<div class="perfil-wrapper">
-  <div class="perfil-layout">
-    <!-- COLUMNA IZQUIERDA: datos del usuario -->
-    <aside class="perfil-lateral">
-      <div class="avatar-wrapper">
-        <img
-          src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
-          alt="Avatar de {{ usuario?.name }}"
-          class="avatar-img"
-        />
-      </div>
+<body>
+  <header class="site-header">
+    <!-- La nav inferior actúa como navegación principal de la app -->
+  </header>
 
-      <h1 class="usuario-nombre">{{ usuario?.name }} {{ usuario?.surname }}</h1>
-      <p class="usuario-id">ID: {{ usuario?.public_id }}</p>
+  <main>
+    <div class="perfil-wrapper">
+      <div class="perfil-layout">
 
-      <span class="badge-rol">{{ usuario?.rol ?? 'Jugador/a' }}</span>
+        <!-- COLUMNA IZQUIERDA: datos del usuario -->
+        <aside class="perfil-lateral" aria-label="Información del usuario">
+          <div class="avatar-wrapper">
+            <img src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
+              alt="Avatar de {{ usuario?.name }}" class="avatar-img" />
+          </div>
 
-      <div class="usuario-datos">
-        <!-- Email -->
-        <div class="dato-row">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#FFAA4A"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-            <polyline points="22,6 12,13 2,6" />
-          </svg>
-          <span>{{ usuario?.email }}</span>
-        </div>
-      </div>
+          <h1 class="usuario-nombre">{{ usuario?.name }} {{ usuario?.surname }}</h1>
+          <p class="usuario-id">ID: {{ usuario?.public_id }}</p>
 
-      <p class="fecha-registro">
-        Fecha de registro: {{ usuario?.created_at | date: 'dd MMM yyyy' }}
-      </p>
+          <span class="badge-rol">{{ usuario?.rol ?? 'Jugador/a' }}</span>
 
-      <!-- Botones del lateral: solo cerrar sesión y darse de baja -->
-      <div class="botones-lateral">
-        <button class="btn-cerrar-sesion" type="button" (click)="cerrarSesion()">
-          <!-- Icono de salida (logout) -->
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
-          Cerrar sesión
-        </button>
-        <button class="btn-baja" type="button" (click)="abrirDialogoBaja()">Darse de baja</button>
-      </div>
-    </aside>
-
-    <!--  COLUMNA DERECHA: formulario y estadísticas  -->
-    <div class="perfil-contenido">
-      <!-- Tarjeta del formulario de edición -->
-      <div class="card-perfil">
-        <h2 class="card-titulo">Editar perfil</h2>
-
-        <form [formGroup]="perfilForm" (ngSubmit)="onGuardar()">
-          <!-- Nombre y Apellidos en la misma fila -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">Nombre</label>
-              <input
-                id="name"
-                type="text"
-                formControlName="name"
-                placeholder="Aether"
-                [class.input-error]="
-                  perfilForm.get('name')?.invalid && perfilForm.get('name')?.touched
-                "
-              />
-              @if (perfilForm.get('name')?.invalid && perfilForm.get('name')?.touched) {
-                <span class="error-text">El nombre es obligatorio (mínimo 2 caracteres).</span>
-              }
-            </div>
-            <div class="form-group">
-              <label for="surname">Apellidos</label>
-              <input
-                id="surname"
-                type="text"
-                formControlName="surname"
-                placeholder="Byte"
-                [class.input-error]="
-                  perfilForm.get('surname')?.invalid && perfilForm.get('surname')?.touched
-                "
-              />
-              @if (perfilForm.get('surname')?.invalid && perfilForm.get('surname')?.touched) {
-                <span class="error-text"
-                  >Los apellidos son obligatorios (mínimo 2 caracteres).</span
-                >
-              }
+          <div class="usuario-datos">
+            <!-- Email -->
+            <div class="dato-row">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFAA4A" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              <span>{{ usuario?.email }}</span>
             </div>
           </div>
 
-          <!-- Email -->
-          <div class="form-group">
-            <label for="email">Correo electrónico</label>
-            <input
-              id="email"
-              type="email"
-              formControlName="email"
-              placeholder="aetherbyte@gmail.com"
-              [class.input-error]="
-                perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched
-              "
-            />
-            @if (perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched) {
-              <span class="error-text">Introduce un correo electrónico válido.</span>
-            }
-          </div>
+          <p class="fecha-registro">
+            Fecha de registro: {{ usuario?.created_at | date: 'dd MMM yyyy' }}
+          </p>
 
-          <!-- Contraseña con botón mostrar/ocultar -->
-          <div class="form-group">
-            <label for="password">Contraseña</label>
-            <div class="input-password">
-              <input
-                id="password"
-                [type]="mostrarPassword ? 'text' : 'password'"
-                formControlName="password"
-                placeholder="Dejar vacío para no cambiarla"
-                [class.input-error]="
-                  perfilForm.get('password')?.invalid && perfilForm.get('password')?.touched
-                "
-              />
-              <button
-                type="button"
-                class="toggle-password"
-                (click)="mostrarPassword = !mostrarPassword"
-              >
-                @if (!mostrarPassword) {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                }
-                @if (mostrarPassword) {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path
-                      d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"
-                    />
-                    <path
-                      d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"
-                    />
-                    <line x1="1" y1="1" x2="23" y2="23" />
-                  </svg>
-                }
-              </button>
-            </div>
-            @if (
-              perfilForm.get('password')?.errors?.['minlength'] &&
-              perfilForm.get('password')?.touched
-            ) {
-              <span class="error-text">La contraseña debe tener al menos 6 caracteres.</span>
-            }
-          </div>
-
-          @if (mensajeExito) {
-            <div class="alert-exito">{{ mensajeExito }}</div>
-          }
-          @if (mensajeError) {
-            <div class="alert-error">{{ mensajeError }}</div>
-          }
-
-          <div class="form-botones">
-            <button type="button" class="btn-descartar" (click)="onDescartar()">
-              Descartar cambios
+          <!-- Botones del lateral: solo cerrar sesión y darse de baja -->
+          <div class="botones-lateral">
+            <button class="btn-cerrar-sesion" type="button" (click)="cerrarSesion()">
+              <!-- Icono de salida (logout) -->
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              Cerrar sesión
             </button>
-            <button type="submit" class="btn-guardar" [disabled]="perfilForm.invalid || cargando">
-              {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+            <button class="btn-baja" type="button" (click)="abrirDialogoBaja()">Darse de baja</button>
+          </div>
+        </aside>
+
+        <!--  COLUMNA DERECHA: formulario y estadísticas  -->
+        <div class="perfil-contenido">
+
+          <!-- Tarjeta del formulario de edición -->
+          <section aria-labelledby="editar-titulo">
+            <div class="card-perfil">
+              <h2 id="editar-titulo" class="card-titulo">Editar perfil</h2>
+
+              <form [formGroup]="perfilForm" (ngSubmit)="onGuardar()" novalidate>
+                <!-- Nombre y Apellidos en la misma fila -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input id="name" type="text" formControlName="name" placeholder="Aether" aria-required="true"
+                      aria-describedby="error-name"
+                      [class.input-error]="perfilForm.get('name')?.invalid && perfilForm.get('name')?.touched" />
+                    <!-- El span siempre existe en el DOM para que aria-live funcione correctamente -->
+                    <span id="error-name" class="error-text" aria-live="polite" role="alert">
+                      @if (perfilForm.get('name')?.invalid && perfilForm.get('name')?.touched) {
+                      El nombre es obligatorio (mínimo 2 caracteres).
+                      }
+                    </span>
+                  </div>
+                  <div class="form-group">
+                    <label for="surname">Apellidos</label>
+                    <input id="surname" type="text" formControlName="surname" placeholder="Byte" aria-required="true"
+                      aria-describedby="error-surname"
+                      [class.input-error]="perfilForm.get('surname')?.invalid && perfilForm.get('surname')?.touched" />
+                    <span id="error-surname" class="error-text" aria-live="polite" role="alert">
+                      @if (perfilForm.get('surname')?.invalid && perfilForm.get('surname')?.touched) {
+                      Los apellidos son obligatorios (mínimo 2 caracteres).
+                      }
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                  <label for="email">Correo electrónico</label>
+                  <input id="email" type="email" formControlName="email" placeholder="aetherbyte@gmail.com"
+                    aria-required="true" aria-describedby="error-email"
+                    [class.input-error]="perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched" />
+                  <span id="error-email" class="error-text" aria-live="polite" role="alert">
+                    @if (perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched) {
+                    Introduce un correo electrónico válido.
+                    }
+                  </span>
+                </div>
+
+                <!-- Contraseña con botón mostrar/ocultar -->
+                <div class="form-group">
+                  <label for="password">Contraseña</label>
+                  <div class="input-password">
+                    <input id="password" [type]="mostrarPassword ? 'text' : 'password'" formControlName="password"
+                      placeholder="Dejar vacío para no cambiarla" aria-describedby="error-password"
+                      [class.input-error]="perfilForm.get('password')?.invalid && perfilForm.get('password')?.touched" />
+                    <button type="button" class="toggle-password"
+                      [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                      (click)="mostrarPassword = !mostrarPassword">
+                      @if (!mostrarPassword) {
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true" focusable="false">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      }
+                      @if (mostrarPassword) {
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true" focusable="false">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                      }
+                    </button>
+                  </div>
+                  <span id="error-password" class="error-text" aria-live="polite" role="alert">
+                    @if (perfilForm.get('password')?.errors?.['minlength'] && perfilForm.get('password')?.touched) {
+                    La contraseña debe tener al menos 6 caracteres.
+                    }
+                  </span>
+                </div>
+
+                @if (mensajeExito) {
+                <div class="alert-exito" aria-live="polite" role="status">{{ mensajeExito }}</div>
+                }
+                @if (mensajeError) {
+                <div class="alert-error" aria-live="polite" role="alert">{{ mensajeError }}</div>
+                }
+
+                <div class="form-botones">
+                  <button type="button" class="btn-descartar" (click)="onDescartar()">
+                    Descartar cambios
+                  </button>
+                  <button type="submit" class="btn-guardar" [disabled]="perfilForm.invalid || cargando"
+                    aria-disabled="{{ perfilForm.invalid || cargando }}">
+                    {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- Tarjeta de estadísticas -->
+          <section aria-labelledby="estadisticas-titulo">
+            <div class="card-perfil card-estadisticas">
+              <h2 id="estadisticas-titulo" class="card-titulo">Estadísticas</h2>
+              <div class="estadisticas-grid">
+                <div class="stat-item">
+                  <div class="stat-top">
+                    <span class="stat-numero">{{ usuario?.batallas_ganadas ?? 0 }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                      stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      aria-hidden="true" focusable="false">
+                      <polyline points="8 21 12 17 16 21" />
+                      <line x1="12" y1="17" x2="12" y2="11" />
+                      <path d="M7 4H4a2 2 0 0 0-2 2v1a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V6a2 2 0 0 0-2-2h-3" />
+                      <rect x="7" y="2" width="10" height="9" rx="1" />
+                    </svg>
+                  </div>
+                  <span class="stat-label">Batallas ganadas</span>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-top">
+                    <span class="stat-numero">{{ usuario?.batallas_jugadas ?? 0 }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                      stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      aria-hidden="true" focusable="false">
+                      <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
+                      <line x1="13" y1="19" x2="19" y2="13" />
+                      <line x1="16" y1="16" x2="20" y2="20" />
+                      <line x1="19" y1="21" x2="21" y2="19" />
+                      <polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5" />
+                      <line x1="5" y1="11" x2="9" y2="15" />
+                    </svg>
+                  </div>
+                  <span class="stat-label">Batallas jugadas</span>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-top">
+                    <span class="stat-numero">{{ usuario?.mejor_racha ?? 0 }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                      stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      aria-hidden="true" focusable="false">
+                      <path
+                        d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+                    </svg>
+                  </div>
+                  <span class="stat-label">Mejor racha</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!--  DIÁLOGO DE CONFIRMACIÓN PARA DARSE DE BAJA  -->
+      @if (mostrarDialogoBaja) {
+      <div class="dialogo-overlay" role="dialog" aria-modal="true" aria-labelledby="dialogo-titulo"
+        aria-describedby="dialogo-desc" (click)="cerrarDialogoBaja()">
+        <div class="dialogo-box" (click)="$event.stopPropagation()">
+          <h3 id="dialogo-titulo">¿Seguro que quieres darte de baja?</h3>
+          <p id="dialogo-desc">
+            Esta acción es permanente. Tu cuenta quedará desactivada y no podrás volver a acceder con
+            este usuario.
+          </p>
+          <div class="dialogo-botones">
+            <button class="btn-descartar" type="button" (click)="cerrarDialogoBaja()">
+              Cancelar
+            </button>
+            <button class="btn-baja" type="button" (click)="confirmarBaja()">
+              Sí, darme de baja
             </button>
           </div>
-        </form>
-      </div>
-
-      <!-- Tarjeta de estadísticas -->
-      <div class="card-perfil card-estadisticas">
-        <h2 class="card-titulo">Estadísticas</h2>
-        <div class="estadisticas-grid">
-          <div class="stat-item">
-            <div class="stat-top">
-              <span class="stat-numero">{{ usuario?.batallas_ganadas ?? 0 }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#FFAA4A"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="8 21 12 17 16 21" />
-                <line x1="12" y1="17" x2="12" y2="11" />
-                <path
-                  d="M7 4H4a2 2 0 0 0-2 2v1a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V6a2 2 0 0 0-2-2h-3"
-                />
-                <rect x="7" y="2" width="10" height="9" rx="1" />
-              </svg>
-            </div>
-            <span class="stat-label">Batallas ganadas</span>
-          </div>
-          <div class="stat-item">
-            <div class="stat-top">
-              <span class="stat-numero">{{ usuario?.batallas_jugadas ?? 0 }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#FFAA4A"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
-                <line x1="13" y1="19" x2="19" y2="13" />
-                <line x1="16" y1="16" x2="20" y2="20" />
-                <line x1="19" y1="21" x2="21" y2="19" />
-                <polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5" />
-                <line x1="5" y1="11" x2="9" y2="15" />
-              </svg>
-            </div>
-            <span class="stat-label">Batallas jugadas</span>
-          </div>
-          <div class="stat-item">
-            <div class="stat-top">
-              <span class="stat-numero">{{ usuario?.mejor_racha ?? 0 }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#FFAA4A"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
-                />
-              </svg>
-            </div>
-            <span class="stat-label">Mejor racha</span>
-          </div>
         </div>
       </div>
-    </div>
-  </div>
+      }
 
-  <!--  DIÁLOGO DE CONFIRMACIÓN PARA DARSE DE BAJA  -->
-  @if (mostrarDialogoBaja) {
-    <div class="dialogo-overlay" (click)="cerrarDialogoBaja()">
-      <div class="dialogo-box" (click)="$event.stopPropagation()">
-        <h3>¿Seguro que quieres darte de baja?</h3>
-        <p>
-          Esta acción es permanente. Tu cuenta quedará desactivada y no podrás volver a acceder con
-          este usuario.
-        </p>
-        <div class="dialogo-botones">
-          <button class="btn-descartar" type="button" (click)="cerrarDialogoBaja()">
-            Cancelar
-          </button>
-          <button class="btn-baja" type="button" (click)="confirmarBaja()">
-            Sí, darme de baja
-          </button>
-        </div>
-      </div>
-    </div>
-  }
+      <!-- BARRA DE NAVEGACIÓN INFERIOR-->
+      <nav class="nav-inferior" aria-label="Navegació principal">
+        <!-- Perfil (activo) -->
+        <a routerLink="/perfilUsuario" class="nav-item nav-activo" aria-label="Perfil (página actual)"
+          aria-current="page">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </a>
+        <a routerLink="/xuxedex" class="nav-item" aria-label="Xuxedex">
+          <svg width="28" height="30" viewBox="0 0 37 40" fill="none" xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true" focusable="false">
+            <path
+              d="M16.5855 0.107391C14.1012 0.443329 11.9762 1.50583 10.1793 3.31052C8.54648 4.93552 7.50741 6.88083 7.04648 9.14646C6.94491 9.67771 6.86679 11.084 6.85898 12.584C6.85898 12.6543 6.71054 12.7949 6.53085 12.9043C4.50742 14.0996 1.8746 18.5683 0.726166 22.7793C-0.430084 26.9746 -0.195709 29.9355 1.35898 30.9277C2.35898 31.5605 3.47617 31.3652 4.75742 30.334L5.27304 29.9199L5.45273 30.5605C5.7496 31.6465 6.26523 32.8418 6.82773 33.7168L7.08554 34.123L6.77304 34.498C5.98398 35.4433 5.57773 36.7793 5.6246 38.3027C5.64804 39.2715 5.71054 39.4355 6.1871 39.7871C6.39804 39.9511 6.4996 39.9511 10.8199 39.9746C14.5699 39.9902 15.2652 39.9746 15.4605 39.8808C15.648 39.7871 15.7809 39.7793 16.1793 39.8496C16.7887 39.9668 19.4059 39.9668 20.0152 39.8574C20.3824 39.7949 20.5387 39.7949 20.734 39.8808C20.9449 39.9668 21.8199 39.9902 25.2965 39.9902C30.0699 39.9902 29.9449 40.0058 30.3433 39.4746L30.5699 39.1777L30.5621 38.0058C30.5543 36.959 30.5308 36.7558 30.3512 36.2011C30.1246 35.5136 29.7183 34.7715 29.3433 34.3886L29.109 34.1465L29.2574 33.9199C29.7808 33.1855 30.523 31.5058 30.8043 30.4433L30.9449 29.9199L31.4215 30.3183C31.6793 30.5371 32.1637 30.8418 32.484 30.998C34.1012 31.7636 35.5387 30.9824 36.0387 29.0605C37.0933 24.9746 33.3824 15.334 29.8512 13.0136C29.5855 12.834 29.359 12.6543 29.3512 12.6074C29.3512 12.5683 29.3355 11.8965 29.3277 11.123C29.2965 9.56833 29.1793 8.77927 28.8043 7.63083C27.6168 3.98239 24.7262 1.27145 21.0387 0.357391C19.5777 -0.00979614 18.0387 -0.0957336 16.5855 0.107391ZM19.4059 2.57614C21.4605 2.85739 23.5934 3.99802 24.7887 5.43552C25.273 6.01364 25.8433 6.90427 26.0308 7.34177L26.148 7.62302L25.484 7.35739C23.0543 6.38083 20.4371 6.92771 18.6168 8.78708L18.109 9.31052L17.5777 8.77927C15.7496 6.91208 13.1168 6.38083 10.6715 7.3652C10.4215 7.46677 10.2184 7.52927 10.2184 7.51364C10.2184 7.38864 10.8277 6.35739 11.1559 5.91989C12.5465 4.06833 14.5699 2.93552 17.1715 2.53708C17.6012 2.47458 18.8355 2.49802 19.4059 2.57614ZM13.8199 9.44333C15.2496 9.70896 16.5074 10.9668 16.7809 12.4043C16.8199 12.6386 16.8512 12.834 16.8434 12.8418C16.523 13.0215 16.1324 13.4433 15.9371 13.8027C15.4605 14.6933 15.523 15.3808 16.2105 17.0215C16.7496 18.2715 17.0621 18.8574 17.3277 19.0761C17.7652 19.4511 18.4527 19.4511 18.8902 19.0761C19.1949 18.8183 19.9605 17.2636 20.3434 16.1074C20.5777 15.4043 20.6246 15.1933 20.5855 14.8183C20.523 14.084 20.1012 13.334 19.5309 12.9433C19.3512 12.8183 19.3512 12.8027 19.4371 12.3808C19.7496 10.873 21.0309 9.66208 22.5621 9.41989C24.3512 9.14646 26.1324 10.2715 26.7027 12.0371C26.773 12.2871 26.7652 12.498 26.6168 13.3652C26.359 14.873 26.359 17.4824 26.6168 18.9199C26.859 20.2871 27.1558 21.3261 27.7496 22.8183C28.4762 24.6543 28.734 25.8027 28.734 27.2402C28.734 28.9355 28.1168 31.0527 27.2027 32.498L27.023 32.7871L26.648 32.6777C26.4449 32.6152 25.9762 32.5371 25.609 32.5136C23.0387 32.3418 20.6324 34.1699 20.1168 36.6933C20.0465 37.0136 19.984 37.2871 19.9684 37.3027C19.9527 37.3183 19.6949 37.3652 19.3902 37.4121C18.3121 37.5683 16.359 37.459 16.2184 37.2324C16.1871 37.1855 16.1559 37.0605 16.1559 36.9668C16.1559 36.6465 15.773 35.5761 15.4762 35.0761C15.0934 34.4355 14.2887 33.6308 13.648 33.248C13.3746 33.084 12.8668 32.8652 12.523 32.748C11.9762 32.5683 11.773 32.5371 10.9215 32.5449C10.2496 32.5449 9.82773 32.584 9.56991 32.6621L9.20273 32.7871L9.05429 32.5761C8.80429 32.2324 8.21054 30.998 8.03085 30.459C7.5621 29.0683 7.38241 27.4121 7.55429 26.0449C7.60898 25.6308 7.8121 24.7011 7.9996 23.9824C8.60116 21.7324 8.72616 21.209 8.92148 20.0605C9.26523 18.0996 9.3746 16.834 9.42929 14.4043L9.47616 12.0605L9.72616 11.5293C10.4605 9.98239 12.1324 9.13083 13.8199 9.44333ZM30.1246 16.9433C32.3746 20.2011 34.1246 25.8105 33.6558 28.2715C33.609 28.5058 33.5621 28.709 33.5387 28.7246C33.4683 28.7949 32.7574 28.1855 32.3433 27.7011C31.6949 26.9511 31.1558 26.0996 31.1558 25.8496C31.1558 25.1152 30.648 23.2402 30.0699 21.873C29.5308 20.5918 29.1949 19.334 29.0074 17.9121C28.8512 16.6933 28.8512 16.0215 29.023 15.834C29.1558 15.6855 29.1637 15.6933 29.4137 15.9824C29.5543 16.1465 29.8746 16.5761 30.1246 16.9433ZM6.74179 17.7558C6.5621 19.3027 6.30429 20.5918 5.72617 22.8027C5.44492 23.8574 5.17148 25.0449 5.10898 25.4433C5.01523 26.0996 4.96835 26.2324 4.6246 26.7324C4.24179 27.3105 2.89023 28.7402 2.73398 28.7402C2.57773 28.7402 2.52304 28.334 2.53085 27.2168C2.53867 26.3027 2.57773 25.9165 2.78867 24.9277C3.4371 21.8183 4.78867 18.6386 6.34335 16.5761L6.81991 15.9355L6.84335 16.2949C6.85898 16.4902 6.8121 17.1465 6.74179 17.7558ZM12.0621 35.2558C12.8512 35.6152 13.484 36.3965 13.6871 37.2715L13.734 37.4902H10.9215H8.10898L8.15585 37.2715C8.5621 35.4902 10.4449 34.5215 12.0621 35.2558ZM26.4449 35.2636C27.2105 35.6074 27.8668 36.4199 28.0621 37.2715L28.109 37.4902H25.2965H22.484L22.5309 37.2715C22.9371 35.4824 24.8043 34.5215 26.4449 35.2636Z"
+              fill="currentColor" />
+          </svg>
+        </a>
+        <a routerLink="/mochila" class="nav-item" aria-label="Mochila">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true" focusable="false">
+            <path
+              d="M10 23.75C10 23.4185 10.1317 23.1005 10.3661 22.8661C10.6005 22.6317 10.9185 22.5 11.25 22.5H28.75C29.0815 22.5 29.3995 22.6317 29.6339 22.8661C29.8683 23.1005 30 23.4185 30 23.75V33.75C30 34.0815 29.8683 34.3995 29.6339 34.6339C29.3995 34.8683 29.0815 35 28.75 35H11.25C10.9185 35 10.6005 34.8683 10.3661 34.6339C10.1317 34.3995 10 34.0815 10 33.75V23.75ZM12.5 25V32.5H27.5V25H25V26.25C25 26.5815 24.8683 26.8995 24.6339 27.1339C24.3995 27.3683 24.0815 27.5 23.75 27.5C23.4185 27.5 23.1005 27.3683 22.8661 27.1339C22.6317 26.8995 22.5 26.5815 22.5 26.25V25H12.5Z"
+              fill="currentColor" />
+            <path
+              d="M20 0C18.6739 0 17.4021 0.526784 16.4645 1.46447C15.5268 2.40215 15 3.67392 15 5H8.75C7.42392 5 6.15215 5.52678 5.21447 6.46447C4.27678 7.40215 3.75 8.67392 3.75 10V12.5C3.75 13.8 4.245 14.9825 5.0575 15.8725C5.01911 15.9946 4.99972 16.122 5 16.25V35C5 36.3261 5.52678 37.5979 6.46447 38.5355C7.40215 39.4732 8.67392 40 10 40H30C31.3261 40 32.5979 39.4732 33.5355 38.5355C34.4732 37.5979 35 36.3261 35 35V16.25C35.0003 16.122 34.9809 15.9946 34.9425 15.8725C35.755 14.9825 36.25 13.7975 36.25 12.5V10C36.25 8.67392 35.7232 7.40215 34.7855 6.46447C33.8479 5.52678 32.5761 5 31.25 5H25C25 3.67392 24.4732 2.40215 23.5355 1.46447C22.5979 0.526784 21.3261 0 20 0ZM20 2.5C19.337 2.5 18.7011 2.76339 18.2322 3.23223C17.7634 3.70107 17.5 4.33696 17.5 5H22.5C22.5 4.33696 22.2366 3.70107 21.7678 3.23223C21.2989 2.76339 20.663 2.5 20 2.5ZM7.5 35V17.3425C7.9 17.4458 8.31667 17.4983 8.75 17.5H18.75V18.75C18.75 19.0815 18.8817 19.3995 19.1161 19.6339C19.3505 19.8683 19.6685 20 20 20C20.3315 20 20.6495 19.8683 20.8839 19.6339C21.1183 19.3995 21.25 19.0815 21.25 18.75V17.5H31.25C31.6833 17.5 32.1 17.4475 32.5 17.3425V35C32.5 35.663 32.2366 36.2989 31.7678 36.7678C31.2989 37.2366 30.663 37.5 30 37.5H10C9.33696 37.5 8.70107 37.2366 8.23223 36.7678C7.76339 36.2989 7.5 35.663 7.5 35ZM31.25 7.5C31.913 7.5 32.5489 7.76339 33.0178 8.23223C33.4866 8.70107 33.75 9.33696 33.75 10V12.5C33.75 13.163 33.4866 13.7989 33.0178 14.2678C32.5489 14.7366 31.913 15 31.25 15H8.75C8.08696 15 7.45107 14.7366 6.98223 14.2678C6.51339 13.7989 6.25 13.163 6.25 12.5V10C6.25 9.33696 6.51339 8.70107 6.98223 8.23223C7.45107 7.76339 8.08696 7.5 8.75 7.5H31.25Z"
+              fill="currentColor" />
+          </svg>
+        </a>
+        <a routerLink="/paginaPrincipal" class="nav-item" aria-label="Inicio">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+        </a>
+        <a routerLink="/amigos" class="nav-item" aria-label="Amigos">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </a>
+        <a routerLink="/chat" class="nav-item" aria-label="Chat">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+        </a>
+        <a routerLink="/ajustes" class="nav-item" aria-label="Ajustes">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </a>
+      </nav>
 
-  <!-- BARRA DE NAVEGACIÓN INFERIOR-->
-  <nav class="nav-inferior">
-    <!-- Perfil (activo) -->
-    <a routerLink="/perfilUsuario" class="nav-item nav-activo">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-    </a>
-    <a routerLink="/xuxedex" class="nav-item">
-      <svg
-        width="28"
-        height="30"
-        viewBox="0 0 37 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M16.5855 0.107391C14.1012 0.443329 11.9762 1.50583 10.1793 3.31052C8.54648 4.93552 7.50741 6.88083 7.04648 9.14646C6.94491 9.67771 6.86679 11.084 6.85898 12.584C6.85898 12.6543 6.71054 12.7949 6.53085 12.9043C4.50742 14.0996 1.8746 18.5683 0.726166 22.7793C-0.430084 26.9746 -0.195709 29.9355 1.35898 30.9277C2.35898 31.5605 3.47617 31.3652 4.75742 30.334L5.27304 29.9199L5.45273 30.5605C5.7496 31.6465 6.26523 32.8418 6.82773 33.7168L7.08554 34.123L6.77304 34.498C5.98398 35.4433 5.57773 36.7793 5.6246 38.3027C5.64804 39.2715 5.71054 39.4355 6.1871 39.7871C6.39804 39.9511 6.4996 39.9511 10.8199 39.9746C14.5699 39.9902 15.2652 39.9746 15.4605 39.8808C15.648 39.7871 15.7809 39.7793 16.1793 39.8496C16.7887 39.9668 19.4059 39.9668 20.0152 39.8574C20.3824 39.7949 20.5387 39.7949 20.734 39.8808C20.9449 39.9668 21.8199 39.9902 25.2965 39.9902C30.0699 39.9902 29.9449 40.0058 30.3433 39.4746L30.5699 39.1777L30.5621 38.0058C30.5543 36.959 30.5308 36.7558 30.3512 36.2011C30.1246 35.5136 29.7183 34.7715 29.3433 34.3886L29.109 34.1465L29.2574 33.9199C29.7808 33.1855 30.523 31.5058 30.8043 30.4433L30.9449 29.9199L31.4215 30.3183C31.6793 30.5371 32.1637 30.8418 32.484 30.998C34.1012 31.7636 35.5387 30.9824 36.0387 29.0605C37.0933 24.9746 33.3824 15.334 29.8512 13.0136C29.5855 12.834 29.359 12.6543 29.3512 12.6074C29.3512 12.5683 29.3355 11.8965 29.3277 11.123C29.2965 9.56833 29.1793 8.77927 28.8043 7.63083C27.6168 3.98239 24.7262 1.27145 21.0387 0.357391C19.5777 -0.00979614 18.0387 -0.0957336 16.5855 0.107391ZM19.4059 2.57614C21.4605 2.85739 23.5934 3.99802 24.7887 5.43552C25.273 6.01364 25.8433 6.90427 26.0308 7.34177L26.148 7.62302L25.484 7.35739C23.0543 6.38083 20.4371 6.92771 18.6168 8.78708L18.109 9.31052L17.5777 8.77927C15.7496 6.91208 13.1168 6.38083 10.6715 7.3652C10.4215 7.46677 10.2184 7.52927 10.2184 7.51364C10.2184 7.38864 10.8277 6.35739 11.1559 5.91989C12.5465 4.06833 14.5699 2.93552 17.1715 2.53708C17.6012 2.47458 18.8355 2.49802 19.4059 2.57614ZM13.8199 9.44333C15.2496 9.70896 16.5074 10.9668 16.7809 12.4043C16.8199 12.6386 16.8512 12.834 16.8434 12.8418C16.523 13.0215 16.1324 13.4433 15.9371 13.8027C15.4605 14.6933 15.523 15.3808 16.2105 17.0215C16.7496 18.2715 17.0621 18.8574 17.3277 19.0761C17.7652 19.4511 18.4527 19.4511 18.8902 19.0761C19.1949 18.8183 19.9605 17.2636 20.3434 16.1074C20.5777 15.4043 20.6246 15.1933 20.5855 14.8183C20.523 14.084 20.1012 13.334 19.5309 12.9433C19.3512 12.8183 19.3512 12.8027 19.4371 12.3808C19.7496 10.873 21.0309 9.66208 22.5621 9.41989C24.3512 9.14646 26.1324 10.2715 26.7027 12.0371C26.773 12.2871 26.7652 12.498 26.6168 13.3652C26.359 14.873 26.359 17.4824 26.6168 18.9199C26.859 20.2871 27.1558 21.3261 27.7496 22.8183C28.4762 24.6543 28.734 25.8027 28.734 27.2402C28.734 28.9355 28.1168 31.0527 27.2027 32.498L27.023 32.7871L26.648 32.6777C26.4449 32.6152 25.9762 32.5371 25.609 32.5136C23.0387 32.3418 20.6324 34.1699 20.1168 36.6933C20.0465 37.0136 19.984 37.2871 19.9684 37.3027C19.9527 37.3183 19.6949 37.3652 19.3902 37.4121C18.3121 37.5683 16.359 37.459 16.2184 37.2324C16.1871 37.1855 16.1559 37.0605 16.1559 36.9668C16.1559 36.6465 15.773 35.5761 15.4762 35.0761C15.0934 34.4355 14.2887 33.6308 13.648 33.248C13.3746 33.084 12.8668 32.8652 12.523 32.748C11.9762 32.5683 11.773 32.5371 10.9215 32.5449C10.2496 32.5449 9.82773 32.584 9.56991 32.6621L9.20273 32.7871L9.05429 32.5761C8.80429 32.2324 8.21054 30.998 8.03085 30.459C7.5621 29.0683 7.38241 27.4121 7.55429 26.0449C7.60898 25.6308 7.8121 24.7011 7.9996 23.9824C8.60116 21.7324 8.72616 21.209 8.92148 20.0605C9.26523 18.0996 9.3746 16.834 9.42929 14.4043L9.47616 12.0605L9.72616 11.5293C10.4605 9.98239 12.1324 9.13083 13.8199 9.44333ZM30.1246 16.9433C32.3746 20.2011 34.1246 25.8105 33.6558 28.2715C33.609 28.5058 33.5621 28.709 33.5387 28.7246C33.4683 28.7949 32.7574 28.1855 32.3433 27.7011C31.6949 26.9511 31.1558 26.0996 31.1558 25.8496C31.1558 25.1152 30.648 23.2402 30.0699 21.873C29.5308 20.5918 29.1949 19.334 29.0074 17.9121C28.8512 16.6933 28.8512 16.0215 29.023 15.834C29.1558 15.6855 29.1637 15.6933 29.4137 15.9824C29.5543 16.1465 29.8746 16.5761 30.1246 16.9433ZM6.74179 17.7558C6.5621 19.3027 6.30429 20.5918 5.72617 22.8027C5.44492 23.8574 5.17148 25.0449 5.10898 25.4433C5.01523 26.0996 4.96835 26.2324 4.6246 26.7324C4.24179 27.3105 2.89023 28.7402 2.73398 28.7402C2.57773 28.7402 2.52304 28.334 2.53085 27.2168C2.53867 26.3027 2.57773 25.9165 2.78867 24.9277C3.4371 21.8183 4.78867 18.6386 6.34335 16.5761L6.81991 15.9355L6.84335 16.2949C6.85898 16.4902 6.8121 17.1465 6.74179 17.7558ZM12.0621 35.2558C12.8512 35.6152 13.484 36.3965 13.6871 37.2715L13.734 37.4902H10.9215H8.10898L8.15585 37.2715C8.5621 35.4902 10.4449 34.5215 12.0621 35.2558ZM26.4449 35.2636C27.2105 35.6074 27.8668 36.4199 28.0621 37.2715L28.109 37.4902H25.2965H22.484L22.5309 37.2715C22.9371 35.4824 24.8043 34.5215 26.4449 35.2636Z"
-          fill="currentColor"
-        />
-      </svg>
-    </a>
-    <a routerLink="/mochila" class="nav-item">
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M10 23.75C10 23.4185 10.1317 23.1005 10.3661 22.8661C10.6005 22.6317 10.9185 22.5 11.25 22.5H28.75C29.0815 22.5 29.3995 22.6317 29.6339 22.8661C29.8683 23.1005 30 23.4185 30 23.75V33.75C30 34.0815 29.8683 34.3995 29.6339 34.6339C29.3995 34.8683 29.0815 35 28.75 35H11.25C10.9185 35 10.6005 34.8683 10.3661 34.6339C10.1317 34.3995 10 34.0815 10 33.75V23.75ZM12.5 25V32.5H27.5V25H25V26.25C25 26.5815 24.8683 26.8995 24.6339 27.1339C24.3995 27.3683 24.0815 27.5 23.75 27.5C23.4185 27.5 23.1005 27.3683 22.8661 27.1339C22.6317 26.8995 22.5 26.5815 22.5 26.25V25H12.5Z"
-          fill="currentColor"
-        />
-        <path
-          d="M20 0C18.6739 0 17.4021 0.526784 16.4645 1.46447C15.5268 2.40215 15 3.67392 15 5H8.75C7.42392 5 6.15215 5.52678 5.21447 6.46447C4.27678 7.40215 3.75 8.67392 3.75 10V12.5C3.75 13.8 4.245 14.9825 5.0575 15.8725C5.01911 15.9946 4.99972 16.122 5 16.25V35C5 36.3261 5.52678 37.5979 6.46447 38.5355C7.40215 39.4732 8.67392 40 10 40H30C31.3261 40 32.5979 39.4732 33.5355 38.5355C34.4732 37.5979 35 36.3261 35 35V16.25C35.0003 16.122 34.9809 15.9946 34.9425 15.8725C35.755 14.9825 36.25 13.7975 36.25 12.5V10C36.25 8.67392 35.7232 7.40215 34.7855 6.46447C33.8479 5.52678 32.5761 5 31.25 5H25C25 3.67392 24.4732 2.40215 23.5355 1.46447C22.5979 0.526784 21.3261 0 20 0ZM20 2.5C19.337 2.5 18.7011 2.76339 18.2322 3.23223C17.7634 3.70107 17.5 4.33696 17.5 5H22.5C22.5 4.33696 22.2366 3.70107 21.7678 3.23223C21.2989 2.76339 20.663 2.5 20 2.5ZM7.5 35V17.3425C7.9 17.4458 8.31667 17.4983 8.75 17.5H18.75V18.75C18.75 19.0815 18.8817 19.3995 19.1161 19.6339C19.3505 19.8683 19.6685 20 20 20C20.3315 20 20.6495 19.8683 20.8839 19.6339C21.1183 19.3995 21.25 19.0815 21.25 18.75V17.5H31.25C31.6833 17.5 32.1 17.4475 32.5 17.3425V35C32.5 35.663 32.2366 36.2989 31.7678 36.7678C31.2989 37.2366 30.663 37.5 30 37.5H10C9.33696 37.5 8.70107 37.2366 8.23223 36.7678C7.76339 36.2989 7.5 35.663 7.5 35ZM31.25 7.5C31.913 7.5 32.5489 7.76339 33.0178 8.23223C33.4866 8.70107 33.75 9.33696 33.75 10V12.5C33.75 13.163 33.4866 13.7989 33.0178 14.2678C32.5489 14.7366 31.913 15 31.25 15H8.75C8.08696 15 7.45107 14.7366 6.98223 14.2678C6.51339 13.7989 6.25 13.163 6.25 12.5V10C6.25 9.33696 6.51339 8.70107 6.98223 8.23223C7.45107 7.76339 8.08696 7.5 8.75 7.5H31.25Z"
-          fill="currentColor"
-        />
-      </svg>
-    </a>
-    <a routerLink="/paginaPrincipal" class="nav-item">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-    </a>
-    <a routerLink="/amigos" class="nav-item">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    </a>
-    <a routerLink="/chat" class="nav-item">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-      </svg>
-    </a>
-    <a routerLink="/batalla" class="nav-item">
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M20 36.6666C29.2048 36.6666 36.6667 29.2047 36.6667 20C36.6667 10.7952 29.2048 3.33331 20 3.33331C10.7953 3.33331 3.33337 10.7952 3.33337 20C3.33337 29.2047 10.7953 36.6666 20 36.6666Z"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M27.0667 12.9333L23.5334 23.5333L12.9334 27.0666L16.4667 16.4666L27.0667 12.9333Z"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </a>
-  </nav>
-</div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Xuxemons</p>
+  </footer>
+</body>
