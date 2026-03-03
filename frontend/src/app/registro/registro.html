@@ -13,33 +13,33 @@
       <!-- Fila con nombre y apellidos en paralelo -->
       <div class="form-row">
         <div class="form-group">
-          <label for="nombre">Nombre</label>
+          <label for="name">Nombre</label>
           <input
-            id="nombre"
+            id="name"
             type="text"
-            formControlName="nombre"
+            formControlName="name"
             placeholder="Tu nombre"
             [class.input-error]="
-              registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched
+              registroForm.get('name')?.invalid && registroForm.get('name')?.touched
             "
           />
-          @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
+          @if (registroForm.get('name')?.invalid && registroForm.get('name')?.touched) {
             <span class="error-text">Obligatorio</span>
           }
         </div>
 
         <div class="form-group">
-          <label for="apellidos">Apellidos</label>
+          <label for="surname">Apellidos</label>
           <input
-            id="apellidos"
+            id="surname"
             type="text"
-            formControlName="apellidos"
+            formControlName="surname"
             placeholder="Tus apellidos"
             [class.input-error]="
-              registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched
+              registroForm.get('surname')?.invalid && registroForm.get('surname')?.touched
             "
           />
-          @if (registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched) {
+          @if (registroForm.get('surname')?.invalid && registroForm.get('surname')?.touched) {
             <span class="error-text">Obligatorio</span>
           }
         </div>

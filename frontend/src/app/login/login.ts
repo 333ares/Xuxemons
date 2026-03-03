@@ -41,12 +41,13 @@ export class Login {
       next: (res) => {
         // Guardamos el token y redirigimos
         this.authService.guardarToken(res.token);
+        this.authService.guardarUsuario(res.usuario);
         this.router.navigate(['/paginaPrincipal']);
       },
       error: (err) => {
         // Mostramos el error del backend en el formulario
-        this.errorMessage = err.error.errors ?? 'Error al iniciar sesión';
-      }
+        this.errorMessage = err.error?.errors ?? 'Credenciales incorrectas';
+      },
     });
   }
 }
