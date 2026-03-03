@@ -41,7 +41,6 @@ export class Login {
       next: (res) => {
         // Guardamos el token y redirigimos
         this.authService.guardarToken(res.token);
-        this.authService.guardarUsuario(res.usuario);
         this.router.navigate(['/paginaPrincipal']);
       },
       error: (err) => {
