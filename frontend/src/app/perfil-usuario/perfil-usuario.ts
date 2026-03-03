@@ -67,8 +67,21 @@ export class PerfilUsuario implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    const datos = { ...this.perfilForm.value };
-    if (!datos.password) delete datos.password;
+    const formValue = this.perfilForm.value;
+    const datos: any = {};
+
+    // Solo enviamos los campos que han cambiado respecto al valor original
+    if (formValue.name !== this.usuario.name) datos.name = formValue.name;
+    if (formValue.surname !== this.usuario.surname) datos.surname = formValue.surname;
+    if (formValue.email !== this.usuario.email) datos.email = formValue.email;
+    if (formValue.password) datos.password = formValue.password;
+
+    // Si no hay nada que actualizar, no hacemos la llamada
+    if (Object.keys(datos).length === 0) {
+      this.mensajeExito = 'No hay cambios que guardar.';
+      this.cargando = false;
+      return;
+    }
 
     this.authService.actualizarUsuario(datos).subscribe({
       next: (res) => {
