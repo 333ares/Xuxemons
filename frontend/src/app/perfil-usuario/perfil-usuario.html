@@ -10,10 +10,13 @@
         />
       </div>
 
+
       <h1 class="usuario-nombre">{{ usuario?.name }} {{ usuario?.surname }}</h1>
       <p class="usuario-id">ID: {{ usuario?.public_id }}</p>
 
+
       <span class="badge-rol">{{ usuario?.rol ?? 'Jugador/a' }}</span>
+
 
       <div class="usuario-datos">
         <!-- Email -->
@@ -55,9 +58,11 @@
         }
       </div>
 
+
       <p class="fecha-registro">
         Fecha de registro: {{ usuario?.created_at | date: 'dd MMM yyyy' }}
       </p>
+
 
       <!-- Botones del lateral: solo cerrar sesión y darse de baja -->
       <div class="botones-lateral">
@@ -83,11 +88,13 @@
       </div>
     </aside>
 
+
     <!--  COLUMNA DERECHA: formulario y estadísticas  -->
     <div class="perfil-contenido">
       <!-- Tarjeta del formulario de edición -->
       <div class="card-perfil">
         <h2 class="card-titulo">Editar perfil</h2>
+
 
         <form [formGroup]="perfilForm" (ngSubmit)="onGuardar()">
           <!-- Nombre y Apellidos en la misma fila -->
@@ -126,6 +133,7 @@
             </div>
           </div>
 
+
           <!-- Email -->
           <div class="form-group">
             <label for="email">Correo electrónico</label>
@@ -143,6 +151,7 @@
             }
           </div>
 
+
           <!-- Teléfono (opcional) -->
           <div class="form-group">
             <label for="telefono">
@@ -156,6 +165,7 @@
               placeholder="+34 612 843 957"
             />
           </div>
+
 
           <!-- Contraseña con botón mostrar/ocultar -->
           <div class="form-group">
@@ -222,12 +232,14 @@
             }
           </div>
 
+
           @if (mensajeExito) {
             <div class="alert-exito">{{ mensajeExito }}</div>
           }
           @if (mensajeError) {
             <div class="alert-error">{{ mensajeError }}</div>
           }
+
 
           <div class="form-botones">
             <button type="button" class="btn-descartar" (click)="onDescartar()">
@@ -239,6 +251,7 @@
           </div>
         </form>
       </div>
+
 
       <!-- Tarjeta de estadísticas -->
       <div class="card-perfil card-estadisticas">
@@ -318,6 +331,7 @@
     </div>
   </div>
 
+
   <!--  DIÁLOGO DE CONFIRMACIÓN PARA DARSE DE BAJA  -->
   @if (mostrarDialogoBaja) {
     <div class="dialogo-overlay" (click)="cerrarDialogoBaja()">
@@ -338,6 +352,7 @@
       </div>
     </div>
   }
+
 
   <!-- BARRA DE NAVEGACIÓN INFERIOR-->
   <nav class="nav-inferior">

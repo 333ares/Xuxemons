@@ -33,6 +33,11 @@ export class Auth {
     return this.http.post(`${this.apiUrl}/registro`, datos);
   }
 
+  // Invalida el token en el backend cerrando la sesión
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/logout`, {}, { headers: this.getHeaders() });
+  }
+
   // Guarda el token JWT en localStorage
   guardarToken(token: string): void {
     localStorage.setItem('token', token);
@@ -41,6 +46,11 @@ export class Auth {
   // Obtiene el token JWT del localStorage
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  // Elimina el token JWT del localStorage
+  eliminarToken(): void {
+    localStorage.removeItem('token');
   }
 
   // Guarda los datos del usuario en localStorage como JSON
@@ -54,8 +64,28 @@ export class Auth {
     return u ? JSON.parse(u) : null;
   }
 
+  // Elimina los datos del usuario del localStorage
+  eliminarUsuario(): void {
+    localStorage.removeItem('usuario');
+  }
+
   // Comprueba si hay un token activo en localStorage
   estaAutenticado(): boolean {
     return !!this.getToken();
+  }
+
+  // Obtiene los datos del usuario autenticado desde el backend
+  getInfoUsuario(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/usuario`, { headers: this.getHeaders() });
+  }
+
+  // Elimina la cuenta del usuario autenticado
+  eliminarCuenta(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/usuario`, { headers: this.getHeaders() });
+  }
+
+  // Actualiza los datos del usuario autenticado
+  actualizarUsuario(datos: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/usuario`, datos, { headers: this.getHeaders() });
   }
 }
