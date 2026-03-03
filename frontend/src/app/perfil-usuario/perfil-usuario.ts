@@ -4,7 +4,6 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../services/auth';
 
-
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
@@ -12,7 +11,6 @@ import { Auth } from '../services/auth';
   templateUrl: './perfil-usuario.html',
   styleUrl: './perfil-usuario.css',
 })
-
 export class PerfilUsuario implements OnInit {
   perfilForm!: FormGroup;
   mostrarPassword: boolean = false;
@@ -67,8 +65,21 @@ export class PerfilUsuario implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    const datos = { ...this.perfilForm.value };
-    if (!datos.password) delete datos.password;
+    const formValue = this.perfilForm.value;
+    const datos: any = {};
+
+    // Solo enviamos los campos que han cambiado respecto al valor original
+    if (formValue.name !== this.usuario.name) datos.name = formValue.name;
+    if (formValue.surname !== this.usuario.surname) datos.surname = formValue.surname;
+    if (formValue.email !== this.usuario.email) datos.email = formValue.email;
+    if (formValue.password) datos.password = formValue.password;
+
+    // Si no hay nada que actualizar, no hacemos la llamada
+    if (Object.keys(datos).length === 0) {
+      this.mensajeExito = 'No hay cambios que guardar.';
+      this.cargando = false;
+      return;
+    }
 
     this.authService.actualizarUsuario(datos).subscribe({
       next: (res) => {
@@ -78,13 +89,19 @@ export class PerfilUsuario implements OnInit {
         this.perfilForm.patchValue({ password: '' });
       },
       error: (err) => {
-        this.mensajeError = err.error?.errors ?? 'Error al guardar los cambios.';
+        // Si el error es un objeto (validación de Laravel) lo aplanamos en un string legible
+        if (typeof err.error?.errors === 'object') {
+          this.mensajeError = Object.values(err.error.errors).flat().join(', ');
+        } else {
+          this.mensajeError = err.error?.errors ?? 'Error al guardar los cambios.';
+        }
         this.cargando = false;
       }
     });
   }
 
   onDescartar() {
+    // Restauramos el formulario con los datos originales del usuario
     this.perfilForm.patchValue({
       name: this.usuario?.name ?? '',
       surname: this.usuario?.surname ?? '',
@@ -104,6 +121,7 @@ export class PerfilUsuario implements OnInit {
         this.router.navigate(['/login']);
       },
       error: () => {
+        // Aunque falle el backend, limpiamos igualmente
         this.authService.eliminarToken();
         this.router.navigate(['/login']);
       }
@@ -131,5 +149,4 @@ export class PerfilUsuario implements OnInit {
       }
     });
   }
-
 }
