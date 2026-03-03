@@ -84,7 +84,7 @@ class UserController extends Controller
                 'message' => 'error',
                 'usuario' => 'No existe ningún usuario con ese ID'
             ], 404);
-        }
+        } 
 
         $usuario->delete();
 

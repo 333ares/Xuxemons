@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
-    public function definition(): array
+    public function definition()
     {
         return [
             'public_id' => Str::uuid(), // Genera un ID único
