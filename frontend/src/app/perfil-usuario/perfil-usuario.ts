@@ -4,7 +4,6 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../services/auth';
 
-
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
@@ -12,7 +11,6 @@ import { Auth } from '../services/auth';
   templateUrl: './perfil-usuario.html',
   styleUrl: './perfil-usuario.css',
 })
-
 export class PerfilUsuario implements OnInit {
   perfilForm!: FormGroup;
   mostrarPassword: boolean = false;
@@ -91,13 +89,19 @@ export class PerfilUsuario implements OnInit {
         this.perfilForm.patchValue({ password: '' });
       },
       error: (err) => {
-        this.mensajeError = err.error?.errors ?? 'Error al guardar los cambios.';
+        // Si el error es un objeto (validación de Laravel) lo aplanamos en un string legible
+        if (typeof err.error?.errors === 'object') {
+          this.mensajeError = Object.values(err.error.errors).flat().join(', ');
+        } else {
+          this.mensajeError = err.error?.errors ?? 'Error al guardar los cambios.';
+        }
         this.cargando = false;
       }
     });
   }
 
   onDescartar() {
+    // Restauramos el formulario con los datos originales del usuario
     this.perfilForm.patchValue({
       name: this.usuario?.name ?? '',
       surname: this.usuario?.surname ?? '',
@@ -117,6 +121,7 @@ export class PerfilUsuario implements OnInit {
         this.router.navigate(['/login']);
       },
       error: () => {
+        // Aunque falle el backend, limpiamos igualmente
         this.authService.eliminarToken();
         this.router.navigate(['/login']);
       }
@@ -144,5 +149,4 @@ export class PerfilUsuario implements OnInit {
       }
     });
   }
-
 }
