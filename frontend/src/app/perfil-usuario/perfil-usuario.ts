@@ -34,7 +34,6 @@ export class PerfilUsuario implements OnInit {
       name: ['', [Validators.required, Validators.minLength(2)]],
       surname: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      telefono: ['', []],
       password: ['', [Validators.minLength(6)]],
     });
 
@@ -48,7 +47,6 @@ export class PerfilUsuario implements OnInit {
           name: this.usuario.name,
           surname: this.usuario.surname,
           email: this.usuario.email,
-          telefono: this.usuario.telefono ?? '',
         });
       },
       error: () => {
@@ -106,7 +104,6 @@ export class PerfilUsuario implements OnInit {
       name: this.usuario?.name ?? '',
       surname: this.usuario?.surname ?? '',
       email: this.usuario?.email ?? '',
-      telefono: this.usuario?.telefono ?? '',
       password: '',
     });
     this.mensajeExito = '';
