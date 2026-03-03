@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../services/auth';
 
+
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
@@ -11,6 +12,7 @@ import { Auth } from '../services/auth';
   templateUrl: './perfil-usuario.html',
   styleUrl: './perfil-usuario.css',
 })
+
 export class PerfilUsuario implements OnInit {
   perfilForm!: FormGroup;
   mostrarPassword: boolean = false;
@@ -19,6 +21,7 @@ export class PerfilUsuario implements OnInit {
   mensajeError: string = '';
   cargando: boolean = false;
 
+  // any permite que el template use ?. sin que Angular strict mode genere warnings
   usuario: any = null;
 
   constructor(
@@ -28,35 +31,26 @@ export class PerfilUsuario implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Cargamos los datos del usuario desde el backend
-    this.authService.getInfoUsuario().subscribe({
-      next: (res) => {
-        this.usuario = res.usuario;
+    // Datos de prueba para visualizar el componente sin backend
+    this.usuario = {
+      name: 'Aether',
+      surname: 'Byte',
+      email: 'aetherbyte@gmail.com',
+      public_id: '#AetherByte4821',
+      rol: 'Jugador/a',
+      telefono: '+34 612 843 957',
+      created_at: '2026-02-14',
+      batallas_ganadas: 18,
+      batallas_jugadas: 27,
+      mejor_racha: 5,
+    };
 
-        // Guardamos los datos actualizados en localStorage
-        this.authService.guardarUsuario(this.usuario);
-
-        // Inicializamos el formulario con los datos reales
-        this.perfilForm = this.fb.group({
-          name: [this.usuario?.name ?? '', [Validators.required, Validators.minLength(2)]],
-          surname: [this.usuario?.surname ?? '', [Validators.required, Validators.minLength(2)]],
-          email: [this.usuario?.email ?? '', [Validators.required, Validators.email]],
-          telefono: [this.usuario?.telefono ?? '', []],
-          password: ['', [Validators.minLength(6)]],
-        });
-      },
-      error: () => {
-        // Si falla (token expirado, etc.) redirigimos al login
-        this.router.navigate(['/login']);
-      }
-    });
-
-    // Inicializamos el formulario vacío para evitar errores antes de que lleguen los datos
     this.perfilForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      surname: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      telefono: ['', []],
+      name: [this.usuario?.name ?? '', [Validators.required, Validators.minLength(2)]],
+      surname: [this.usuario?.surname ?? '', [Validators.required, Validators.minLength(2)]],
+      email: [this.usuario?.email ?? '', [Validators.required, Validators.email]],
+      // El teléfono es opcional, el usuario puede dejarlo vacío
+      telefono: [this.usuario?.telefono ?? '', []],
       password: ['', [Validators.minLength(6)]],
     });
   }
@@ -71,20 +65,13 @@ export class PerfilUsuario implements OnInit {
     const datos = { ...this.perfilForm.value };
     if (!datos.password) delete datos.password;
 
-    // Llamada real al backend
-    this.authService.actualizarUsuario(datos).subscribe({
-      next: (res) => {
-        this.mensajeExito = 'Cambios guardados correctamente.';
-        this.cargando = false;
-        this.usuario = res.usuario;
-        this.authService.guardarUsuario(this.usuario);
-        this.perfilForm.patchValue({ password: '' });
-      },
-      error: (err) => {
-        this.mensajeError = err.error?.errors ?? 'Error al guardar los cambios.';
-        this.cargando = false;
-      }
-    });
+
+    // Simulación de guardado sin backend
+    setTimeout(() => {
+      this.mensajeExito = 'Cambios guardados correctamente.';
+      this.cargando = false;
+      this.perfilForm.patchValue({ password: '' });
+    }, 800);
   }
 
   onDescartar() {
@@ -99,6 +86,11 @@ export class PerfilUsuario implements OnInit {
     this.mensajeError = '';
   }
 
+  // Cierra la sesión sin eliminar la cuenta y redirige al login
+  cerrarSesion() {
+    this.router.navigate(['/login']);
+  }
+
   abrirDialogoBaja() {
     this.mostrarDialogoBaja = true;
   }
@@ -108,34 +100,6 @@ export class PerfilUsuario implements OnInit {
   }
 
   confirmarBaja() {
-    this.authService.eliminarCuenta().subscribe({
-      next: () => {
-        this.authService.eliminarToken();
-        this.authService.eliminarUsuario();
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        // Aunque falle limpiamos igualmente
-        this.authService.eliminarToken();
-        this.authService.eliminarUsuario();
-        this.router.navigate(['/login']);
-      }
-    });
-  }
-
-  onLogout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.authService.eliminarToken();
-        this.authService.eliminarUsuario();
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        // Aunque falle el backend, limpiamos igualmente
-        this.authService.eliminarToken();
-        this.authService.eliminarUsuario();
-        this.router.navigate(['/login']);
-      }
-    });
+    this.router.navigate(['/login']);
   }
 }
