@@ -14,16 +14,11 @@
       <!-- Campo ID: el usuario introduce su identificador único (#Nombre0000) -->
       <div class="form-group">
         <label for="public_id">ID</label>
-        <input
-          id="public_id"
-          type="text"
-          formControlName="public_id"
-          placeholder="#Nombre0000"
-          [class.input-error]="loginForm.get('public_id')?.invalid && loginForm.get('public_id')?.touched"
-        />
+        <input id="public_id" type="text" formControlName="public_id" placeholder="#Nombre0000"
+          [class.input-error]="loginForm.get('public_id')?.invalid && loginForm.get('public_id')?.touched" />
         <!-- Muestra el error solo si el usuario ya ha tocado el campo -->
         @if (loginForm.get('public_id')?.invalid && loginForm.get('public_id')?.touched) {
-          <span class="error-text">El ID es obligatorio</span>
+        <span class="error-text">El ID es obligatorio</span>
         }
       </div>
 
@@ -33,69 +28,40 @@
         <!-- div wrapper para posicionar el botón del ojo dentro del input -->
         <div class="input-password">
           <!-- [type] cambia entre 'text' y 'password' según mostrarPassword -->
-          <input
-            id="password"
-            [type]="mostrarPassword ? 'text' : 'password'"
-            formControlName="password"
-            placeholder="Tu contraseña"
-            [class.input-error]="
+          <input id="password" [type]="mostrarPassword ? 'text' : 'password'" formControlName="password"
+            placeholder="Tu contraseña" [class.input-error]="
               loginForm.get('password')?.invalid && loginForm.get('password')?.touched
-            "
-          />
+            " />
           <!-- type="button" evita que el click haga submit del formulario -->
-          <button
-            type="button"
-            class="toggle-password"
-            (click)="mostrarPassword = !mostrarPassword"
-          >
+          <button type="button" class="toggle-password" (click)="mostrarPassword = !mostrarPassword">
             <!-- Ojo abierto: se muestra cuando la contraseña está oculta -->
             @if (!mostrarPassword) {
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
             }
             <!-- Ojo tachado: se muestra cuando la contraseña es visible -->
             @if (mostrarPassword) {
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"
-                />
-                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                <line x1="1" y1="1" x2="23" y2="23" />
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
             }
           </button>
         </div>
         @if (
-          loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched
+        loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched
         ) {
-          <span class="error-text">La contraseña es obligatoria</span>
+        <span class="error-text">La contraseña es obligatoria</span>
         }
         @if (
-          loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched
+        loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched
         ) {
-          <span class="error-text">Mínimo 8 caracteres</span>
+        <span class="error-text">Mínimo 8 caracteres</span>
         }
       </div>
 
@@ -106,7 +72,11 @@
 
       <!-- Mensaje de error general, por ejemplo credenciales incorrectas -->
       @if (errorMessage) {
-        <div class="alert-error">{{ errorMessage }}</div>
+      <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      @if (successMessage) {
+      <div class="alert-exito">{{ successMessage }}</div>
       }
 
       <!-- Botón de submit: [disabled] lo desactiva si el formulario tiene algún error -->
