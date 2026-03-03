@@ -78,9 +78,11 @@ export class Registro {
       email,
       password
     }).subscribe({
-      next: () => {
-        // Redirigimos al login tras registrarse correctamente
-        this.router.navigate(['/login']);
+      next: (res) => {
+        // Redirigimos al login con el public_id para mostrar el mensaje de éxito
+        this.router.navigate(['/login'], {
+          state: { registrado: true, public_id: res.public_id }
+        });
       },
       error: (err) => {
         // Si el error es un objeto (validación de Laravel) lo aplanamos en un string legible

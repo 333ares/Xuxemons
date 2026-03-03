@@ -50,7 +50,8 @@ class AuthController extends Controller
 
         if ($usuario) {
             return response()->json([
-                'message' => 'Usuario creado correctamente'
+                'message' => 'Usuario creado correctamente',
+                'public_id' => $usuario->public_id
             ], 201);
         }
     }

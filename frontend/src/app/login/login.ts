@@ -20,6 +20,7 @@ export class Login {
   loginForm: FormGroup;
   errorMessage: string = '';
   mostrarPassword: boolean = false;
+  successMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -30,6 +31,12 @@ export class Login {
       public_id: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
+
+    // Comprobamos si venimos del registro para mostrar el mensaje de éxito
+    const nav = this.router.getCurrentNavigation();
+    if (nav?.extras?.state?.['registrado']) {
+      this.successMessage = `Te has registrado correctamente, tu ID es ${nav.extras.state['public_id']}`;
+    }
   }
 
   onSubmit() {
