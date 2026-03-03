@@ -87,7 +87,7 @@ export class Registro {
         if (typeof err.error?.errors === 'object') {
           this.errorMessage = Object.values(err.error.errors).flat().join(', ');
         } else {
-          this.errorMessage = err.error?.errors ?? 'Error al guardar los cambios.';
+          this.errorMessage = err.error?.errors ?? 'Ha habido un problema con tu registro.';
         }
       }
     });
