@@ -1,0 +1,175 @@
+.mant-wrapper {
+  background-color: #f4f3f3;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 90px;
+}
+
+.mant-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(244, 243, 243, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 40px;
+}
+
+.mant-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.mant-logo img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.mant-logo-text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #3b2101;
+  letter-spacing: -0.5px;
+}
+
+.mant-header-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffaa4a;
+}
+
+.mant-contenido {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  text-align: center;
+  gap: 12px;
+}
+
+.mant-icono-wrapper {
+  width: 96px;
+  height: 96px;
+  border-radius: 28px;
+  background: #fff8f0;
+  border: 1.5px solid #ffd49a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.mant-titulo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #3b2101;
+  margin: 0;
+}
+
+.mant-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff3cd;
+  color: #92610a;
+  border: 1px solid #fde68a;
+  border-radius: 99px;
+  padding: 5px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.mant-mensaje {
+  font-size: 0.95rem;
+  color: #888;
+  max-width: 380px;
+  line-height: 1.65;
+  margin: 4px 0 8px;
+}
+
+.mant-btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffaa4a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(255, 140, 0, 0.2);
+}
+
+.mant-btn-volver:hover {
+  background: #e8962e;
+}
+
+.nav-inferior {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  padding: 14px 32px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-item:hover {
+  color: #ffaa4a;
+}
+
+.nav-activo {
+  color: #fff;
+}
+
+.nav-activo svg {
+  background-color: #ffaa4a;
+  border-radius: 50%;
+  padding: 9px;
+  width: 42px;
+  height: 42px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .mant-header {
+    padding: 14px 20px;
+  }
+  .mant-titulo {
+    font-size: 1.4rem;
+  }
+  .nav-inferior {
+    gap: 16px;
+    padding: 12px 18px;
+  }
+}
