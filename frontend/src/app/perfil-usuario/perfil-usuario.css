@@ -1,7 +1,7 @@
 /* Fondo principal con el color secundario del proyecto */
 .perfil-wrapper {
   background-color: #f4f3f3;
-  min-height: 100vh;
+  min-height: 98.50vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -618,4 +618,13 @@ input.input-error {
 .btn-cerrar-sesion:hover {
   background-color: var(--color-primary);
   color: #fff;
+}
+
+footer {
+  background-color: var(--color-primary);
+}
+
+footer p {
+  color: white;
+  text-align: center;
 }
