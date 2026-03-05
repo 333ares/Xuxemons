@@ -524,8 +524,8 @@ input.input-error {
 }
 
 
-.nav-item:hover {
-  color: var(--color-primary);
+.nav-item:hover:not(.nav-activo) { /* Para excluir el hover del navegador que esta activo */
+  color: #ffaa4a;
 }
 
 
