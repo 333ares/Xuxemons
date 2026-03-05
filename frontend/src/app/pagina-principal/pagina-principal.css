@@ -921,7 +921,7 @@
   transition: color 0.2s ease;
 }
 
-.nav-item:hover {
+.nav-item:hover:not(.nav-activo) { /* Para excluir el hover del navegador que esta activo */
   color: #ffaa4a;
 }
 
