@@ -20,6 +20,7 @@ export class Login {
   loginForm: FormGroup;
   errorMessage: string = '';
   mostrarPassword: boolean = false;
+  successMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -30,6 +31,12 @@ export class Login {
       public_id: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
+
+    // Comprobamos si venimos del registro para mostrar el mensaje de éxito
+    const nav = this.router.getCurrentNavigation();
+    if (nav?.extras?.state?.['registrado']) {
+      this.successMessage = `Te has registrado correctamente, tu ID es ${nav.extras.state['public_id']}`;
+    }
   }
 
   onSubmit() {
@@ -41,12 +48,15 @@ export class Login {
       next: (res) => {
         // Guardamos el token y redirigimos
         this.authService.guardarToken(res.token);
-        this.authService.guardarUsuario(res.usuario);
         this.router.navigate(['/paginaPrincipal']);
       },
       error: (err) => {
-        // Mostramos el error del backend en el formulario
-        this.errorMessage = err.error?.errors ?? 'Credenciales incorrectas';
+        // Si el error es un objeto (validación de Laravel) lo aplanamos en un string legible
+        if (typeof err.error?.errors === 'object') {
+          this.errorMessage = Object.values(err.error.errors).flat().join(', ');
+        } else {
+          this.errorMessage = err.error?.errors ?? 'Credenciales incorrectas.';
+        }
       },
     });
   }
