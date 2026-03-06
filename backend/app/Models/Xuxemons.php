@@ -7,9 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Xuxemon extends Model
 {
     protected $fillable = [
-        'nombre',
-        'tipo',
-        'tamany'
+        'name',
+        'type',
+        'size',
+        'sickness',
+        'user_id'
+    ];
+
+    protected $attributes = [
+        'size' => 'small',
+        'sickness' => 'false'
     ];
 }
 
