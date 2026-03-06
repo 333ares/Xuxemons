@@ -1,6 +1,6 @@
 .dashboard-wrapper {
   background-color: #f4f3f3;
-  min-height: 98.50vh;
+  min-height: 100vh;
   font-family: var(--font-body, 'Inter', sans-serif);
   padding-bottom: 90px;
 }
@@ -1004,13 +1004,4 @@
   .mochila-grid {
     grid-template-columns: repeat(5, 1fr);
   }
-}
-
-footer {
-  background-color: var(--color-primary);
-}
-
-footer p {
-  color: white;
-  text-align: center;
 }
