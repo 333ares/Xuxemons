@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('xuxemons', function (Blueprint $table) {
         $table->id();
-        $table->string('nombre');
-        $table->enum('tipo', ['Aigua', 'Terra', 'Aire']);
-        $table->enum('tamany', ['Petit', 'Mitjà', 'Gran'])->default('Petit');
+        $table->string('name');
+        $table->string('type');
+        $table->string('size');
+        $table->boolean('sickness');
+        $table->foreignId('user_id');
         $table->timestamps();
         });
     }
