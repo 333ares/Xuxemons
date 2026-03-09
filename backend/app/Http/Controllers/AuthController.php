@@ -58,11 +58,13 @@ class AuthController extends Controller
 
     public function loginUsuario(Request $request)
     {
+        // Comprobamos que los datos del usuario sean validos
         $validator = Validator::make($request->all(), [
             'public_id' => 'required|string',
             'password'  => 'required',
         ]);
 
+        // Si no son validos, se muestra error
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'error',
@@ -96,12 +98,14 @@ class AuthController extends Controller
             // Invalidamos el token JWT
             JWTAuth::invalidate(JWTAuth::getToken());
         } catch (JWTException $e) {
+            // Si ocurre algune error, se muestra
             return response()->json([
                 'message' => 'error',
                 'errors'  => 'No se pudo cerrar la sesión'
             ], 500);
         }
 
+        // De lo contrario, se muestra mensaje de exito
         return response()->json([
             'message' => 'Cierre de sesión correcto'
         ], 200);
