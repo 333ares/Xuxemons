@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: column;
   font-family: 'Inter', sans-serif;
-  padding-bottom: 90px;
+  padding-bottom: 100px;
 }
 
+/* ── HEADER ─────────────────────────────────────────────── */
 .mant-header {
   position: sticky;
   top: 0;
@@ -48,6 +49,7 @@
   border: 2px solid #ffaa4a;
 }
 
+/* ── CONTENIDO CENTRAL ───────────────────────────────────── */
 .mant-contenido {
   flex: 1;
   display: flex;
@@ -114,62 +116,96 @@
   cursor: pointer;
   text-decoration: none;
   box-shadow: 0 3px 10px rgba(255, 140, 0, 0.2);
+  transition: background 0.2s ease;
 }
 
 .mant-btn-volver:hover {
   background: #e8962e;
 }
 
+/* ── NAVEGACIÓN INFERIOR ─────────────────────────────────── */
 .nav-inferior {
   position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.97);
   border-radius: 30px;
-  padding: 14px 32px;
+  /* Más padding horizontal para que el menú sea más ancho */
+  padding: 10px 32px;
   display: flex;
+  /* Más separación entre iconos */
   gap: 28px;
   align-items: center;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   z-index: 50;
+  /* Evita que el menú quede cortado en pantallas pequeñas */
+  max-width: calc(100vw - 32px);
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Área táctil más grande */
+  width: 44px;
+  height: 44px;
   color: #bbb;
   text-decoration: none;
-  transition: color 0.2s ease;
+  border-radius: 50%;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+  flex-shrink: 0;
 }
 
-.nav-item:hover:not(.nav-activo) { /* Para excluir el hover del navegador que esta activo */
+/*
+ * El <span> que Angular inyecta con [innerHTML] debe ser transparente al layout.
+ * Lo convertimos en flex para que el SVG quede perfectamente centrado.
+ */
+.nav-item span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Tamaño igual al del SVG para no añadir espacio extra */
+  width: 26px;
+  height: 26px;
+}
+
+/*
+ * REGLA CRÍTICA:
+ * NO se aplica fill: none de forma global porque rompería los iconos
+ * de tipo FILL (xuxedex, mochila). Cada SVG gestiona su propio fill
+ * mediante sus atributos. Aquí solo forzamos el tamaño y el stroke
+ * para los iconos de tipo STROKE, que sí usan currentColor en stroke.
+ */
+.nav-item svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.nav-item:hover:not(.nav-activo) {
   color: #ffaa4a;
 }
 
-.nav-activo {
+.nav-item.nav-activo {
   color: #fff;
-}
-
-.nav-activo svg {
   background-color: #ffaa4a;
-  border-radius: 50%;
-  padding: 9px;
-  width: 42px;
-  height: 42px;
-  box-sizing: border-box;
 }
 
+/* ── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 600px) {
   .mant-header {
     padding: 14px 20px;
   }
+
   .mant-titulo {
     font-size: 1.4rem;
   }
+
   .nav-inferior {
-    gap: 16px;
-    padding: 12px 18px;
+    gap: 18px;
+    padding: 10px 20px;
   }
 }
