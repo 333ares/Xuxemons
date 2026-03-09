@@ -51,33 +51,5 @@
   </main>
 
   <!-- BARRA DE NAVEGACIÓN INFERIOR -->
-  <nav class="nav-inferior" aria-label="Navegación principal">
-    <a routerLink="/perfilUsuario" class="nav-item" aria-label="Perfil">
-      <span [innerHTML]="icons['perfil']"></span>
-    </a>
-
-    <a routerLink="/xuxedex" class="nav-item nav-activo" aria-label="Xuxedex" aria-current="page">
-      <span [innerHTML]="icons['xuxedex']"></span>
-    </a>
-
-    <a routerLink="/mochila" class="nav-item" aria-label="Mochila">
-      <span [innerHTML]="icons['mochila']"></span>
-    </a>
-
-    <a routerLink="/paginaPrincipal" class="nav-item" aria-label="Inicio">
-      <span [innerHTML]="icons['home']"></span>
-    </a>
-
-    <a routerLink="/amigos" class="nav-item" aria-label="Amigos">
-      <span [innerHTML]="icons['amigos']"></span>
-    </a>
-
-    <a routerLink="/chat" class="nav-item" aria-label="Chat">
-      <span [innerHTML]="icons['chat']"></span>
-    </a>
-
-    <a routerLink="/batalla" class="nav-item" aria-label="Batalla">
-      <span [innerHTML]="icons['batalla']"></span>
-    </a>
-  </nav>
+ <app-nav></app-nav>
 </div>
