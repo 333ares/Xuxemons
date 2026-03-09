@@ -3,11 +3,13 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../services/auth';
+import { Nav } from '../shared/nav/nav';
+
 
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, Nav],
   templateUrl: './perfil-usuario.html',
   styleUrl: './perfil-usuario.css',
 })
