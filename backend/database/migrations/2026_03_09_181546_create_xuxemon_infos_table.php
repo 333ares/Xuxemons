@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('objetos', function (Blueprint $table) {
+        Schema::create('xuxemon_infos', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre')->unique();
+            $table->enum('tipo', ['Agua', 'Tierra', 'Aire']);
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('objetos');
+        Schema::dropIfExists('xuxemon_infos');
     }
 };
