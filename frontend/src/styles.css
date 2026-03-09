@@ -18,3 +18,7 @@ body {
   background-color: var(--color-secondary);
   color: #1a1a1a;
 }
+
+html {
+  scrollbar-gutter: stable;
+}
