@@ -4,12 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Xuxemon extends Model
+class Xuxemons extends Model
 {
     protected $fillable = [
-        'nombre',
-        'tipo',
-        'tamany'
+        'name',
+        'type',
+        'size',
+        'sickness',
+        'user_id'
+    ];
+
+    protected $attributes = [
+        'size' => 's',
+        'sickness' => '0'
     ];
 }
 
