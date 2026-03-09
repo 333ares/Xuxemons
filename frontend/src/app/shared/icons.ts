@@ -1,19 +1,6 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// CONVENCIÓN DE ICONOS
-//
-// Hay dos tipos de SVG según cómo se pinta:
-//
-//  · STROKE  → fill="none"  + stroke="currentColor"  (perfil, home, amigos, chat, batalla)
-//  · FILL    → fill="currentColor" sin stroke         (xuxedex, mochila)
-//
-// IMPORTANTE: el CSS NO sobreescribe fill ni stroke a nivel de svg global,
-// cada icono se autogestiona con sus propios atributos. Esto permite mezclar
-// ambos estilos sin conflictos.
-// ─────────────────────────────────────────────────────────────────────────────
-
 export const ICONS: Record<string, string> = {
 
-  // ── STROKE ──────────────────────────────────────────────────────────────────
+  // STROKE
 
   perfil: `
     <svg viewBox="0 0 24 24" fill="none"
@@ -66,7 +53,7 @@ export const ICONS: Record<string, string> = {
       <path d="M27.0667 12.9333L23.5334 23.5333L12.9334 27.0666L16.4667 16.4666L27.0667 12.9333Z"/>
     </svg>`,
 
-  // ── FILL ────────────────────────────────────────────────────────────────────
+  // FILL
 
   xuxedex: `
     <svg viewBox="0 0 37 40" fill="currentColor"
