@@ -78,5 +78,19 @@ export class Xuxedex {
     });
   }
 
-  private agruparPorNombre(lista: Xuxemon[]): XuxemonGrupo[] {}
+ private agruparPorNombre(lista: Xuxemon[]): XuxemonGrupo[] {
+    const mapa = new Map<string, Xuxemon[]>();
+    lista.forEach((x) => {
+      const existentes = mapa.get(x.name) ?? [];
+      existentes.push(x);
+      mapa.set(x.name, existentes);
+    });
+    return Array.from(mapa.entries()).map(([nombre, xuxemons]) => ({
+      nombre,
+      type: xuxemons[0].type,
+      cantidad: xuxemons.length,
+      xuxemons,
+      representante: xuxemons[0],
+    }));
+  }
 }
