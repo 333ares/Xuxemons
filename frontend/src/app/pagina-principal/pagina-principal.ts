@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Auth } from '../services/auth';
+import { Nav } from '../shared/nav/nav';
 
 @Component({
   selector: 'app-pagina-principal',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, Nav],
   templateUrl: './pagina-principal.html',
   styleUrls: ['./pagina-principal.css'],
 })
