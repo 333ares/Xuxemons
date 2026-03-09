@@ -47,28 +47,34 @@ class AdminController extends Controller
 
     public function listarUsuarios(Request $request)
     {
+        // Cogemos el id del usuario que hace la petición
         $admin = $request->user()->id;
 
+        // Si el id es 1, es el admin
         if ($admin === 1) {
+            // Recogemos todos los datos de los usuarios
             $usuarios = User::all();
 
+            // Si no se han encontrado los usuarios, se devuelve error
             if (!$usuarios) {
                 return response()->json([
                     'message' => 'error',
                     'errors' => 'No se han podido listar los usuarios'
                 ], 404);
+
+                // Si no se devuelve la lista de usuarios
             } else {
                 return response()->json([
                     'message' => 'success',
                     'xuxemons' => $usuarios
                 ], 201);
             }
-            
+            // Si no es el admin, se muestra error de falta de permisos
         } else {
-             return response()->json([
-                    'message' => 'error',
-                    'errors' => 'No tienes suficientes permisos para ejecutar esta función'
-                ], 400);
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
+            ], 400);
         }
     }
 }
