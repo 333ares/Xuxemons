@@ -6,6 +6,7 @@ use App\Models\Xuxemons;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\XuxemonsInfo;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -81,6 +82,47 @@ class AdminController extends Controller
                 'message' => 'error',
                 'errors' => 'No tienes suficientes permisos para ejecutar esta función'
             ], 400);
+        }
+    }
+
+    public function navegadorUsuarios(Request $request)
+    {
+        // Validamos que los datos sean validos
+        $validator = Validator::make($request->all(), [
+            'nav' => 'required|string'
+        ]);
+
+        // Si no lo son, devolvemos error
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        // Cogemos el contenido del navegador
+        $buscar = $request->nav;
+
+        // Buscamos los usuarios coincidan con el nombre que ha puesto
+        $usuarios = User::where('name', 'LIKE', "%{$buscar}%")
+            ->orWhere('surname', 'LIKE', "%{$buscar}%")
+            ->orWhere('email', 'LIKE', "%{$buscar}%")
+            ->orWhere('public_id', 'LIKE', "%{$buscar}%")
+            ->get();
+
+        // Si no se encuentram devovlemos error
+        if (count($usuarios) <= 0) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Sin resultados, prueba a poner otros parametros...'
+            ], 404);
+
+            // Si se encuentran, devolvemos la lista
+        } else {
+            return response()->json([
+                'message' => 'success',
+                'usuarios' => $usuarios
+            ], 201);
         }
     }
 }
