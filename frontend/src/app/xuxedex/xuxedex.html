@@ -53,7 +53,126 @@
         </p>
       </div>
     }
+    <!-- PANEL PRINCIPAL -->
+    @if (!cargando && !error && todosLosGrupos.length > 0) {
+      <div class="xdex-panel">
+        <!-- PANEL IZQUIERDO -->
+        <section class="xdex-panel__izq" aria-labelledby="titulo-xuxedex">
+          <div class="xdex-panel__izq-header">
+            <div class="xdex-panel__izq-titulo-wrap">
+              <div class="xdex-panel__izq-icono" aria-hidden="true">
+                <svg
+                  width="28"
+                  height="30"
+                  viewBox="0 0 37 40"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M16.5855 0.107391C14.1012 0.443329 11.9762 1.50583 10.1793 3.31052C8.54648 4.93552 7.50741 6.88083 7.04648 9.14646C6.94491 9.67771 6.86679 11.084 6.85898 12.584C6.85898 12.6543 6.71054 12.7949 6.53085 12.9043C4.50742 14.0996 1.8746 18.5683 0.726166 22.7793C-0.430084 26.9746 -0.195709 29.9355 1.35898 30.9277C2.35898 31.5605 3.47617 31.3652 4.75742 30.334L5.27304 29.9199L5.45273 30.5605C5.7496 31.6465 6.26523 32.8418 6.82773 33.7168L7.08554 34.123L6.77304 34.498C5.98398 35.4433 5.57773 36.7793 5.6246 38.3027C5.64804 39.2715 5.71054 39.4355 6.1871 39.7871C6.39804 39.9511 6.4996 39.9511 10.8199 39.9746C14.5699 39.9902 15.2652 39.9746 15.4605 39.8808C15.648 39.7871 15.7809 39.7793 16.1793 39.8496C16.7887 39.9668 19.4059 39.9668 20.0152 39.8574C20.3824 39.7949 20.5387 39.7949 20.734 39.8808C20.9449 39.9668 21.8199 39.9902 25.2965 39.9902C30.0699 39.9902 29.9449 40.0058 30.3433 39.4746L30.5699 39.1777L30.5621 38.0058C30.5543 36.959 30.5308 36.7558 30.3512 36.2011C30.1246 35.5136 29.7183 34.7715 29.3433 34.3886L29.109 34.1465L29.2574 33.9199C29.7808 33.1855 30.523 31.5058 30.8043 30.4433L30.9449 29.9199L31.4215 30.3183C31.6793 30.5371 32.1637 30.8418 32.484 30.998C34.1012 31.7636 35.5387 30.9824 36.0387 29.0605C37.0933 24.9746 33.3824 15.334 29.8512 13.0136C29.5855 12.834 29.359 12.6543 29.3512 12.6074C29.3512 12.5683 29.3355 11.8965 29.3277 11.123C29.2965 9.56833 29.1793 8.77927 28.8043 7.63083C27.6168 3.98239 24.7262 1.27145 21.0387 0.357391C19.5777 -0.00979614 18.0387 -0.0957336 16.5855 0.107391Z"
+                    fill="#FFAA4A"
+                  />
+                </svg>
+              </div>
+              <h1 id="titulo-xuxedex" class="xdex-panel__izq-titulo">Xuxedex</h1>
+            </div>
+            <div class="xdex-panel__izq-deco" aria-hidden="true">🦊🐸🐼🐨</div>
+          </div>
 
-    <app-nav></app-nav>
-  </main>
+          <ul class="xdex-grid" aria-label="Lista de Xuxemons">
+            @for (grupo of gruposPaginaActual; track grupo.nombre) {
+              <!-- Le dice a Angular exactamente qué elementos han cambiado para no tener que volver a pintar toda la lista en la pantalla. -->
+              <li
+                class="xdex-card"
+                [class.xdex-card--seleccionado]="estaSeleccionado(grupo)"
+                [class.xdex-card--agua]="grupo.type === 'agua'"
+                [class.xdex-card--tierra]="grupo.type === 'tierra'"
+                [class.xdex-card--aire]="grupo.type === 'aire'"
+                (click)="seleccionarGrupo(grupo)"
+                role="button"
+                tabindex="0"
+                (keydown.enter)="seleccionarGrupo(grupo)"
+                (keydown.space)="seleccionarGrupo(grupo)"
+                [attr.aria-pressed]="estaSeleccionado(grupo)"
+                [attr.aria-label]="grupo.nombre + ', ' + grupo.cantidad + ' unidades'"
+              >
+                <span class="xdex-card__cantidad" aria-hidden="true">x{{ grupo.cantidad }}</span>
+
+                <div class="xdex-card__imagen">
+                  <img
+                    [src]="getImagenXuxemon(grupo.nombre)"
+                    [alt]="grupo.nombre"
+                    class="xdex-card__img"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div class="xdex-card__nombre-bar">
+                  <span class="xdex-card__nombre">{{ grupo.nombre }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+
+          @if (totalPaginas > 1) {
+            <nav class="xdex-paginacion" aria-label="Paginación de la Xuxedex">
+              <button
+                class="xdex-paginacion__btn"
+                (click)="irAPagina(paginaActual - 1)"
+                [disabled]="paginaActual === 1"
+                aria-label="Página anterior"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M19 12H5" />
+                  <polyline points="12 19 5 12 12 5" />
+                </svg>
+              </button>
+              @for (p of paginas; track p) {
+                <button
+                  class="xdex-paginacion__num"
+                  [class.xdex-paginacion__num--activo]="paginaActual === p"
+                  (click)="irAPagina(p)"
+                  [attr.aria-current]="paginaActual === p ? 'page' : null"
+                  [attr.aria-label]="'Página ' + p"
+                >
+                  {{ p }}
+                </button>
+              }
+              <button
+                class="xdex-paginacion__btn"
+                (click)="irAPagina(paginaActual + 1)"
+                [disabled]="paginaActual === totalPaginas"
+                aria-label="Página siguiente"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+            </nav>
+          }
+        </section>
+
+
+  <app-nav></app-nav>
 </div>
