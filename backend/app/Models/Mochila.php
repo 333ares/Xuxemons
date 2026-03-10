@@ -8,6 +8,7 @@ class Mochila extends Model
 {
     protected $fillable = [
         'id',
+        'type',
         'name',
         'stackable',
         'amount',

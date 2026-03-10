@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('mochila', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
             $table->string('name');
             $table->boolean('stackable'); // Si es apilable o no (true = apilable, false = no apilable)
             $table->integer('amount');
