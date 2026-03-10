@@ -9,8 +9,9 @@ class XuxemonInfo extends Model
     protected $table = 'xuxemons_info';
 
     protected $fillable = [
-        'nombre',
-        'tipo'
+        'id',
+        'name',
+        'type'
     ];
 }
 

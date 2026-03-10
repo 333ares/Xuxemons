@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('xuxemon_infos', function (Blueprint $table) {
+        Schema::create('xuxemons_info', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();
-            $table->enum('tipo', ['Agua', 'Tierra', 'Aire']);
+            $table->string('name')->unique();
+            $table->enum('type', ['agua', 'tierra', 'aire']);
             $table->timestamps();
         });
     }
