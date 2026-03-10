@@ -3,8 +3,10 @@
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MochilaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XuxemonsController;
+use PHPUnit\Metadata\RequiresPhpunitExtension;
 
 Route::post('/registro', [AuthController::class, 'registroUsuario']);
 Route::post('/login', [AuthController::class, 'loginUsuario']);
@@ -22,4 +24,10 @@ Route::middleware('auth:api')->group(function () {
 
     // Xuxemons
     Route::get('/xuxemons', [XuxemonsController::class, 'listarXuxemons']);
+    Route::get('/xuxemons/aire', [XuxemonsController::class, 'listarXuxemonsAire']);
+    Route::get('/xuxemons/tierra', [XuxemonsController::class, 'listarXuxemonsTierra']);
+    Route::post('/xuxemons/agua', [XuxemonsController::class, 'listarXuxemonsAgua']);
+
+    // Mochila
+    Route::get('/mochila', [MochilaController::class, 'listarObjetos']);
 });
