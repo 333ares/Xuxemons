@@ -68,7 +68,7 @@ class AdminController extends Controller
                 $validator = Validator::make($request->all(), [
                     'type' => 'required|in:xuxe',
                     'name' => 'required|string',
-                    'amount' => 'required|integer',
+                    'amount' => 'required|integer|in:1,2,3',
                     'user_id' => 'required|integer'
                 ]);
             }
