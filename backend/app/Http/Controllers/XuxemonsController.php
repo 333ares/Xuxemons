@@ -90,4 +90,67 @@ class XuxemonsController extends Controller
             }
         }
     }
+
+    public function listarXuxemonsS(Request $request)
+    {
+        if ($request->size == 's') {
+            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
+                ->where('size', 's')
+                ->get();
+
+            if (!$xuxemons) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => 'No tienes xuxemons pequeños aún'
+                ], 400);
+            } else {
+                return response()->json([
+                    'message' => 'success',
+                    'xuxemons' => $xuxemons
+                ], 201);
+            }
+        }
+    }
+
+    public function listarXuxemonsM(Request $request)
+    {
+        if ($request->size == 'm') {
+            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
+                ->where('size', 'm')
+                ->get();
+
+            if (!$xuxemons) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => 'No tienes xuxemons medianos aún'
+                ], 400);
+            } else {
+                return response()->json([
+                    'message' => 'success',
+                    'xuxemons' => $xuxemons
+                ], 201);
+            }
+        }
+    }
+
+    public function listarXuxemonsL(Request $request)
+    {
+        if ($request->size == 'l') {
+            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
+                ->where('size', 'l')
+                ->get();
+
+            if (!$xuxemons) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => 'No tienes xuxemons grandes aún'
+                ], 400);
+            } else {
+                return response()->json([
+                    'message' => 'success',
+                    'xuxemons' => $xuxemons
+                ], 201);
+            }
+        }
+    }
 }

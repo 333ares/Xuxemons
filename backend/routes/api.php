@@ -27,6 +27,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/xuxemons/aire', [XuxemonsController::class, 'listarXuxemonsAire']);
     Route::get('/xuxemons/tierra', [XuxemonsController::class, 'listarXuxemonsTierra']);
     Route::post('/xuxemons/agua', [XuxemonsController::class, 'listarXuxemonsAgua']);
+    Route::get('/xuxemons/pequenos', [XuxemonsController::class, 'listarXuxemonsS']);
+    Route::get('/xuxemons/medianos', [XuxemonsController::class, 'listarXuxemonsM']);
+    Route::post('/xuxemons/grandes', [XuxemonsController::class, 'listarXuxemonsL']);
 
     // Mochila
     Route::get('/mochila', [MochilaController::class, 'listarObjetos']);
