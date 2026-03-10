@@ -6,7 +6,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MochilaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XuxemonsController;
-use PHPUnit\Metadata\RequiresPhpunitExtension;
 
 Route::post('/registro', [AuthController::class, 'registroUsuario']);
 Route::post('/login', [AuthController::class, 'loginUsuario']);
@@ -17,10 +16,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/usuario', [UserController::class, 'listarInfo']);
     Route::put('/usuario', [UserController::class, 'actualizarUsuario']);
     Route::delete('/usuario', [UserController::class, 'borrarUsuario']);
+    Route::get('/xuxemonsNav', [UserController::class, 'navegadorXuxemons']);
 
     // Administrador
     Route::post('/agregarXuxemon', [AdminController::class, 'agregarXuxemon']);
-    Route::get('listarUsuarios', [AdminController::class, 'listarUsuarios']);
+    Route::get('/listarUsuarios', [AdminController::class, 'listarUsuarios']);
+    Route::get('/usuariosNav', [AdminController::class, 'navegadorUsuarios']);
 
     // Xuxemons
     Route::get('/xuxemons', [XuxemonsController::class, 'listarXuxemons']);

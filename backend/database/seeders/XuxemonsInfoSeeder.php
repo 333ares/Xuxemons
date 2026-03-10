@@ -3,69 +3,69 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\XuxemonInfo;
+use App\Models\XuxemonsInfo;
 
 class XuxemonsInfoSeeder extends Seeder
 {
     public function run(): void
     {
         $xuxemons = [
-            ['nombre' => 'Apleki', 'tipo' => 'Tierra'],
-            ['nombre' => 'Avecrem', 'tipo' => 'Aire'],
-            ['nombre' => 'Bambino', 'tipo' => 'Tierra'],
-            ['nombre' => 'Beeboo', 'tipo' => 'Aire'],
-            ['nombre' => 'Boo-hoot', 'tipo' => 'Aire'],
-            ['nombre' => 'Cabrales', 'tipo' => 'Tierra'],
-            ['nombre' => 'Catua', 'tipo' => 'Aire'],
-            ['nombre' => 'Catyuska', 'tipo' => 'Aire'],
-            ['nombre' => 'Chapapá', 'tipo' => 'Agua'],
+            ['name' => 'Apleki', 'type' => 'Tierra'],
+            ['name' => 'Avecrem', 'type' => 'Aire'],
+            ['name' => 'Bambino', 'type' => 'Tierra'],
+            ['name' => 'Beeboo', 'type' => 'Aire'],
+            ['name' => 'Boo-hoot', 'type' => 'Aire'],
+            ['name' => 'Cabrales', 'type' => 'Tierra'],
+            ['name' => 'Catua', 'type' => 'Aire'],
+            ['name' => 'Catyuska', 'type' => 'Aire'],
+            ['name' => 'Chapapá', 'type' => 'Agua'],
 
-            ['nombre' => 'Chopper', 'tipo' => 'Tierra'],
-            ['nombre' => 'Cuellilargui', 'tipo' => 'Tierra'],
-            ['nombre' => 'Deskangoo', 'tipo' => 'Tierra'],
-            ['nombre' => 'Doflamingo', 'tipo' => 'Aire'],
-            ['nombre' => 'Dolly', 'tipo' => 'Tierra'],
-            ['nombre' => 'Elconchudo', 'tipo' => 'Agua'],
-            ['nombre' => 'Eldientes', 'tipo' => 'Agua'],
-            ['nombre' => 'Elgominas', 'tipo' => 'Tierra'],
-            ['nombre' => 'Flipper', 'tipo' => 'Agua'],
-            ['nombre' => 'Floppi', 'tipo' => 'Tierra'],
+            ['name' => 'Chopper', 'type' => 'Tierra'],
+            ['name' => 'Cuellilargui', 'type' => 'Tierra'],
+            ['name' => 'Deskangoo', 'type' => 'Tierra'],
+            ['name' => 'Doflamingo', 'type' => 'Aire'],
+            ['name' => 'Dolly', 'type' => 'Tierra'],
+            ['name' => 'Elconchudo', 'type' => 'Agua'],
+            ['name' => 'Eldientes', 'type' => 'Agua'],
+            ['name' => 'Elgominas', 'type' => 'Tierra'],
+            ['name' => 'Flipper', 'type' => 'Agua'],
+            ['name' => 'Floppi', 'type' => 'Tierra'],
 
-            ['nombre' => 'Horseluis', 'tipo' => 'Agua'],
-            ['nombre' => 'Krokolisko', 'tipo' => 'Agua'],
-            ['nombre' => 'Kurama', 'tipo' => 'Tierra'],
-            ['nombre' => 'Ladybug', 'tipo' => 'Aire'],
-            ['nombre' => 'Lengualargui', 'tipo' => 'Tierra'],
-            ['nombre' => 'Medusation', 'tipo' => 'Agua'],
-            ['nombre' => 'Meekmeek', 'tipo' => 'Tierra'],
-            ['nombre' => 'Megalo', 'tipo' => 'Agua'],
-            ['nombre' => 'Mocha', 'tipo' => 'Agua'],
-            ['nombre' => 'Murcimurci', 'tipo' => 'Aire'],
+            ['name' => 'Horseluis', 'type' => 'Agua'],
+            ['name' => 'Krokolisko', 'type' => 'Agua'],
+            ['name' => 'Kurama', 'type' => 'Tierra'],
+            ['name' => 'Ladybug', 'type' => 'Aire'],
+            ['name' => 'Lengualargui', 'type' => 'Tierra'],
+            ['name' => 'Medusation', 'type' => 'Agua'],
+            ['name' => 'Meekmeek', 'type' => 'Tierra'],
+            ['name' => 'Megalo', 'type' => 'Agua'],
+            ['name' => 'Mocha', 'type' => 'Agua'],
+            ['name' => 'Murcimurci', 'type' => 'Aire'],
 
-            ['nombre' => 'Nemo', 'tipo' => 'Agua'],
-            ['nombre' => 'Oinkcelot', 'tipo' => 'Tierra'],
-            ['nombre' => 'Oreo', 'tipo' => 'Tierra'],
-            ['nombre' => 'Otto', 'tipo' => 'Tierra'],
-            ['nombre' => 'Pinchimott', 'tipo' => 'Agua'],
-            ['nombre' => 'Pollis', 'tipo' => 'Aire'],
-            ['nombre' => 'Posón', 'tipo' => 'Aire'],
-            ['nombre' => 'Quakko', 'tipo' => 'Agua'],
-            ['nombre' => 'Rajoy', 'tipo' => 'Aire'],
-            ['nombre' => 'Rawlion', 'tipo' => 'Tierra'],
+            ['name' => 'Nemo', 'type' => 'Agua'],
+            ['name' => 'Oinkcelot', 'type' => 'Tierra'],
+            ['name' => 'Oreo', 'type' => 'Tierra'],
+            ['name' => 'Otto', 'type' => 'Tierra'],
+            ['name' => 'Pinchimott', 'type' => 'Agua'],
+            ['name' => 'Pollis', 'type' => 'Aire'],
+            ['name' => 'Posón', 'type' => 'Aire'],
+            ['name' => 'Quakko', 'type' => 'Agua'],
+            ['name' => 'Rajoy', 'type' => 'Aire'],
+            ['name' => 'Rawlion', 'type' => 'Tierra'],
 
-            ['nombre' => 'Rexxo', 'tipo' => 'Tierra'],
-            ['nombre' => 'Ron', 'tipo' => 'Tierra'],
-            ['nombre' => 'Sesssi', 'tipo' => 'Tierra'],
-            ['nombre' => 'Shelly', 'tipo' => 'Agua'],
-            ['nombre' => 'Sirucco', 'tipo' => 'Aire'],
-            ['nombre' => 'Torcas', 'tipo' => 'Agua'],
-            ['nombre' => 'Trompeta', 'tipo' => 'Aire'],
-            ['nombre' => 'Trompi', 'tipo' => 'Tierra'],
-            ['nombre' => 'Tux', 'tipo' => 'Agua'],
+            ['name' => 'Rexxo', 'type' => 'Tierra'],
+            ['name' => 'Ron', 'type' => 'Tierra'],
+            ['name' => 'Sesssi', 'type' => 'Tierra'],
+            ['name' => 'Shelly', 'type' => 'Agua'],
+            ['name' => 'Sirucco', 'type' => 'Aire'],
+            ['name' => 'Torcas', 'type' => 'Agua'],
+            ['name' => 'Trompeta', 'type' => 'Aire'],
+            ['name' => 'Trompi', 'type' => 'Tierra'],
+            ['name' => 'Tux', 'type' => 'Agua'],
         ];
 
         foreach ($xuxemons as $x) {
-            XuxemonInfo::create($x);
+            XuxemonsInfo::create($x);
         }
     }
 }
