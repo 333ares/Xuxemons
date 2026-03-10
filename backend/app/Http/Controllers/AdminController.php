@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mochila;
 use App\Models\Xuxemons;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -49,6 +50,82 @@ class AdminController extends Controller
                     'errors' => 'No se ha podido añadir el xuxemon'
                 ], 400);
             }
+        }
+    }
+
+    public function agregarObjeto(Request $request)
+    {
+        $admin = $request->user()->id;
+
+        if ($admin === 1) {
+            if ($request->type === "vacuna") {
+                $validator = Validator::make($request->all(), [
+                    'type' => 'required|in:vacuna',
+                    'name' => 'required|string',
+                    'user_id' => 'required|integer'
+                ]);
+            } else {
+                $validator = Validator::make($request->all(), [
+                    'type' => 'required|in:xuxe',
+                    'name' => 'required|string',
+                    'amount' => 'required|integer|in:1,2,3',
+                    'user_id' => 'required|integer'
+                ]);
+            }
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => $validator->errors()
+                ], 400);
+            }
+
+            if ($request->type === "vacuna") {
+                $vacuna = Mochila::create([
+                    'type' => $request->type,
+                    'name' => $request->name,
+                    'amount' => 1,
+                    'stackable' => 0,
+                    'user_id' => $request->user_id
+                ]);
+
+                if ($vacuna) {
+                    return response()->json([
+                        'message' => 'Vacuna añadida correctamente',
+                        'vacuna' => $vacuna
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'message' => 'error',
+                        'errors' => 'No se ha podido añadir la vacuna'
+                    ], 400);
+                }
+            } else {
+                $xuxe = Mochila::create([
+                    'type' => $request->type,
+                    'name' => $request->name,
+                    'amount' => $request->amount,
+                    'stackable' => 1,
+                    'user_id' => $request->user_id
+                ]);
+
+                if ($xuxe) {
+                    return response()->json([
+                        'message' => 'Xuxe añadida correctamente',
+                        'xuxe' => $xuxe
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'message' => 'error',
+                        'errors' => 'No se ha podido añadir la xuxe'
+                    ], 400);
+                }
+            }
+        } else {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
+            ], 400);
         }
     }
 

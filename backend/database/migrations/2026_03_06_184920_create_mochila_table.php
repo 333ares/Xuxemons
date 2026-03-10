@@ -13,17 +13,11 @@ return new class extends Migration
     {
         Schema::create('mochila', function (Blueprint $table) {
             $table->id();
-
-            $table->string('nombre_xuxe');
-
-        // Si es apilable o no (true = apilable, false = no apilable)
-            $table->boolean('apilable');
-
-        // Cantidad dentro del espacio (si es apilable, máx 5)
-            $table->integer('cantidad')->default(1);
-
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-
+            $table->string('type');
+            $table->string('name');
+            $table->boolean('stackable'); // Si es apilable o no (true = apilable, false = no apilable)
+            $table->integer('amount');
+            $table->foreignId('user_id')->onDelete('cascade');
             $table->timestamps();
         });
     }

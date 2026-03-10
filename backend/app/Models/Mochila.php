@@ -6,21 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mochila extends Model
 {
+    protected $table = 'mochila';
+
     protected $fillable = [
-        'nombre_xuxe',
-        'apilable',
-        'cantidad',
+        'id',
+        'type',
+        'name',
+        'stackable',
+        'amount',
         'user_id'
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Saber si el espacio está lleno para apilables
-    public function espacioLleno()
-    {
-        return $this->apilable && $this->cantidad >= 5;
-    }
 }

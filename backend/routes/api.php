@@ -20,6 +20,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Administrador
     Route::post('/agregarXuxemon', [AdminController::class, 'agregarXuxemon']);
+    Route::post('/agregarObjeto', [AdminController::class, 'agregarObjeto']);
     Route::get('/listarUsuarios', [AdminController::class, 'listarUsuarios']);
     Route::get('/usuariosNav', [AdminController::class, 'navegadorUsuarios']);
 
@@ -31,7 +32,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/xuxemons/pequenos', [XuxemonsController::class, 'listarXuxemonsS']);
     Route::get('/xuxemons/medianos', [XuxemonsController::class, 'listarXuxemonsM']);
     Route::post('/xuxemons/grandes', [XuxemonsController::class, 'listarXuxemonsL']);
+    Route::delete('/xuxemon', [XuxemonsController::class, 'borrarXuxemon']);
 
     // Mochila
     Route::get('/mochila', [MochilaController::class, 'listarObjetos']);
+    Route::delete('/mochila', [MochilaController::class, 'borrarObjeto']);
 });
