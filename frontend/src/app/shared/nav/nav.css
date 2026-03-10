@@ -1,0 +1,59 @@
+/* NAVEGACIÓN INFERIOR */
+.nav-inferior {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 30px;
+  /* Más padding horizontal para que el menú sea más ancho */
+  padding: 10px 32px;
+  display: flex;
+  /* Más separación entre iconos */
+  gap: 28px;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  /* Evita que el menú quede cortado en pantallas pequeñas */
+  max-width: calc(100vw - 32px);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Área táctil más grande */
+  width: 44px;
+  height: 44px;
+  color: #bbb;
+  text-decoration: none;
+  border-radius: 50%;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.nav-item span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Tamaño igual al del SVG para no añadir espacio extra */
+  width: 26px;
+  height: 26px;
+}
+
+.nav-item svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.nav-item:hover:not(.nav-activo) {
+  color: #ffaa4a;
+}
+
+.nav-item.nav-activo {
+  color: #fff;
+  background-color: #ffaa4a;
+}
