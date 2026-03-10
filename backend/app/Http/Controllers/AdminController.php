@@ -68,7 +68,7 @@ class AdminController extends Controller
                 $validator = Validator::make($request->all(), [
                     'type' => 'required|in:xuxe',
                     'name' => 'required|string',
-                    'amount' => 'required|integer|in:1,2,3',
+                    'amount' => 'required|integer',
                     'user_id' => 'required|integer'
                 ]);
             }
@@ -101,24 +101,45 @@ class AdminController extends Controller
                     ], 400);
                 }
             } else {
-                $xuxe = Mochila::create([
-                    'type' => $request->type,
-                    'name' => $request->name,
-                    'amount' => $request->amount,
-                    'stackable' => 1,
-                    'user_id' => $request->user_id
-                ]);
+                $maxStack = 5;
 
-                if ($xuxe) {
+                if ($request->amount > $maxStack) {
+
+                    $primero = Mochila::create([
+                        'type' => 'xuxe',
+                        'name' => $request->name,
+                        'amount' => $maxStack,
+                        'stackable' => 1,
+                        'user_id' => $request->user_id
+                    ]);
+
+                    $segundo = Mochila::create([
+                        'type' => 'xuxe',
+                        'name' => $request->name,
+                        'amount' => $request->amount - $maxStack,
+                        'stackable' => 1,
+                        'user_id' => $request->user_id
+                    ]);
+
+                    return response()->json([
+                        'message' => 'Xuxe separada en stacks',
+                        'xuxe1' => $primero,
+                        'xuxe2' => $segundo
+                    ], 201);
+                } else {
+
+                    $xuxe = Mochila::create([
+                        'type' => 'xuxe',
+                        'name' => $request->name,
+                        'amount' => $request->amount,
+                        'stackable' => 1,
+                        'user_id' => $request->user_id
+                    ]);
+
                     return response()->json([
                         'message' => 'Xuxe añadida correctamente',
                         'xuxe' => $xuxe
                     ], 201);
-                } else {
-                    return response()->json([
-                        'message' => 'error',
-                        'errors' => 'No se ha podido añadir la xuxe'
-                    ], 400);
                 }
             }
         } else {
