@@ -28,6 +28,7 @@ class UserController extends Controller
 
     public function actualizarUsuario(Request $request)
     {
+        // Comprobamos que todos los datos del usuario son validos
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string',
             'surname' => 'nullable|string',
@@ -35,6 +36,7 @@ class UserController extends Controller
             'password' => 'nullable'
         ]);
 
+        // Si no son validos, devolvemos error
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'error',
@@ -42,7 +44,9 @@ class UserController extends Controller
             ], 400);
         }
 
+        // Recogemos los datos del usuario que ha hecho la petición
         $usuario = $request->user();
+
         if (!$usuario) {
             return response()->json([
                 'message' => 'error',
@@ -77,17 +81,21 @@ class UserController extends Controller
 
     public function borrarUsuario(Request $request)
     {
+        // Recogemos los datos del usuario que ha hecho la petición
         $usuario = $request->user();
 
+        // Si no se ha encontrado, se devuelve error
         if (!$usuario) {
             return response()->json([
                 'message' => 'error',
                 'usuario' => 'No existe ningún usuario con ese ID'
             ], 404);
-        } 
+        }
 
+        // Si se encuentra, se borra
         $usuario->delete();
 
+        // Y se muestra mensaje de exito
         return response()->json([
             'message' => 'success',
             'usuario' => 'El usuario se ha borrado correctamente'
