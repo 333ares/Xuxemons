@@ -122,7 +122,7 @@ class AdminController extends Controller
             return response()->json([
                 'message' => 'success',
                 'usuarios' => $usuarios
-            ], 201);
+            ], 200);
         }
     }
 }
