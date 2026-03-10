@@ -17,7 +17,7 @@ return new class extends Migration
         $table->string('type');
         $table->string('size');
         $table->boolean('sickness');
-        $table->foreignId('user_id');
+        $table->foreignId('user_id')->onDelete('cascade');
         $table->timestamps();
         });
     }
