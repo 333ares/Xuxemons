@@ -20,6 +20,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Administrador
     Route::post('/agregarXuxemon', [AdminController::class, 'agregarXuxemon']);
+    Route::post('/agregarObjeto', [AdminController::class, 'agregarObjeto']);
     Route::get('/listarUsuarios', [AdminController::class, 'listarUsuarios']);
     Route::get('/usuariosNav', [AdminController::class, 'navegadorUsuarios']);
 
