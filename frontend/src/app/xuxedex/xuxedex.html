@@ -172,7 +172,64 @@
             </nav>
           }
         </section>
+        <!-- PANEL DERECHO -->
+        @if (grupoSeleccionado) {
+          <section class="xdex-panel__der" aria-labelledby="detalle-nombre" aria-live="polite">
+            <div class="xdex-detalle__header">
+              <div class="xdex-detalle__linea" aria-hidden="true"></div>
+              <h2 id="detalle-nombre" class="xdex-detalle__nombre">
+                {{ grupoSeleccionado.nombre }}
+              </h2>
+              <div class="xdex-detalle__linea" aria-hidden="true"></div>
+            </div>
 
+            <div class="xdex-detalle__imagen-wrap">
+              <div
+                class="xdex-detalle__imagen-fondo xdex-detalle__imagen-fondo--{{
+                  grupoSeleccionado.type
+                }}"
+              >
+                <img
+                  [src]="getImagenXuxemon(grupoSeleccionado.nombre)"
+                  [alt]="grupoSeleccionado.nombre"
+                  class="xdex-detalle__img"
+                />
+              </div>
+            </div>
+
+            <div class="xdex-detalle__badges" role="list" aria-label="Características del Xuxemon">
+              <span
+                class="xdex-badge xdex-badge--tipo xdex-badge--{{ grupoSeleccionado.type }}"
+                role="listitem"
+              >
+                {{ getNombreTipo(grupoSeleccionado.type) }}
+              </span>
+              @if (estaEnfermo(grupoSeleccionado.representante)) {
+                <span class="xdex-badge xdex-badge--enfermo" role="listitem">
+                  🤒 {{ getNombreEnfermedad(grupoSeleccionado.representante.sickness) }}
+                </span>
+              }
+              <span class="xdex-badge xdex-badge--tamano" role="listitem">
+                {{ getNombreTamano(grupoSeleccionado.representante.size) }}
+              </span>
+            </div>
+
+            <p class="xdex-detalle__fecha">
+              Fecha de adquisición:
+              <strong>{{ formatearFecha(grupoSeleccionado.representante.created_at) }}</strong>
+            </p>
+
+            @if (grupoSeleccionado.cantidad > 1) {
+              <p class="xdex-detalle__multi">
+                Tienes <strong>{{ grupoSeleccionado.cantidad }}</strong>
+                {{ grupoSeleccionado.nombre }} en total
+              </p>
+            }
+          </section>
+        }
+      </div>
+    }
+  </main>
 
   <app-nav></app-nav>
 </div>
