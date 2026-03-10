@@ -130,7 +130,7 @@ const DATOS_PRUEBA: Xuxemon[] = [
   {
     id: 12,
     name: 'horseluis',
-    type: 'tierra',
+    type: 'agua',
     size: 'g',
     sickness: 'bajón de azúcar',
     user_id: 1,
@@ -148,7 +148,7 @@ const DATOS_PRUEBA: Xuxemon[] = [
   {
     id: 14,
     name: 'horseluis',
-    type: 'tierra',
+    type: 'agua',
     size: 's',
     sickness: '0',
     user_id: 1,
@@ -275,18 +275,18 @@ export class Xuxedex implements OnInit {
   getNombreTipo(type: string): string {
     // Usan diccionarios (Record<string, string>) para cambiar un valor como 's' por 'Xuxemon Pequeño'
     const mapa: Record<string, string> = {
-      agua: 'Tipo Agua',
-      tierra: 'Tipo Tierra',
-      aire: 'Tipo Aire',
+      agua: 'Agua',
+      tierra: 'Tierra',
+      aire: 'Aire',
     };
     return mapa[type] ?? type;
   }
 
   getNombreTamano(size: string): string {
     const mapa: Record<string, string> = {
-      s: 'Xuxemon Pequeño',
-      m: 'Xuxemon Mediano',
-      g: 'Xuxemon Grande',
+      s: 'Pequeño',
+      m: 'Mediano',
+      g: 'Grande',
     };
     return mapa[size] ?? size;
   }

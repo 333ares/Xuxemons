@@ -155,7 +155,7 @@
   padding: 32px 24px;
 }
 
-/* ---- Estados ---- */
+/* Estados */
 .xdex-estado {
   display: flex;
   flex-direction: column;
@@ -227,7 +227,7 @@
   background: #e8962e;
 }
 
-/* ---- Panel dos columnas, ancho máximo centrado ---- */
+/* Panel dos columnas, ancho máximo centrado */
 .xdex-panel {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -237,7 +237,7 @@
   max-width: 2000px;
 }
 
-/* ---- Panel izquierdo ---- */
+/* Panel izquierdo */
 .xdex-panel__izq {
   background: white;
   border-radius: 20px;
@@ -275,7 +275,7 @@
   letter-spacing: -0.4px;
 }
 
-/* ---- Grid ---- */
+/* Grid */
 .xdex-grid {
   list-style: none;
   margin: 0;
@@ -285,7 +285,7 @@
   gap: 10px;
 }
 
-/* ---- Card ---- */
+/* Card */
 .xdex-card {
   background: white;
   border: 2px solid #f0eeee;
@@ -380,7 +380,7 @@
   background: #ffaa4a;
 }
 
-/* ---- Paginación ---- */
+/* Paginación */
 .xdex-paginacion {
   display: flex;
   align-items: center;
@@ -452,7 +452,7 @@
   color: white;
 }
 
-/* ---- Panel derecho ---- */
+/* Panel derecho */
 .xdex-panel__der {
   background: white;
   border-radius: 20px;
@@ -591,7 +591,7 @@
   color: #ffaa4a;
 }
 
-/* ---- Responsive ---- */
+/* Responsive */
 @media (max-width: 820px) {
   .xdex-panel {
     grid-template-columns: 1fr;
@@ -628,7 +628,7 @@
   }
 }
 
-/* ---- Animaciones ---- */
+/* Animaciones */
 @keyframes xdex-girar {
   to {
     transform: rotate(360deg);
