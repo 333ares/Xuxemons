@@ -35,4 +35,5 @@ Route::middleware('auth:api')->group(function () {
 
     // Mochila
     Route::get('/mochila', [MochilaController::class, 'listarObjetos']);
+    Route::delete('/mochila', [MochilaController::class, 'borrarObjeto']);
 });

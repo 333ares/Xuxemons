@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Mochila extends Model
 {
     protected $fillable = [
+        'id',
         'name',
         'stackable',
         'amount',
