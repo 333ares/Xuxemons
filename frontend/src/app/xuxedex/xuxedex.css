@@ -591,6 +591,37 @@
   color: #ffaa4a;
 }
 
+.xdex-filtros {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.xdex-filtros__input,
+.xdex-filtros__select {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border: 1.5px solid #f0eeee;
+  border-radius: 10px;
+  background: #fafafa;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #3b2101;
+  outline: none;
+  transition: border-color 0.18s;
+}
+
+.xdex-filtros__input:focus,
+.xdex-filtros__select:focus {
+  border-color: #ffaa4a;
+  background: white;
+}
+
+.xdex-filtros__input::placeholder {
+  color: #bbb;
+}
+
 /* Responsive */
 @media (max-width: 820px) {
   .xdex-panel {
