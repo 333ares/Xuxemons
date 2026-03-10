@@ -31,6 +31,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/xuxemons/pequenos', [XuxemonsController::class, 'listarXuxemonsS']);
     Route::get('/xuxemons/medianos', [XuxemonsController::class, 'listarXuxemonsM']);
     Route::post('/xuxemons/grandes', [XuxemonsController::class, 'listarXuxemonsL']);
+    Route::delete('/xuxemon', [XuxemonsController::class, 'borrarXuxemon']);
 
     // Mochila
     Route::get('/mochila', [MochilaController::class, 'listarObjetos']);

@@ -162,4 +162,29 @@ class XuxemonsController extends Controller
             }
         }
     }
+
+    public function borrarXuxemon(Request $request)
+    {
+        // Buscamos que el usuario tenga en propiedad el xuxemon
+        $xuxemon = Xuxemons::where('user_id', $request->user()->id)
+            ->where('id', $request->id)
+            ->first();
+
+        // Si no se encuentra, se muestra error
+        if (!$xuxemon) {
+            return response()->json([
+                'message' => 'error',
+                'usuario' => 'No tienes ningún xuxemon con ese ID'
+            ], 404);
+        }
+
+        // Borrar xuxemon
+        $xuxemon->delete();
+
+        // Devolvemos mensaje de éxito
+        return response()->json([
+            'message' => 'success',
+            'usuario' => 'El xuxemon se ha borrado correctamente'
+        ], 200);
+    }
 }
