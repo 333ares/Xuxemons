@@ -12,21 +12,24 @@
   </header>
 
   <main class="xdex-main">
+    <!-- CARGANDO -->
     @if (cargando) {
-      <div class="xdex-estado" role="status" aria-live="polite" aria-label="Carregant Xuxemons">
+      <div class="xdex-estado" role="status" aria-live="polite" aria-label="Cargando Xuxemons">
         <div class="xdex-spinner" aria-hidden="true"></div>
         <p>Cargando tus Xuxemons...</p>
       </div>
     }
 
+    <!-- ERROR -->
     @if (!cargando && error) {
       <div class="xdex-estado xdex-estado--error" role="alert">
         <span class="xdex-estado__icono" aria-hidden="true">⚠️</span>
         <p>{{ error }}</p>
-        <button class="xdex-btn-reintentar" (click)="cargarXuxemons()">Vuelvelo a intentar</button>
+        <button class="xdex-btn-reintentar" (click)="cargarXuxemons()">Volver a intentarlo</button>
       </div>
     }
 
+    <!-- SIN XUXEMONS -->
     @if (!cargando && !error && todosLosGrupos.length === 0) {
       <div class="xdex-estado xdex-estado--vacio" role="status">
         <div class="xdex-estado__icono-wrapper" aria-hidden="true">
@@ -44,10 +47,13 @@
             />
           </svg>
         </div>
-        <h2 class="xdex-estado__titulo">Aun no tienes ningun Xuxemon</h2>
-        <p class="xdex-estado__msg">Cuando el administrador te asigne un Xuxemon, te aparecera aqui.</p>
+        <h2 class="xdex-estado__titulo">Todavía no tienes ningún Xuxemon</h2>
+        <p class="xdex-estado__msg">
+          Cuando el administrador te asigne un Xuxemon, aparecerá aquí.
+        </p>
       </div>
     }
 
-
-  <app-nav></app-nav>
+    <app-nav></app-nav>
+  </main>
+</div>
