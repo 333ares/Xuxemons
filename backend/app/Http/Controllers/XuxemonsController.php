@@ -30,16 +30,21 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsAire(Request $request)
     {
+        // Si el tipo que pide el usuario es aire
         if ($request->type == 'aire') {
+            // Cogemos todos los xuxemons del usuario de tipo "aire"
             $xuxemons = Xuxemons::where('user_id', $request->user()->id)
                 ->where('type', 'aire')
                 ->get();
 
+            // Si no encuentra, mostramos error
             if (!$xuxemons) {
                 return response()->json([
                     'message' => 'error',
                     'errors' => 'No tienes xuxemons de tipo aire aún'
                 ], 400);
+
+                // Si encuentra, los devolvemos
             } else {
                 return response()->json([
                     'message' => 'success',
@@ -93,16 +98,20 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsS(Request $request)
     {
+        // Si el tamaño que pide el usuario es S 
         if ($request->size == 's') {
             $xuxemons = Xuxemons::where('user_id', $request->user()->id)
                 ->where('size', 's')
                 ->get();
 
+            // Cogemos todos los xuxemons del usuario de tamaño "s"
             if (!$xuxemons) {
                 return response()->json([
                     'message' => 'error',
                     'errors' => 'No tienes xuxemons pequeños aún'
                 ], 400);
+
+                // Si encuentra, los devolvemos
             } else {
                 return response()->json([
                     'message' => 'success',
