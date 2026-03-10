@@ -17,6 +17,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/usuario', [UserController::class, 'listarInfo']);
     Route::put('/usuario', [UserController::class, 'actualizarUsuario']);
     Route::delete('/usuario', [UserController::class, 'borrarUsuario']);
+    Route::get('usuario/xuxemonsNav', [UserController::class, 'navegadorXuxemons']);
 
     // Administrador
     Route::post('/agregarXuxemon', [AdminController::class, 'agregarXuxemon']);

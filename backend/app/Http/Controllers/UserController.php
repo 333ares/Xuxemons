@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Xuxemons;
 
 class UserController extends Controller
 {
@@ -100,5 +101,44 @@ class UserController extends Controller
             'message' => 'success',
             'usuario' => 'El usuario se ha borrado correctamente'
         ], 200);
+    }
+
+    public function navegadorXuxemons(Request $request)
+    {
+        // Validamos que los datos sean validos
+        $validator = Validator::make($request->all(), [
+            'nav' => 'required|string'
+        ]);
+
+        // Si no lo son, devolvemos error
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        // Cogemos el contenido del navegador
+        $buscar = $request->nav;
+
+        // Buscamos los xuxemons del usuario que coincidan con el nombre que ha puesto
+        $xuxemons = Xuxemons::where('user_id', $request->user()->id)
+            ->where('name', 'LIKE', "%{$buscar}%")
+            ->get();
+
+        // Si no se encuentram devovlemos error
+        if (count($xuxemons) <= 0) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Sin resultados, prueba a buscar otro xuxemon...'
+            ], 404);
+
+            // Si se encuentran, devolvemos la lista
+        } else {
+            return response()->json([
+                'message' => 'success',
+                'xuxemons' => $xuxemons
+            ], 201);
+        }
     }
 }
