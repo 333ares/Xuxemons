@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class XuxemonInfo extends Model
+class XuxemonsInfo extends Model
 {
     protected $table = 'xuxemons_info';
 
