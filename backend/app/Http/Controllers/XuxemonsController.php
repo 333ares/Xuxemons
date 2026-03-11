@@ -10,7 +10,8 @@ class XuxemonsController extends Controller
     public function listarXuxemons(Request $request)
     {
         // Recogemos los xuxemons del usuario que hace la petición
-        $xuxemons = Xuxemons::where('user_id', $request->user()->id)->get();
+        $xuxemons = Xuxemons::where('user_id', $request->user()->id)
+        ->paginate(9);
 
         // Si el resultado es 0 o menor, se muestra error
         if (count($xuxemons) <= 0) {
@@ -35,7 +36,7 @@ class XuxemonsController extends Controller
             // Cogemos todos los xuxemons del usuario de tipo "aire"
             $xuxemons = Xuxemons::where('user_id', $request->user()->id)
                 ->where('type', 'aire')
-                ->get();
+                ->paginate(9);
 
             // Si no encuentra, mostramos error
             if (!$xuxemons) {
@@ -59,7 +60,7 @@ class XuxemonsController extends Controller
         if ($request->type == 'tierra') {
             $xuxemons = Xuxemons::where('user_id', $request->user()->id)
                 ->where('type', 'tierra')
-                ->get();
+                ->paginate(9);
 
             if (!$xuxemons) {
                 return response()->json([
@@ -80,7 +81,7 @@ class XuxemonsController extends Controller
         if ($request->type == 'agua') {
             $xuxemons = Xuxemons::where('user_id', $request->user()->id)
                 ->where('type', 'agua')
-                ->get();
+                ->paginate(9);
 
             if (!$xuxemons) {
                 return response()->json([
@@ -102,7 +103,7 @@ class XuxemonsController extends Controller
         if ($request->size == 's') {
             $xuxemons = Xuxemons::where('user_id', $request->user()->id)
                 ->where('size', 's')
-                ->get();
+                ->paginate(9);
 
             // Cogemos todos los xuxemons del usuario de tamaño "s"
             if (!$xuxemons) {
@@ -126,7 +127,7 @@ class XuxemonsController extends Controller
         if ($request->size == 'm') {
             $xuxemons = Xuxemons::where('user_id', $request->user()->id)
                 ->where('size', 'm')
-                ->get();
+                ->paginate(9);
 
             if (!$xuxemons) {
                 return response()->json([
@@ -147,7 +148,7 @@ class XuxemonsController extends Controller
         if ($request->size == 'l') {
             $xuxemons = Xuxemons::where('user_id', $request->user()->id)
                 ->where('size', 'l')
-                ->get();
+                ->paginate(9);
 
             if (!$xuxemons) {
                 return response()->json([
