@@ -27,7 +27,7 @@
     }
 
     <!-- SIN XUXEMONS -->
-    @if (!cargando && !error && todosLosGrupos.length === 0) {
+    @if (!cargando && !error && xuxemons.length === 0) {
     <div class="xdex-estado xdex-estado--vacio" role="status">
       <div class="xdex-estado__icono-wrapper" aria-hidden="true">
         <svg width="48" height="48" viewBox="0 0 37 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +43,7 @@
     </div>
     }
     <!-- PANEL PRINCIPAL -->
-    @if (!cargando && !error && todosLosGrupos.length > 0) {
+    @if (!cargando && !error && xuxemons.length > 0) {
     <div class="xdex-panel">
       <!-- PANEL IZQUIERDO -->
       <section class="xdex-panel__izq" aria-labelledby="titulo-xuxedex">
@@ -77,55 +77,75 @@
             <option value="g">Grande</option>
           </select>
         </div>
+
+        <ul class="xdex-grid" aria-label="Lista de Xuxemons">
+          @for (x of xuxemons; track x.id) {
+          <li class="xdex-card" [class.xdex-card--activo]="xuxemonSeleccionado?.id === x.id"
+            (click)="xuxemonSeleccionado = x">
+            <div class="xdex-card__img-wrap xdex-card__img-wrap--{{ x.type }}">
+              <img [src]="getImagenXuxemon(x.name)" [alt]="x.name" class="xdex-card__img" />
+            </div>
+            <span class="xdex-card__nombre">{{ x.name }}</span>
+            <span class="xdex-badge xdex-badge--tipo xdex-badge--{{ x.type }}">
+              {{ getNombreTipo(x.type) }}
+            </span>
+          </li>
+          }
+        </ul>
       </section>
+
       <!-- PANEL DERECHO -->
-      @if (grupoSeleccionado) {
+      @if (xuxemonSeleccionado) {
       <section class="xdex-panel__der" aria-labelledby="detalle-nombre" aria-live="polite">
         <div class="xdex-detalle__header">
           <div class="xdex-detalle__linea" aria-hidden="true"></div>
           <h2 id="detalle-nombre" class="xdex-detalle__nombre">
-            {{ grupoSeleccionado.nombre }}
+            {{ xuxemonSeleccionado.name }}
           </h2>
           <div class="xdex-detalle__linea" aria-hidden="true"></div>
         </div>
 
         <div class="xdex-detalle__imagen-wrap">
           <div class="xdex-detalle__imagen-fondo xdex-detalle__imagen-fondo--{{
-                  grupoSeleccionado.type
+                  xuxemonSeleccionado.type
                 }}">
-            <img [src]="getImagenXuxemon(grupoSeleccionado.nombre)" [alt]="grupoSeleccionado.nombre"
+            <img [src]="getImagenXuxemon(xuxemonSeleccionado.name)" [alt]="xuxemonSeleccionado.name"
               class="xdex-detalle__img" />
           </div>
         </div>
 
         <div class="xdex-detalle__badges" role="list" aria-label="Características del Xuxemon">
-          <span class="xdex-badge xdex-badge--tipo xdex-badge--{{ grupoSeleccionado.type }}" role="listitem">
-            {{ getNombreTipo(grupoSeleccionado.type) }}
+          <span class="xdex-badge xdex-badge--tipo xdex-badge--{{ xuxemonSeleccionado.type }}" role="listitem">
+            {{ getNombreTipo(xuxemonSeleccionado.type) }}
           </span>
-          @if (estaEnfermo(grupoSeleccionado.representante)) {
+          @if (estaEnfermo(xuxemonSeleccionado)) {
           <span class="xdex-badge xdex-badge--enfermo" role="listitem">
-            🤒 {{ getNombreEnfermedad(grupoSeleccionado.representante.sickness) }}
+            🤒 {{ getNombreEnfermedad(xuxemonSeleccionado.sickness) }}
           </span>
           }
           <span class="xdex-badge xdex-badge--tamano" role="listitem">
-            {{ getNombreTamano(grupoSeleccionado.representante.size) }}
+            {{ getNombreTamano(xuxemonSeleccionado.size) }}
           </span>
         </div>
 
         <p class="xdex-detalle__fecha">
           Fecha de adquisición:
-          <strong>{{ formatearFecha(grupoSeleccionado.representante.created_at) }}</strong>
+          <strong>{{ formatearFecha(xuxemonSeleccionado.created_at) }}</strong>
         </p>
-
-        @if (grupoSeleccionado.cantidad > 1) {
-        <p class="xdex-detalle__multi">
-          Tienes <strong>{{ grupoSeleccionado.cantidad }}</strong>
-          {{ grupoSeleccionado.nombre }} en total
-        </p>
-        }
       </section>
       }
     </div>
+
+    <div class="xdex-paginacion">
+      <button (click)="irAPagina(paginaActual - 1)" [disabled]="paginaActual === 1">←</button>
+
+      @for (p of paginas; track p) {
+      <button (click)="irAPagina(p)" [class.activo]="p === paginaActual">{{ p }}</button>
+      }
+
+      <button (click)="irAPagina(paginaActual + 1)" [disabled]="paginaActual === ultimaPagina">→</button>
+    </div>
+
     }
   </main>
 
