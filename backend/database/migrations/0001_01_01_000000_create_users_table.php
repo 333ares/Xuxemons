@@ -9,21 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-public function up(): void
-{
-    Schema::create('users', function (Blueprint $table) {
-        $table->id();
-        $table->string('public_id')->unique();
-        $table->string('name');
-        $table->string('surname');
-        $table->string('email')->unique();
-        $table->string('password');
-        $table->timestamps();
-    });
-}
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('public_id')->unique();
+            $table->string('name');
+            $table->string('surname');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->timestamps();
+        });
+    }
 
-public function down(): void
-{
-    Schema::dropIfExists('users');
-}
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
 };

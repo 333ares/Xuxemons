@@ -58,6 +58,7 @@ export class Auth {
     return !!this.getToken();
   }
 
+  // --- USUARIOS ---
   // Obtiene los datos del usuario autenticado desde el backend
   getInfoUsuario(): Observable<any> {
     return this.http.get(`${this.apiUrl}/usuario`, { headers: this.getHeaders() });
@@ -71,5 +72,10 @@ export class Auth {
   // Actualiza los datos del usuario autenticado
   actualizarUsuario(datos: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/usuario`, datos, { headers: this.getHeaders() });
+  }
+
+  // --- XUXEDEX ---
+  getXuxemons(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/xuxemons`, { headers: this.getHeaders() });
   }
 }

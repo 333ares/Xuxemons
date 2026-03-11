@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('xuxemons', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->string('type');
-        $table->string('size');
-        $table->boolean('sickness');
-        $table->foreignId('user_id')->onDelete('cascade');
-        $table->timestamps();
+            $table->id();
+            $table->string('name');
+            $table->string('type');
+            $table->string('size');
+            $table->boolean('sickness');
+            $table->foreignId('user_id')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

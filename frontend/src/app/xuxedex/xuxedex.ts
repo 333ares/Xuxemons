@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ICONS } from '../shared/icons';
 import { Nav } from '../shared/nav/nav';
+import { Auth } from '../services/auth';
 
 export interface Xuxemon {
   id: number;
@@ -23,138 +24,6 @@ export interface XuxemonGrupo {
   xuxemons: Xuxemon[];
   representante: Xuxemon;
 }
-
-// ─── Cambiar a false cuando el backend esté listo ───
-const MOCK = true;
-
-const DATOS_PRUEBA: Xuxemon[] = [
-  {
-    id: 1,
-    name: 'boohoot',
-    type: 'aire',
-    size: 'm',
-    sickness: 'bajón de azúcar',
-    user_id: 1,
-    created_at: '2026-02-15',
-  },
-  {
-    id: 2,
-    name: 'elgominas',
-    type: 'tierra',
-    size: 's',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-16',
-  },
-  {
-    id: 3,
-    name: 'avecrem',
-    type: 'aire',
-    size: 's',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-17',
-  },
-  {
-    id: 4,
-    name: 'flipper',
-    type: 'agua',
-    size: 'g',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-18',
-  },
-  {
-    id: 5,
-    name: 'flipper',
-    type: 'agua',
-    size: 'm',
-    sickness: 'atracón',
-    user_id: 1,
-    created_at: '2026-02-19',
-  },
-  {
-    id: 6,
-    name: 'flipper',
-    type: 'agua',
-    size: 's',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-20',
-  },
-  {
-    id: 7,
-    name: 'rajoy',
-    type: 'aire',
-    size: 's',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-21',
-  },
-  {
-    id: 8,
-    name: 'mocha',
-    type: 'agua',
-    size: 's',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-22',
-  },
-  {
-    id: 9,
-    name: 'sesssi',
-    type: 'tierra',
-    size: 'm',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-23',
-  },
-  {
-    id: 10,
-    name: 'sesssi',
-    type: 'tierra',
-    size: 's',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-24',
-  },
-  {
-    id: 11,
-    name: 'shelly',
-    type: 'tierra',
-    size: 's',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-25',
-  },
-  {
-    id: 12,
-    name: 'horseluis',
-    type: 'agua',
-    size: 'g',
-    sickness: 'bajón de azúcar',
-    user_id: 1,
-    created_at: '2026-02-26',
-  },
-  {
-    id: 13,
-    name: 'horseluis',
-    type: 'agua',
-    size: 'm',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-27',
-  },
-  {
-    id: 14,
-    name: 'horseluis',
-    type: 'agua',
-    size: 's',
-    sickness: '0',
-    user_id: 1,
-    created_at: '2026-02-28',
-  },
-];
 
 @Component({
   selector: 'app-xuxedex',
@@ -178,7 +47,7 @@ export class Xuxedex implements OnInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private http: HttpClient,
+    private auth: Auth,
   ) {
     Object.keys(ICONS).forEach((key) => {
       this.icons[key] = this.sanitizer.bypassSecurityTrustHtml(ICONS[key]);
@@ -186,62 +55,29 @@ export class Xuxedex implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarXuxemons();
+    this.listarXuxemons();
+
   }
 
-  cargarXuxemons(): void {
+  listarXuxemons(): void {
     this.cargando = true;
     this.error = '';
 
-    if (MOCK) {
-      // Simula un pequeño delay como si fuera la API
-      setTimeout(() => {
-        this.todosLosGrupos = this.agruparPorNombre(DATOS_PRUEBA);
-        this.grupoSeleccionado = this.todosLosGrupos[0] ?? null;
-        this.cargando = false;
-      }, 600);
-      return;
-    }
-
-    this.http.get<{ message: string; xuxemons: Xuxemon[] }>(`${this.API_URL}/xuxemons`).subscribe({
+    this.auth.getXuxemons().subscribe({
       next: (res) => {
-        this.todosLosGrupos = this.agruparPorNombre(res.xuxemons);
+        const lista: Xuxemon[] = res.xuxemons.data; // Laravel paginate → .data
         if (this.todosLosGrupos.length > 0) {
           this.grupoSeleccionado = this.todosLosGrupos[0];
         }
         this.cargando = false;
       },
       error: (err) => {
-        if (err.status === 400) {
-          this.todosLosGrupos = [];
-        } else {
-          this.error = "No s'han pogut carregar els Xuxemons.";
-        }
+        this.error = err.error?.errors ?? 'Error al cargar los Xuxemons.';
         this.cargando = false;
-      },
+      }
     });
   }
 
-  private agruparPorNombre(lista: Xuxemon[]): XuxemonGrupo[] {
-    const mapa = new Map<string, Xuxemon[]>();
-    lista.forEach((x) => {
-      const existentes = mapa.get(x.name) ?? [];
-      existentes.push(x);
-      mapa.set(x.name, existentes);
-    });
-    return Array.from(mapa.entries()).map(([nombre, xuxemons]) => ({
-      nombre,
-      type: xuxemons[0].type,
-      cantidad: xuxemons.length,
-      xuxemons,
-      representante: xuxemons[0],
-    }));
-  }
-
-  seleccionarGrupo(grupo: XuxemonGrupo): void {
-    //Controlan el estado de la interfaz. Cuando el usuario hace clic en un grupo, seleccionarGrupo lo guarda en la variable grupoSeleccionado.
-    this.grupoSeleccionado = grupo;
-  }
 
   // Convierte el nombre del xuxemon al nombre del archivo PNG
   getImagenXuxemon(nombre: string): string {
