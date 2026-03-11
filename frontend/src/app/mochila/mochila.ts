@@ -22,7 +22,7 @@ export interface Slot {// Representa una "casilla" física en la mochila
   cantidadEnSlot: number;
 }
 
-// ─── Cambiar a false cuando el backend esté listo ───
+//Cambiar a false cuando el backend esté listo
 const MOCK = true;
 
 const DATOS_PRUEBA: ItemMochila[] = [
@@ -260,6 +260,23 @@ export class Mochila implements OnInit {
 
   get slotsUsados(): number {
     return this.todosLosSlots.filter((s) => s.item !== null).length;
+  }
+
+  // Mapea el nombre del ítem al archivo PNG de la carpeta public/chuches/
+  getImagenItem(nombre: string): string {
+    const mapa: Record<string, string> = {
+      chocolatina: 'chuches/chocolate.png',
+      'bastón de caramelo': 'chuches/navidad.png',
+      inxulina: 'chuches/Vacuna.png',
+      caramelux: 'chuches/caramelo.png',
+      pirupiru: 'chuches/piruleta.png',
+      chicleto: 'chuches/suggus.png',
+      'chal de frutas': 'chuches/macedonia.png',
+      azucarín: 'chuches/redondos.png',
+      'xocolatina extra': 'chuches/chocolate.png',
+    };
+    const clave = nombre.toLowerCase().trim();
+    return mapa[clave] ?? 'chuches/caramelos.png'; // fallback genérico
   }
 
   getNombreTipo(tipo: string): string {
