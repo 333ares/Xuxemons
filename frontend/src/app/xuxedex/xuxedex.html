@@ -77,7 +77,28 @@
               <h1 id="titulo-xuxedex" class="xdex-panel__izq-titulo">Xuxedex</h1>
             </div>
           </div>
+          <div class="xdex-filtros">
+            <input
+              type="search"
+              class="xdex-filtros__input"
+              placeholder="Buscar Xuxemon..."
+              aria-label="Buscar por nombre"
+            />
 
+            <select class="xdex-filtros__select" aria-label="Filtrar por tipo">
+              <option value="">Todos los tipos</option>
+              <option value="agua">💧 Agua</option>
+              <option value="tierra">🌍 Tierra</option>
+              <option value="aire">💨 Aire</option>
+            </select>
+
+            <select class="xdex-filtros__select" aria-label="Filtrar por tamaño">
+              <option value="">Todos los tamaños</option>
+              <option value="s">Pequeño</option>
+              <option value="m">Mediano</option>
+              <option value="g">Grande</option>
+            </select>
+          </div>
           <ul class="xdex-grid" aria-label="Lista de Xuxemons">
             @for (grupo of gruposPaginaActual; track grupo.nombre) {
               <!-- Le dice a Angular exactamente qué elementos han cambiado para no tener que volver a pintar toda la lista en la pantalla. -->
