@@ -1,5 +1,5 @@
 <div class="mo-wrapper">
-  <!--  CABECERA  -->
+  <!-- ── CABECERA ─────────────────────────────────────────── -->
   <header class="mant-header">
     <a routerLink="/paginaPrincipal" class="mant-logo">
       <img src="logo.png" alt="Logo Xuxemons" />
@@ -7,7 +7,7 @@
     </a>
     <img
       src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
-      alt="Avatar"
+      alt="Avatar usuario"
       class="mant-header-avatar"
     />
   </header>
@@ -29,6 +29,207 @@
         <button class="mo-btn-reintentar" (click)="cargarMochila()">Volver a intentarlo</button>
       </div>
     }
+
+    <!-- PANEL PRINCIPAL -->
+    @if (!cargando && !error) {
+      <div class="mo-panel">
+        <!-- PANEL IZQUIERDO inventario -->
+        <section class="mo-panel__izq" aria-labelledby="titulo-mochila">
+          <!-- Cabecera del panel -->
+          <div class="mo-panel__izq-header">
+            <div class="mo-panel__izq-titulo-wrap">
+              <span class="mo-panel__izq-icono" aria-hidden="true">🎒</span>
+              <h1 id="titulo-mochila" class="mo-panel__izq-titulo">Mochila</h1>
+            </div>
+          </div>
+
+          <!-- Grid 3×3 de slots -->
+          <ul class="mo-grid" aria-label="Inventario — 20 espacios en total">
+            @for (slot of slotsEnPaginaActual; track slot.indice) {
+              <li
+                class="mo-card"
+                [class.mo-card--ocupado]="slot.item !== null"
+                [class.mo-card--vacio]="slot.item === null"
+                [class.mo-card--seleccionado]="slotSeleccionado?.indice === slot.indice"
+                [class.mo-card--xuxe]="slot.item?.categoria === 'xuxe'"
+                [class.mo-card--vacuna]="slot.item?.categoria === 'vacuna'"
+                [attr.aria-label]="
+                  slot.item
+                    ? slot.item.nombre + ', ' + slot.cantidadEnSlot + ' unidades'
+                    : 'Espacio vacío'
+                "
+                [attr.tabindex]="slot.item ? 0 : -1"
+                [attr.role]="slot.item ? 'button' : null"
+                [attr.aria-pressed]="slot.item ? slotSeleccionado?.indice === slot.indice : null"
+                (click)="seleccionarSlot(slot)"
+                (keydown.enter)="seleccionarSlot(slot)"
+                (keydown.space)="seleccionarSlot(slot)"
+              >
+                @if (slot.item) {
+                  <!-- Badge de cantidad -->
+                  <span class="mo-card__cantidad" aria-hidden="true">
+                    x{{ slot.cantidadEnSlot }}
+                  </span>
+
+                  <!-- Emoji del objeto -->
+                  <div class="mo-card__imagen" aria-hidden="true">
+                    {{ slot.item.emoji }}
+                  </div>
+
+                  <!-- Franja inferior con el nombre -->
+                  <div class="mo-card__nombre-bar">
+                    <span class="mo-card__nombre">{{ slot.item.nombre }}</span>
+                  </div>
+                } @else {
+                  <div class="mo-card__vacio" aria-hidden="true"></div>
+                }
+              </li>
+            }
+          </ul>
+
+          <!-- Paginación -->
+          @if (totalPaginas > 1) {
+            <nav class="mo-paginacion" aria-label="Paginación de la mochila">
+              <button
+                class="mo-paginacion__btn"
+                (click)="irAPagina(paginaActual - 1)"
+                [disabled]="paginaActual === 1"
+                aria-label="Página anterior"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M19 12H5" />
+                  <polyline points="12 19 5 12 12 5" />
+                </svg>
+              </button>
+
+              @for (p of paginas; track p) {
+                <button
+                  class="mo-paginacion__num"
+                  [class.mo-paginacion__num--activo]="paginaActual === p"
+                  [attr.aria-current]="paginaActual === p ? 'page' : null"
+                  [attr.aria-label]="'Página ' + p"
+                  (click)="irAPagina(p)"
+                >
+                  {{ p }}
+                </button>
+              }
+
+              <button
+                class="mo-paginacion__btn"
+                (click)="irAPagina(paginaActual + 1)"
+                [disabled]="paginaActual === totalPaginas"
+                aria-label="Página siguiente"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+            </nav>
+          }
+        </section>
+
+        <!-- PANEL DERECHO detalle -->
+        <section
+          class="mo-panel__der"
+          aria-label="Detalle del objeto seleccionado"
+          aria-live="polite"
+        >
+          <!-- Contador de capacidad -->
+          <div class="mo-contador" [attr.aria-label]="slotsUsados + ' de 20 espacios usados'">
+            {{ slotsUsados }}/20
+          </div>
+
+          <!-- Estado sin selección: ilustración de mochila -->
+          @if (!slotSeleccionado) {
+            <div class="mo-detalle-vacio">
+              <span class="mo-mochila-emoji" aria-hidden="true">🎒</span>
+              <p class="mo-detalle-vacio__texto">Selecciona un objeto para ver los detalles</p>
+            </div>
+          }
+
+          <!-- Detalle del objeto seleccionado -->
+          @if (slotSeleccionado?.item) {
+            <div class="mo-detalle">
+              <!-- Emoji grande del objeto -->
+              <div class="mo-detalle__ilustracion" aria-hidden="true">
+                {{ slotSeleccionado!.item!.emoji }}
+              </div>
+
+              <!-- Tarjeta de información -->
+              <div class="mo-detalle__card">
+                <div class="mo-detalle__cabecera">
+                  <p class="mo-detalle__nombre">{{ slotSeleccionado!.item!.nombre }}</p>
+                  <span class="mo-detalle__cantidad">x{{ slotSeleccionado!.cantidadEnSlot }}</span>
+                </div>
+
+                <div
+                  class="mo-detalle__etiquetas"
+                  role="list"
+                  aria-label="Características del objeto"
+                >
+                  <span
+                    class="mo-etiqueta"
+                    [class.mo-etiqueta--no-apilable]="
+                      slotSeleccionado!.item!.tipo === 'no_apilable'
+                    "
+                    [class.mo-etiqueta--apilable]="slotSeleccionado!.item!.tipo === 'apilable'"
+                    role="listitem"
+                  >
+                    {{ getNombreTipo(slotSeleccionado!.item!.tipo) }}
+                  </span>
+                  <span
+                    class="mo-etiqueta"
+                    [class.mo-etiqueta--vacuna]="slotSeleccionado!.item!.categoria === 'vacuna'"
+                    [class.mo-etiqueta--xuxe]="slotSeleccionado!.item!.categoria === 'xuxe'"
+                    role="listitem"
+                  >
+                    {{ getNombreCategoria(slotSeleccionado!.item!.categoria) }}
+                  </span>
+                  <span class="mo-etiqueta mo-etiqueta--efecto" role="listitem">
+                    {{ slotSeleccionado!.item!.efecto }}
+                  </span>
+                </div>
+
+                <p class="mo-detalle__fecha">
+                  Fecha de adquisición:
+                  <strong>{{ slotSeleccionado!.item!.fechaAdquisicion }}</strong>
+                </p>
+
+                <button
+                  class="mo-btn-eliminar"
+                  (click)="eliminarSeleccionado()"
+                  [attr.aria-label]="'Eliminar ' + slotSeleccionado!.item!.nombre"
+                >
+                  Borrar objeto
+                </button>
+              </div>
+            </div>
+          }
+        </section>
+      </div>
+    }
+  </main>
 
   <!-- BARRA DE NAVEGACIÓN INFERIOR -->
   <app-nav></app-nav>
