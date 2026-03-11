@@ -10,6 +10,7 @@ import { Batalla } from './batalla/batalla';
 import { Chat } from './chat/chat';
 import { Mochila } from './mochila/mochila';
 import { Xuxedex } from './xuxedex/xuxedex';
+import { PerfilAdmin } from './perfil-admin/perfil-admin';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -74,6 +75,13 @@ export const routes: Routes = [
   {
     path: 'xuxedex',
     component: Xuxedex,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Perfil del Administrador
+  {
+    path: 'perfilAdmin',
+    component: PerfilAdmin,
     canActivate: [AuthGuard],
   },
 
