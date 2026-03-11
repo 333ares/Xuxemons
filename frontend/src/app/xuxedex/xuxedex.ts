@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ICONS } from '../shared/icons';
 import { Nav } from '../shared/nav/nav';
+import { Auth } from '../services/auth';
 
 export interface Xuxemon {
   id: number;
@@ -46,7 +47,7 @@ export class Xuxedex implements OnInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private http: HttpClient,
+    private auth: Auth,
   ) {
     Object.keys(ICONS).forEach((key) => {
       this.icons[key] = this.sanitizer.bypassSecurityTrustHtml(ICONS[key]);
@@ -54,52 +55,29 @@ export class Xuxedex implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarXuxemons();
+    this.listarXuxemons();
+
   }
 
-  cargarXuxemons(): void {
+  listarXuxemons(): void {
     this.cargando = true;
     this.error = '';
 
-    this.http.get<{ message: string; xuxemons: Xuxemon[] }>(`${this.API_URL}/xuxemons`).subscribe({
+    this.auth.getXuxemons().subscribe({
       next: (res) => {
-        this.todosLosGrupos = this.agruparPorNombre(res.xuxemons);
+        const lista: Xuxemon[] = res.xuxemons.data; // Laravel paginate → .data
         if (this.todosLosGrupos.length > 0) {
           this.grupoSeleccionado = this.todosLosGrupos[0];
         }
         this.cargando = false;
       },
       error: (err) => {
-        if (err.status === 400) {
-          this.todosLosGrupos = [];
-        } else {
-          this.error = "No tienes xuxemons aún.";
-        }
+        this.error = err.error?.errors ?? 'Error al cargar los Xuxemons.';
         this.cargando = false;
-      },
+      }
     });
   }
 
-  private agruparPorNombre(lista: Xuxemon[]): XuxemonGrupo[] {
-    const mapa = new Map<string, Xuxemon[]>();
-    lista.forEach((x) => {
-      const existentes = mapa.get(x.name) ?? [];
-      existentes.push(x);
-      mapa.set(x.name, existentes);
-    });
-    return Array.from(mapa.entries()).map(([nombre, xuxemons]) => ({
-      nombre,
-      type: xuxemons[0].type,
-      cantidad: xuxemons.length,
-      xuxemons,
-      representante: xuxemons[0],
-    }));
-  }
-
-  seleccionarGrupo(grupo: XuxemonGrupo): void {
-    //Controlan el estado de la interfaz. Cuando el usuario hace clic en un grupo, seleccionarGrupo lo guarda en la variable grupoSeleccionado.
-    this.grupoSeleccionado = grupo;
-  }
 
   // Convierte el nombre del xuxemon al nombre del archivo PNG
   getImagenXuxemon(nombre: string): string {
