@@ -22,6 +22,112 @@ export interface Slot {// Representa una "casilla" física en la mochila
   cantidadEnSlot: number;
 }
 
+// ─── Cambiar a false cuando el backend esté listo ───
+const MOCK = true;
+
+const DATOS_PRUEBA: ItemMochila[] = [
+  {
+    id: 1,
+    nombre: 'Chocolatina',
+    tipo: 'no_apilable',
+    cantidad: 1,
+    categoria: 'vacuna',
+    emoji: '🍫',
+    efecto: 'Quita "Bajón de azúcar"',
+    fechaAdquisicion: '15/02/2026',
+  },
+  {
+    id: 2,
+    nombre: 'Bastón de caramelo',
+    tipo: 'apilable',
+    cantidad: 3,
+    categoria: 'xuxe',
+    emoji: '🍬',
+    efecto: 'Alimenta a tu Xuxemon',
+    fechaAdquisicion: '16/02/2026',
+  },
+  {
+    id: 3,
+    nombre: 'Inxulina',
+    tipo: 'no_apilable',
+    cantidad: 1,
+    categoria: 'vacuna',
+    emoji: '💉',
+    efecto: 'Cura todas las enfermedades',
+    fechaAdquisicion: '17/02/2026',
+  },
+  {
+    id: 4,
+    nombre: 'Caramelux',
+    tipo: 'apilable',
+    cantidad: 5,
+    categoria: 'xuxe',
+    emoji: '🍭',
+    efecto: 'Alimenta a tu Xuxemon',
+    fechaAdquisicion: '18/02/2026',
+  },
+  {
+    id: 5,
+    nombre: 'PiruPiru',
+    tipo: 'apilable',
+    cantidad: 1,
+    categoria: 'xuxe',
+    emoji: '🍡',
+    efecto: 'Alimenta a tu Xuxemon',
+    fechaAdquisicion: '19/02/2026',
+  },
+  {
+    id: 6,
+    nombre: 'Chocolatina',
+    tipo: 'no_apilable',
+    cantidad: 1,
+    categoria: 'vacuna',
+    emoji: '🍫',
+    efecto: 'Quita "Bajón de azúcar"',
+    fechaAdquisicion: '20/02/2026',
+  },
+  {
+    id: 7,
+    nombre: 'Chicleto',
+    tipo: 'apilable',
+    cantidad: 2,
+    categoria: 'xuxe',
+    emoji: '🍬',
+    efecto: 'Alimenta a tu Xuxemon',
+    fechaAdquisicion: '21/02/2026',
+  },
+  {
+    id: 8,
+    nombre: 'Chal de frutas',
+    tipo: 'no_apilable',
+    cantidad: 1,
+    categoria: 'vacuna',
+    emoji: '🍇',
+    efecto: 'Quita "Atracón"',
+    fechaAdquisicion: '22/02/2026',
+  },
+  {
+    id: 9,
+    nombre: 'Azucarín',
+    tipo: 'apilable',
+    cantidad: 3,
+    categoria: 'xuxe',
+    emoji: '🍮',
+    efecto: 'Alimenta a tu Xuxemon',
+    fechaAdquisicion: '23/02/2026',
+  },
+  {
+    id: 10,
+    nombre: 'Xocolatina extra',
+    tipo: 'no_apilable',
+    cantidad: 1,
+    categoria: 'vacuna',
+    emoji: '🍫',
+    efecto: 'Quita "Bajón de azúcar"',
+    fechaAdquisicion: '24/02/2026',
+  },
+];
+
 @Component({
   selector: 'app-mochila',
   standalone: true,
@@ -55,6 +161,15 @@ export class Mochila implements OnInit {
   cargarMochila(): void {
     this.cargando = true;
     this.error = '';
+
+    if (MOCK) {
+      // Simula un pequeño delay como si fuera la API
+      setTimeout(() => {
+        this.todosLosSlots = this.calcularSlots(DATOS_PRUEBA);
+        this.cargando = false;
+      }, 600);
+      return;
+    }
 
     const headers = { Authorization: `Bearer ${this.auth.getToken()}` };
     this.http
