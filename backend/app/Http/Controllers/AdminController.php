@@ -58,6 +58,7 @@ class AdminController extends Controller
         $admin = $request->user()->id;
 
         if ($admin === 1) {
+            // Validamos que los datos sean validos, para vacuna y xuxe
             if ($request->type === "vacuna") {
                 $validator = Validator::make($request->all(), [
                     'type' => 'required|in:vacuna',
@@ -68,11 +69,12 @@ class AdminController extends Controller
                 $validator = Validator::make($request->all(), [
                     'type' => 'required|in:xuxe',
                     'name' => 'required|string',
-                    'amount' => 'required|integer',
+                    'amount' => 'required|integer|in:1,2,3,4,5',
                     'user_id' => 'required|integer'
                 ]);
             }
 
+            // Si no lo son, devolvemos error
             if ($validator->fails()) {
                 return response()->json([
                     'message' => 'error',
@@ -80,6 +82,7 @@ class AdminController extends Controller
                 ], 400);
             }
 
+            // Si el tipo es vacuna, se añade sin importar si ya tiene o no, ya que no son apilables
             if ($request->type === "vacuna") {
                 $vacuna = Mochila::create([
                     'type' => $request->type,
@@ -89,45 +92,69 @@ class AdminController extends Controller
                     'user_id' => $request->user_id
                 ]);
 
+                // Si se ha añadido correctamente, devolvemos mensaje de éxito
                 if ($vacuna) {
                     return response()->json([
                         'message' => 'Vacuna añadida correctamente',
                         'vacuna' => $vacuna
                     ], 201);
+
+                    // Si no, mensaje de error
                 } else {
                     return response()->json([
                         'message' => 'error',
                         'errors' => 'No se ha podido añadir la vacuna'
                     ], 400);
                 }
+                // Si el tipo es xuxe, se añade comprobando si ya tiene o no, ya que son apilables
             } else {
-                $maxStack = 5;
+                $maxStack = 5; // El máximo de objetos que se pueden apilar
 
-                if ($request->amount > $maxStack) {
+                // Buscamos si ya tiene esa xuxe y si se puede apilar
+                $xuxe = Mochila::where('user_id', $request->user_id)
+                    ->where('name', $request->name)
+                    ->where('type', 'xuxe')
+                    ->where('amount', '<', $maxStack)
+                    ->first();
 
-                    $primero = Mochila::create([
-                        'type' => 'xuxe',
-                        'name' => $request->name,
-                        'amount' => $maxStack,
-                        'stackable' => 1,
-                        'user_id' => $request->user_id
-                    ]);
+                // Si se puede aplar
+                if ($xuxe) {
+                    $nuevoAmount = $xuxe->amount + $request->amount; // Calculamos el nuevo amount sumando el actual con el que se quiere añadir
 
-                    $segundo = Mochila::create([
-                        'type' => 'xuxe',
-                        'name' => $request->name,
-                        'amount' => $request->amount - $maxStack,
-                        'stackable' => 1,
-                        'user_id' => $request->user_id
-                    ]);
+                    // Si el nuevo amount es menor o igual al máximo, se actualiza el amount del stack actual
+                    if ($nuevoAmount <= $maxStack) {
+                        $xuxe->update([
+                            'amount' => $nuevoAmount
+                        ]);
 
-                    return response()->json([
-                        'message' => 'Xuxe separada en stacks',
-                        'xuxe1' => $primero,
-                        'xuxe2' => $segundo
-                    ], 201);
+                        return response()->json([
+                            'message' => 'Xuxe añadida correctamente',
+                            'xuxe' => $xuxe
+                        ], 201);
+
+                        // Si el nuevo amount supera el máximo, se llena el stack actual y se crea otro stack con el sobrante
+                    } else {
+                        // Se actualiza el stack actual al máximo
+                        $xuxe->update([
+                            'amount' => $maxStack
+                        ]);
+
+                        $nuevaXuxe = Mochila::create([
+                            'type' => 'xuxe',
+                            'name' => $request->name,
+                            'amount' => $nuevoAmount - $maxStack,
+                            'stackable' => 1,
+                            'user_id' => $request->user_id
+                        ]);
+
+                        return response()->json([
+                            'message' => 'Xuxe añadida correctamente',
+                            'xuxe' => $nuevaXuxe
+                        ], 201);
+                    }
+
+                    // Si no se puede apilar
                 } else {
-
                     $xuxe = Mochila::create([
                         'type' => 'xuxe',
                         'name' => $request->name,
