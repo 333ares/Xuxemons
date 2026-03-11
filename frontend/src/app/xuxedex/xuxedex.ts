@@ -32,6 +32,9 @@ export interface Xuxemons {
   styleUrl: './xuxedex.css',
 })
 export class Xuxedex implements OnInit {
+  // Datos del usuario autenticado
+  usuario: any = null;
+
   icons: Record<string, SafeHtml> = {};
   cargando = true;
   error = '';
@@ -51,6 +54,7 @@ export class Xuxedex implements OnInit {
   buscador = new FormControl<string>('');
 
   ngOnInit(): void {
+    this.cargarUsuario();
     this.listarXuxemons();
 
     this.buscador.valueChanges.pipe(
@@ -63,6 +67,19 @@ export class Xuxedex implements OnInit {
       } else {
         this.buscarXuxemons(valor);
       }
+    });
+  }
+
+  // Carga los datos del usuario autenticado desde el backend
+  private cargarUsuario(): void {
+    this.auth.getInfoUsuario().subscribe({
+      next: (res) => {
+        // El backend devuelve el usuario dentro de res.usuario o directamente en res
+        this.usuario = res.usuario ?? res;
+      },
+      error: (err) => {
+        console.error('Error al cargar los datos del usuario:', err);
+      },
     });
   }
 
