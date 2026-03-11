@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { ICONS } from '../shared/icons';
 import { Nav } from '../shared/nav/nav';
 import { Auth } from '../services/auth';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 export interface Xuxemon {
   id: number;
@@ -26,7 +27,7 @@ export interface Xuxemons {
 @Component({
   selector: 'app-xuxedex',
   standalone: true,
-  imports: [RouterLink, CommonModule, Nav],
+  imports: [RouterLink, CommonModule, Nav, ReactiveFormsModule],
   templateUrl: './xuxedex.html',
   styleUrl: './xuxedex.css',
 })
@@ -47,12 +48,25 @@ export class Xuxedex implements OnInit {
       this.icons[key] = this.sanitizer.bypassSecurityTrustHtml(ICONS[key]);
     });
   }
+  buscador = new FormControl<string>('');
 
   ngOnInit(): void {
     this.listarXuxemons();
 
+    this.buscador.valueChanges.pipe(
+      debounceTime(800),
+      distinctUntilChanged()
+    ).subscribe((termino) => {
+      const valor = termino as string;
+      if (!valor || valor.trim() === '') {
+        this.listarXuxemons();
+      } else {
+        this.buscarXuxemons(valor);
+      }
+    });
   }
 
+  // Mostrar lista de xuxemons
   listarXuxemons(pagina: number = 1): void {
     this.cargando = true;
     this.auth.getXuxemons(pagina).subscribe({
@@ -70,14 +84,51 @@ export class Xuxedex implements OnInit {
     });
   }
 
+  // Paginación de datos
   irAPagina(pagina: number): void {
     if (pagina < 1 || pagina > this.ultimaPagina) return;
     this.listarXuxemons(pagina);
   }
-  
+
+  // Getter de paginas
   get paginas(): number[] {
     return Array.from({ length: this.ultimaPagina }, (_, i) => i + 1);
   }
+
+  // Navgeador de xuxemons
+  busqueda = '';
+  sinResultados = false;
+
+  buscarXuxemons(termino: string): void {
+    this.busqueda = termino;
+    this.sinResultados = false;
+
+    if (termino.trim() === '') {
+      this.sinResultados = false;
+      this.xuxemons = [];
+      this.listarXuxemons();
+      return;
+    }
+
+    this.cargando = true;
+
+    this.auth.navXuxemons(termino).subscribe({
+      next: (res) => {
+        this.xuxemons = res.xuxemons;
+        this.ultimaPagina = 1;
+        this.paginaActual = 1;
+        if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
+        this.cargando = false;
+
+      },
+      error: (err) => {
+        this.sinResultados = true;
+        this.xuxemons = [];  // limpia la lista anterior
+        this.cargando = false;
+      }
+    });
+  }
+
   // Convierte el nombre del xuxemon al nombre del archivo PNG
   getImagenXuxemon(nombre: string): string {
     // Coge el nombre, lo pasa a minúsculas y usa una expresión regular (/[\s\-_]+/g) para quitar espacios, guiones bajos o normales.

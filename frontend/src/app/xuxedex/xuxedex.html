@@ -27,7 +27,7 @@
     }
 
     <!-- SIN XUXEMONS -->
-    @if (!cargando && !error && xuxemons.length === 0) {
+    @if (!cargando && !error && xuxemons.length === 0 && !sinResultados) {
     <div class="xdex-estado xdex-estado--vacio" role="status">
       <div class="xdex-estado__icono-wrapper" aria-hidden="true">
         <svg width="48" height="48" viewBox="0 0 37 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +43,7 @@
     </div>
     }
     <!-- PANEL PRINCIPAL -->
-    @if (!cargando && !error && xuxemons.length > 0) {
+    @if (!cargando && !error && (xuxemons.length > 0 || sinResultados)) {
     <div class="xdex-panel">
       <!-- PANEL IZQUIERDO -->
       <section class="xdex-panel__izq" aria-labelledby="titulo-xuxedex">
@@ -61,7 +61,7 @@
         </div>
         <div class="xdex-filtros">
           <input type="search" class="xdex-filtros__input" placeholder="Buscar Xuxemon..."
-            aria-label="Buscar por nombre" />
+            aria-label="Buscar por nombre" [formControl]="buscador" />
 
           <select class="xdex-filtros__select" aria-label="Filtrar por tipo">
             <option value="">Todos los tipos</option>
@@ -77,6 +77,10 @@
             <option value="g">Grande</option>
           </select>
         </div>
+
+        @if (sinResultados) {
+        <p class="xdex-sin-resultados">Sin resultados para "{{ buscador.value }}", prueba con otro nombre.</p>
+        }
 
         <ul class="xdex-grid" aria-label="Lista de Xuxemons">
           @for (x of xuxemons; track x.id) {
