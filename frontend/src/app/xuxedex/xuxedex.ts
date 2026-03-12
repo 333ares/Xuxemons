@@ -102,7 +102,7 @@ export class Xuxedex implements OnInit {
   }
 
   // Filtrado de xuxemons por tipo
-  sinResultadosFiltro = false;
+  sinResultadosFiltroTipo = false;
   tipoActivo = '';
   cargandoFiltro = false;
 
@@ -115,7 +115,7 @@ export class Xuxedex implements OnInit {
     this.tipoActivo = type;
     this.paginaActual = 1;
     this.cargandoFiltro = true;
-    this.sinResultadosFiltro = false;
+    this.sinResultadosFiltroTipo = false;
 
     this.auth.getXuxemonsPorTipo(type).subscribe({
       next: (res) => {
@@ -126,7 +126,37 @@ export class Xuxedex implements OnInit {
         this.cargando = false;
       },
       error: (err) => {
-        this.sinResultadosFiltro = true;
+        this.sinResultadosFiltroTipo = true;
+        this.xuxemons = [];
+        this.cargando = false;
+      }
+    });
+  }
+
+  // Filtrado de xuxemons por tamaño
+  sinResultadosFiltroTamano = false;
+  tamanoActivo = '';
+  filtrarPorTamano(size: string): void {
+    if (size === '') {
+      this.listarXuxemons();
+      return;
+    }
+
+    this.tamanoActivo = size;
+    this.paginaActual = 1;
+    this.cargandoFiltro = true;
+    this.sinResultadosFiltroTamano = false;
+
+    this.auth.getXuxemonsPorTamano(size).subscribe({
+      next: (res) => {
+        this.xuxemons = res.xuxemons.data;
+        this.paginaActual = res.xuxemons.current_page;
+        this.ultimaPagina = res.xuxemons.last_page;
+        if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
+        this.cargando = false;
+      },
+      error: (err) => {
+        this.sinResultadosFiltroTamano = true;
         this.xuxemons = [];
         this.cargando = false;
       }
