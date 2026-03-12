@@ -74,8 +74,15 @@ export class Auth {
     return this.http.put(`${this.apiUrl}/usuario`, datos, { headers: this.getHeaders() });
   }
 
-  // --- XUXEDEX ---
-  getXuxemons(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/xuxemons`, { headers: this.getHeaders() });
+  // Buscar xuxemons con el navegador
+  navXuxemons(nav: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/xuxemonsNav?nav=${nav}`, { headers: this.getHeaders() });
   }
+
+  // --- XUXEDEX ---
+  getXuxemons(pagina: number = 1): Observable<any> {
+    return this.http.get(`${this.apiUrl}/xuxemons?page=${pagina}`, { headers: this.getHeaders() });
+  }
+
+
 }

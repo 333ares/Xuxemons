@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { ICONS } from '../shared/icons';
 import { Nav } from '../shared/nav/nav';
 import { Auth } from '../services/auth';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 export interface Xuxemon {
   id: number;
@@ -17,33 +18,30 @@ export interface Xuxemon {
   created_at?: string;
 }
 
-export interface XuxemonGrupo {
-  nombre: string;
+export interface Xuxemons {
+  name: string;
   type: 'agua' | 'tierra' | 'aire';
-  cantidad: number;
   xuxemons: Xuxemon[];
-  representante: Xuxemon;
 }
 
 @Component({
   selector: 'app-xuxedex',
   standalone: true,
-  imports: [RouterLink, CommonModule, Nav],
+  imports: [RouterLink, CommonModule, Nav, ReactiveFormsModule],
   templateUrl: './xuxedex.html',
   styleUrl: './xuxedex.css',
 })
 export class Xuxedex implements OnInit {
-  icons: Record<string, SafeHtml> = {};
+  // Datos del usuario autenticado
+  usuario: any = null;
 
+  icons: Record<string, SafeHtml> = {};
   cargando = true;
   error = '';
-  todosLosGrupos: XuxemonGrupo[] = [];
-  grupoSeleccionado: XuxemonGrupo | null = null;
-
-  readonly POR_PAGINA = 9;
+  xuxemons: Xuxemon[] = [];
+  xuxemonSeleccionado: Xuxemon | null = null;
   paginaActual = 1;
-
-  private readonly API_URL = 'http://localhost:8000/api';
+  ultimaPagina = 1;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -53,22 +51,47 @@ export class Xuxedex implements OnInit {
       this.icons[key] = this.sanitizer.bypassSecurityTrustHtml(ICONS[key]);
     });
   }
+  buscador = new FormControl<string>('');
 
   ngOnInit(): void {
+    this.cargarUsuario();
     this.listarXuxemons();
 
+    this.buscador.valueChanges.pipe(
+      debounceTime(800),
+      distinctUntilChanged()
+    ).subscribe((termino) => {
+      const valor = termino as string;
+      if (!valor || valor.trim() === '') {
+        this.listarXuxemons();
+      } else {
+        this.buscarXuxemons(valor);
+      }
+    });
   }
 
-  listarXuxemons(): void {
-    this.cargando = true;
-    this.error = '';
-
-    this.auth.getXuxemons().subscribe({
+  // Carga los datos del usuario autenticado desde el backend
+  private cargarUsuario(): void {
+    this.auth.getInfoUsuario().subscribe({
       next: (res) => {
-        const lista: Xuxemon[] = res.xuxemons.data; // Laravel paginate → .data
-        if (this.todosLosGrupos.length > 0) {
-          this.grupoSeleccionado = this.todosLosGrupos[0];
-        }
+        // El backend devuelve el usuario dentro de res.usuario o directamente en res
+        this.usuario = res.usuario ?? res;
+      },
+      error: (err) => {
+        console.error('Error al cargar los datos del usuario:', err);
+      },
+    });
+  }
+
+  // Mostrar lista de xuxemons
+  listarXuxemons(pagina: number = 1): void {
+    this.cargando = true;
+    this.auth.getXuxemons(pagina).subscribe({
+      next: (res) => {
+        this.xuxemons = res.xuxemons.data;
+        this.paginaActual = res.xuxemons.current_page;
+        this.ultimaPagina = res.xuxemons.last_page;
+        if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
         this.cargando = false;
       },
       error: (err) => {
@@ -78,34 +101,56 @@ export class Xuxedex implements OnInit {
     });
   }
 
+  // Paginación de datos
+  irAPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.ultimaPagina) return;
+    this.listarXuxemons(pagina);
+  }
+
+  // Getter de paginas
+  get paginas(): number[] {
+    return Array.from({ length: this.ultimaPagina }, (_, i) => i + 1);
+  }
+
+  // Navgeador de xuxemons
+  busqueda = '';
+  sinResultados = false;
+
+  buscarXuxemons(termino: string): void {
+    this.busqueda = termino;
+    this.sinResultados = false;
+
+    if (termino.trim() === '') {
+      this.sinResultados = false;
+      this.xuxemons = [];
+      this.listarXuxemons();
+      return;
+    }
+
+    this.cargando = true;
+
+    this.auth.navXuxemons(termino).subscribe({
+      next: (res) => {
+        this.xuxemons = res.xuxemons;
+        this.ultimaPagina = 1;
+        this.paginaActual = 1;
+        if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
+        this.cargando = false;
+
+      },
+      error: (err) => {
+        this.sinResultados = true;
+        this.xuxemons = [];  // limpia la lista anterior
+        this.cargando = false;
+      }
+    });
+  }
 
   // Convierte el nombre del xuxemon al nombre del archivo PNG
   getImagenXuxemon(nombre: string): string {
     // Coge el nombre, lo pasa a minúsculas y usa una expresión regular (/[\s\-_]+/g) para quitar espacios, guiones bajos o normales.
     const slug = nombre.toLowerCase().replace(/[\s\-_]+/g, '');
     return `/animales/${slug}.png`;
-  }
-
-  get gruposPaginaActual(): XuxemonGrupo[] {
-    // En lugar de mostrar todos los grupos a la vez, recorta la lista (slice) basándose en la página actual y la cantidad por página (POR_PAGINA).
-    const inicio = (this.paginaActual - 1) * this.POR_PAGINA;
-    return this.todosLosGrupos.slice(inicio, inicio + this.POR_PAGINA);
-  }
-
-  get totalPaginas(): number {
-    // Calcula cuántas páginas hay en total dividiendo los grupos entre la cantidad por página y redondeando hacia arriba (Math.ceil).
-    return Math.ceil(this.todosLosGrupos.length / this.POR_PAGINA);
-  }
-
-  get paginas(): number[] {
-    // Crea un array de números (ej. [1, 2, 3]) para poder dibujar los botones de las páginas en el HTML con un @for.
-    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
-  }
-
-  irAPagina(pagina: number): void {
-    // Cambia la página actual, pero antes se asegura de que no intentes ir a una página que no existe (menor que 1 o mayor que el total).
-    if (pagina < 1 || pagina > this.totalPaginas) return;
-    this.paginaActual = pagina;
   }
 
   getNombreTipo(type: string): string {
@@ -158,8 +203,8 @@ export class Xuxedex implements OnInit {
     }
   }
 
-  estaSeleccionado(grupo: XuxemonGrupo): boolean {
+  estaSeleccionado(grupo: Xuxemons): boolean {
     // La función estaSeleccionado simplemente devuelve true o false para saber si debe aplicarle un estilo de "activo/resaltado" en el HTML.
-    return this.grupoSeleccionado?.nombre === grupo.nombre;
+    return this.xuxemonSeleccionado?.name === grupo.name;
   }
 }
