@@ -1,0 +1,382 @@
+.perfil-admin-wrapper {
+  background-color: #f4f3f3;
+  min-height: 98.5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  padding: 32px 40px 100px;
+  box-sizing: border-box;
+}
+
+/* Layout de dos columnas */
+.perfil-admin-layout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 1900px;
+  align-items: flex-start;
+}
+
+/* COLUMNA IZQUIERDA */
+
+.admin-lateral {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 28px;
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Círculo de avatar con fondo oscuro para el icono de admin */
+.avatar-wrapper {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--color-primary);
+  margin-bottom: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+}
+
+.avatar-admin-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.admin-nombre {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin: 0;
+}
+
+.admin-id {
+  font-size: 1rem;
+  color: #888;
+  margin: 0;
+}
+
+/* Badge diferenciado del admin: azul-índigo en lugar del verde de jugador */
+.badge-admin {
+  background-color: #ede9fe;
+  color: #5b21b6;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 5px 16px;
+  border-radius: 20px;
+  margin: 4px 0 10px;
+}
+
+.admin-datos {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.dato-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  color: #555;
+  padding: 12px 16px;
+  background-color: #fafafa;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.dato-row svg {
+  flex-shrink: 0;
+}
+
+.fecha-registro {
+  font-size: 1rem;
+  color: #888;
+  margin: 4px 0 14px;
+}
+
+.botones-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Botón cerrar sesión: mismo estilo que en perfil-usuario */
+.btn-cerrar-sesion {
+  width: 100%;
+  padding: 13px;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-cerrar-sesion:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* COLUMNA DERECHA — grid de tarjetas 2x2 */
+
+.admin-contenido {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Grid de 2 columnas. Con 3 tarjetas, la última se centra automáticamente */
+.admin-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* La tercera tarjeta ocupa las dos columnas pero se restringe al ancho
+   de una sola y se centra, quedando visualmente alineada entre las dos superiores */
+.admin-card:last-child {
+  grid-column: 1 / -1;
+  width: calc(50% - 12px);
+  margin: 0 auto;
+}
+
+/* Tarjeta individual */
+.admin-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px 36px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.admin-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Cabecera de la tarjeta: icono + título en línea */
+.admin-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: #fff7ed;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.admin-card-titulo {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin: 0;
+}
+
+.admin-card-desc {
+  font-size: 0.97rem;
+  color: #666;
+  line-height: 1.65;
+  flex: 1;
+  margin: 0;
+}
+
+/* Botón de cada tarjeta: centrado y con borde gris al estilo del diseño */
+.btn-card {
+  display: block;
+  margin: auto auto 0;
+  padding: 11px 36px;
+  background-color: transparent;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  border: 1.5px solid #d1d1d1;
+  border-radius: 50px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.btn-card:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* DIÁLOGO DE CONFIRMACIÓN */
+
+.dialogo-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialogo-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 44px;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dialogo-box h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin-bottom: 12px;
+}
+
+.dialogo-box p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.dialogo-botones {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.btn-cancelar {
+  padding: 13px 28px;
+  background-color: transparent;
+  color: #555;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 1.5px solid #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancelar:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-confirmar-salir {
+  padding: 13px 28px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.btn-confirmar-salir:hover {
+  background-color: #e8962e;
+  transform: translateY(-1px);
+}
+
+/* FOOTER */
+
+footer {
+  background-color: var(--color-primary);
+}
+
+footer p {
+  color: white;
+  text-align: center;
+}
+
+/* RESPONSIVE */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .perfil-admin-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .admin-lateral {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .admin-contenido {
+    width: 100%;
+  }
+}
+
+/* Tablet pequeña: grid pasa a columna única */
+@media (max-width: 768px) {
+  .admin-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Móvil */
+@media (max-width: 600px) {
+  .perfil-admin-wrapper {
+    padding: 20px 16px 90px;
+  }
+
+  .admin-card {
+    padding: 24px 20px;
+  }
+}

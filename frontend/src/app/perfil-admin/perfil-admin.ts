@@ -42,15 +42,7 @@ export class PerfilAdmin implements OnInit {
     });
   }
 
-  /**
-   * Navega a la ruta indicada dentro del panel de administración.
-   * Centralizar la navegación aquí facilita añadir guards o logs más adelante.
-   */
-  irA(ruta: string) {
-    this.router.navigate([ruta]);
-  }
-
-  // --- Gestión de cierre de sesión ---
+  // Gestión de cierre de sesión
 
   cerrarSesion() {
     this.mostrarDialogoSesion = true;
