@@ -124,7 +124,11 @@ export class Xuxedex implements OnInit {
         this.xuxemons = res.xuxemons.data;
         this.paginaActual = res.xuxemons.current_page;
         this.ultimaPagina = res.xuxemons.last_page;
-        if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
+        if (this.xuxemons.length === 0) {
+          this.sinResultadosFiltroTipo = true;
+        } else {
+          this.xuxemonSeleccionado = this.xuxemons[0];
+        }
         this.cargando = false;
       },
       error: (err) => {
@@ -156,7 +160,11 @@ export class Xuxedex implements OnInit {
         this.xuxemons = res.xuxemons.data;
         this.paginaActual = res.xuxemons.current_page;
         this.ultimaPagina = res.xuxemons.last_page;
-        if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
+        if (this.xuxemons.length === 0) {
+          this.sinResultadosFiltroTamano = true;
+        } else {
+          this.xuxemonSeleccionado = this.xuxemons[0];
+        }
         this.cargandoFiltro = false;
       },
       error: (err) => {
@@ -184,11 +192,10 @@ export class Xuxedex implements OnInit {
   sinResultados = false;
 
   buscarXuxemons(termino: string): void {
-    this.busqueda = termino;
     this.sinResultados = false;
+    this.busqueda = termino;
 
     if (termino.trim() === '') {
-      this.sinResultados = false;
       this.xuxemons = [];
       this.listarXuxemons();
       return;

@@ -103,15 +103,28 @@
         </div>
 
         @if (sinResultados) {
-        <p class="xdex-sin-resultados">Sin resultados para "{{ buscador.value }}", prueba con otro nombre.</p>
+        <div class="xdex-sin-resultados">
+          <span>Sin resultados para "{{ buscador.value }}", prueba con otro nombre.</span>
+          <button class="xdex-sin-resultados__cerrar"
+            (click)="sinResultados = false; buscador.setValue('', {emitEvent: false}); listarXuxemons()"
+            aria-label="Cerrar">✕</button>
+        </div>
         }
 
         @if (sinResultadosFiltroTipo) {
-        <p class="xdex-sin-resultados">No tienes Xuxemons de tipo "{{ tipoActivo }}", prueba con otro filtro.</p>
+        <div class="xdex-sin-resultados">
+          <span>No tienes Xuxemons de tipo "{{ getNombreTipo(tipoActivo) }}", prueba con otro filtro.</span>
+          <button class="xdex-sin-resultados__cerrar" (click)="sinResultadosFiltroTipo = false; listarXuxemons()"
+            aria-label="Cerrar">✕</button>
+        </div>
         }
 
         @if (sinResultadosFiltroTamano) {
-        <p class="xdex-sin-resultados">No tienes Xuxemons de tamaño "{{ tamanoActivo }}", prueba con otro filtro.</p>
+        <div class="xdex-sin-resultados">
+          <span>No tienes Xuxemons de tamaño "{{ getNombreTamano(tamanoActivo) }}", prueba con otro filtro.</span>
+          <button class="xdex-sin-resultados__cerrar" (click)="sinResultados = false; listarXuxemons()"
+            aria-label="Cerrar">✕</button>
+        </div>
         }
 
         <ul class="xdex-grid" aria-label="Lista de Xuxemons">
