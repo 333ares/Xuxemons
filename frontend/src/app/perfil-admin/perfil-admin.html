@@ -1,1 +1,264 @@
-<p>perfil-admin works!</p>
+<body>
+  <main>
+    <div class="perfil-admin-wrapper">
+      <div class="perfil-admin-layout">
+        <!-- COLUMNA IZQUIERDA: datos del administrador -->
+        <aside class="admin-lateral" aria-label="Información del administrador">
+          <div class="avatar-wrapper">
+            <!-- Icono de admin en lugar de foto de perfil -->
+            <div class="avatar-admin-icon" aria-hidden="true">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="72"
+                height="72"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#000000"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+          </div>
+
+          <h1 class="admin-nombre">{{ admin?.name }} {{ admin?.surname }}</h1>
+          <p class="admin-id">ID: {{ admin?.public_id }}</p>
+
+          <span class="badge-admin">Administrador</span>
+
+          <div class="admin-datos">
+            <div class="dato-row">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FFAA4A"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              <span>{{ admin?.email }}</span>
+            </div>
+
+            <div class="dato-row">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FFAA4A"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+              <span>Panel de Administración</span>
+            </div>
+          </div>
+
+          <p class="fecha-registro">Miembro desde: {{ admin?.created_at | date: 'dd MMM yyyy' }}</p>
+
+          <div class="botones-lateral">
+            <button class="btn-cerrar-sesion" type="button" (click)="cerrarSesion()">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              Cerrar sesión
+            </button>
+          </div>
+        </aside>
+        <!-- COLUMNA DERECHA: módulos de administración -->
+        <div class="admin-contenido">
+          <!-- FILA SUPERIOR -->
+          <div class="admin-cards-grid">
+            <!-- Tarjeta: Gestión de Usuarios -->
+            <section class="admin-card" aria-labelledby="card-usuarios-titulo">
+              <div class="admin-card-header">
+                <div class="card-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFAA4A"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+                <h2 id="card-usuarios-titulo" class="admin-card-titulo">Gestión de Usuarios</h2>
+              </div>
+              <p class="admin-card-desc">
+                Accede al listado completo de jugadores registrados. Consulta su ID, nombre, correo
+                y estado de cuenta. También puedes buscar usuarios por nombre, apellidos, email o ID
+                público y asignarles recursos manualmente.
+              </p>
+              <a routerLink="/gestionUsuarios">
+                <button class="btn-card" type="button" aria-label="Acceder a Gestión de Usuarios">
+                  Acceder
+                </button>
+              </a>
+            </section>
+
+            <!-- Tarjeta: Parámetros del Juego -->
+            <section class="admin-card" aria-labelledby="card-params-titulo">
+              <div class="admin-card-header">
+                <div class="card-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFAA4A"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06
+                      a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                      A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83
+                      l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09
+                      A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83
+                      l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09
+                      a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83
+                      l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09
+                      a1.65 1.65 0 0 0-1.51 1z"
+                    />
+                  </svg>
+                </div>
+                <h2 id="card-params-titulo" class="admin-card-titulo">Parámetros del Juego</h2>
+              </div>
+              <p class="admin-card-desc">
+                Ajusta los valores globales que controlan el funcionamiento del sistema: la cantidad
+                de xuxes necesarias para hacer crecer a un Xuxemon, el porcentaje de probabilidad de
+                infección y el intervalo de recompensas diarias.
+              </p>
+              <a routerLink="/parametros">
+                <button class="btn-card" type="button" aria-label="Editar Parámetros del Juego">
+                  Editar
+                </button>
+              </a>
+            </section>
+            <!-- Tarjeta: Estadísticas globales -->
+            <section class="admin-card" aria-labelledby="card-stats-titulo">
+              <div class="admin-card-header">
+                <div class="card-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFAA4A"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                  </svg>
+                </div>
+                <h2 id="card-stats-titulo" class="admin-card-titulo">Estadísticas globales</h2>
+              </div>
+              <p class="admin-card-desc">
+                Supervisa el estado general de la plataforma: total de jugadores registrados,
+                actividad reciente, partidas realizadas y distribución de Xuxemons por tipo y
+                tamaño. Permite detectar posibles desequilibrios en el sistema.
+              </p>
+              <a routerLink="/estadisticas">
+                <button
+                  class="btn-card"
+                  type="button"
+                  aria-label="Supervisar Estadísticas globales"
+                >
+                  Supervisar
+                </button>
+              </a>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIÁLOGO DE CONFIRMACIÓN PARA CERRAR SESIÓN -->
+      @if (mostrarDialogoSesion) {
+        <div
+          class="dialogo-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dialogo-titulo"
+          aria-describedby="dialogo-desc"
+          (click)="cerrarDialogoSesion()"
+        >
+          <div class="dialogo-box" (click)="$event.stopPropagation()">
+            <h3 id="dialogo-titulo">¿Cerrar sesión?</h3>
+            <p id="dialogo-desc">
+              Se cerrará tu sesión de administrador. Deberás volver a iniciar sesión para acceder al
+              panel.
+            </p>
+            <div class="dialogo-botones">
+              <button class="btn-cancelar" type="button" (click)="cerrarDialogoSesion()">
+                Cancelar
+              </button>
+              <button class="btn-confirmar-salir" type="button" (click)="confirmarCierreSesion()">
+                Sí, cerrar sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <app-nav></app-nav>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Xuxemons</p>
+  </footer>
+</body>

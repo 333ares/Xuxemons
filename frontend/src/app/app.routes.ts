@@ -12,6 +12,11 @@ import { Mochila } from './mochila/mochila';
 import { Xuxedex } from './xuxedex/xuxedex';
 import { PerfilAdmin } from './perfil-admin/perfil-admin';
 import { DashboardAdmin } from './dashboard-admin/dashboard-admin';
+import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
+import { AgregarXuxemon } from './agregar-xuxemon/agregar-xuxemon';
+import { AgregarObjeto } from './agregar-objeto/agregar-objeto';
+import { Parametros } from './parametros/parametros';
+import { Estadisticas } from './estadisticas/estadisticas';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -90,6 +95,41 @@ export const routes: Routes = [
   {
     path: 'dashboardAdmin',
     component: DashboardAdmin,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Gestion de Usuarios
+  {
+    path: 'gestionUsuarios',
+    component: GestionUsuarios,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Agregar Xuxemons
+  {
+    path: 'agregarXuxemnon',
+    component: AgregarXuxemon,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Agregar Objeto
+  {
+    path: 'agregarObjeto',
+    component: AgregarObjeto,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Parametros del Juego
+  {
+    path: 'parametros',
+    component: Parametros,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Estadísticas Globales
+  {
+    path: 'estadisticas',
+    component: Estadisticas,
     canActivate: [AuthGuard],
   },
 
