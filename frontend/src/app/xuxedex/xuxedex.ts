@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ICONS } from '../shared/icons';
@@ -46,6 +46,7 @@ export class Xuxedex implements OnInit {
   constructor(
     private sanitizer: DomSanitizer,
     private auth: Auth,
+    private router: Router,
   ) {
     Object.keys(ICONS).forEach((key) => {
       this.icons[key] = this.sanitizer.bypassSecurityTrustHtml(ICONS[key]);
@@ -229,7 +230,7 @@ export class Xuxedex implements OnInit {
     const mapa: Record<string, string> = {
       s: 'Pequeño',
       m: 'Mediano',
-      g: 'Grande',
+      l: 'Grande',
     };
     return mapa[size] ?? size;
   }
@@ -268,5 +269,26 @@ export class Xuxedex implements OnInit {
   estaSeleccionado(grupo: Xuxemons): boolean {
     // La función estaSeleccionado simplemente devuelve true o false para saber si debe aplicarle un estilo de "activo/resaltado" en el HTML.
     return this.xuxemonSeleccionado?.name === grupo.name;
+  }
+
+  mostrarDialogoBorrar: boolean = false;
+
+  abrirDialogoBorrar() {
+    this.mostrarDialogoBorrar = true;
+  }
+
+  cerrarDialogoBorrar() {
+    this.mostrarDialogoBorrar = false;
+  }
+
+  confirmarBorrar() {
+    this.auth.borrarXuxemon().subscribe({
+      next: () => {
+
+      },
+      error: () => {
+
+      }
+    });
   }
 }

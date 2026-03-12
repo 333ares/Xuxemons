@@ -91,4 +91,8 @@ export class Auth {
   getXuxemonsPorTamano(size: string = '', pagina: number = 1): Observable<any> {
     return this.http.get(`${this.apiUrl}/xuxemons/tamano?size=${size}&page=${pagina}`, { headers: this.getHeaders() });
   }
+
+  borrarXuxemon(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/xuxemon`, { headers: this.getHeaders() });
+  }
 }
