@@ -95,7 +95,39 @@ export class Xuxedex implements OnInit {
         this.cargando = false;
       },
       error: (err) => {
-        this.error = err.error?.errors ?? 'Error al cargar los Xuxemons.';
+        this.error = err.error?.errors ?? 'Error al cargar los xuxemons.';
+        this.cargando = false;
+      }
+    });
+  }
+
+  // Filtrado de xuxemons por tipo
+  sinResultadosFiltro = false;
+  tipoActivo = '';
+  cargandoFiltro = false;
+
+  filtrarPorTipo(type: string): void {
+    if (type === '') {
+      this.listarXuxemons();
+      return;
+    }
+
+    this.tipoActivo = type;
+    this.paginaActual = 1;
+    this.cargandoFiltro = true;
+    this.sinResultadosFiltro = false;
+
+    this.auth.getXuxemonsPorTipo(type).subscribe({
+      next: (res) => {
+        this.xuxemons = res.xuxemons.data;
+        this.paginaActual = res.xuxemons.current_page;
+        this.ultimaPagina = res.xuxemons.last_page;
+        if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
+        this.cargando = false;
+      },
+      error: (err) => {
+        this.sinResultadosFiltro = true;
+        this.xuxemons = [];
         this.cargando = false;
       }
     });

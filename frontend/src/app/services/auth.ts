@@ -84,5 +84,7 @@ export class Auth {
     return this.http.get(`${this.apiUrl}/xuxemons?page=${pagina}`, { headers: this.getHeaders() });
   }
 
-
+  getXuxemonsPorTipo(type: string = '', pagina: number = 1): Observable<any> {
+    return this.http.get(`${this.apiUrl}/xuxemons/tipo?type=${type}&page=${pagina}`, { headers: this.getHeaders() });
+  }
 }

@@ -63,7 +63,7 @@
     </div>
     }
     <!-- PANEL PRINCIPAL -->
-    @if (!cargando && !error && (xuxemons.length > 0 || sinResultados)) {
+    @if (!cargando && !error && (xuxemons.length > 0 || sinResultados || sinResultadosFiltro)) {
     <div class="xdex-panel">
       <!-- PANEL IZQUIERDO -->
       <section class="xdex-panel__izq" aria-labelledby="titulo-xuxedex">
@@ -83,7 +83,8 @@
           <input type="search" class="xdex-filtros__input" placeholder="Buscar Xuxemon..."
             aria-label="Buscar por nombre" [formControl]="buscador" />
 
-          <select class="xdex-filtros__select" aria-label="Filtrar por tipo">
+          <select class="xdex-filtros__select" aria-label="Filtrar por tipo"
+            (change)="filtrarPorTipo($any($event.target).value)">
             <option value="">Todos los tipos</option>
             <option value="agua">💧 Agua</option>
             <option value="tierra">🌍 Tierra</option>
@@ -94,7 +95,7 @@
             <option value="">Todos los tamaños</option>
             <option value="s">Pequeño</option>
             <option value="m">Mediano</option>
-            <option value="g">Grande</option>
+            <option value="l">Grande</option>
           </select>
         </div>
 
@@ -102,6 +103,9 @@
         <p class="xdex-sin-resultados">Sin resultados para "{{ buscador.value }}", prueba con otro nombre.</p>
         }
 
+        @if (sinResultadosFiltro) {
+        <p class="xdex-sin-resultados">No tienes Xuxemons de tipo "{{ tipoActivo }}", prueba con otro filtro.</p>
+        }
         <ul class="xdex-grid" aria-label="Lista de Xuxemons">
           @for (x of xuxemons; track x.id) {
           <li class="xdex-card" [class.xdex-card--activo]="xuxemonSeleccionado?.id === x.id"
