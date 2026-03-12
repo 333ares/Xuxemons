@@ -26,12 +26,8 @@ Route::middleware('auth:api')->group(function () {
 
     // Xuxemons
     Route::get('/xuxemons', [XuxemonsController::class, 'listarXuxemons']);
-    Route::get('/xuxemons/aire', [XuxemonsController::class, 'listarXuxemonsAire']);
-    Route::get('/xuxemons/tierra', [XuxemonsController::class, 'listarXuxemonsTierra']);
-    Route::post('/xuxemons/agua', [XuxemonsController::class, 'listarXuxemonsAgua']);
-    Route::get('/xuxemons/pequenos', [XuxemonsController::class, 'listarXuxemonsS']);
-    Route::get('/xuxemons/medianos', [XuxemonsController::class, 'listarXuxemonsM']);
-    Route::post('/xuxemons/grandes', [XuxemonsController::class, 'listarXuxemonsL']);
+    Route::get('/xuxemons/tipo', [XuxemonsController::class, 'listarXuxemonsPorTipo']);
+    Route::get('/xuxemons/tamano', [XuxemonsController::class, 'listarXuxemonsPorTamano']);
     Route::delete('/xuxemon', [XuxemonsController::class, 'borrarXuxemon']);
 
     // Mochila

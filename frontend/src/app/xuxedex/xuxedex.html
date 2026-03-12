@@ -47,7 +47,8 @@
     }
 
     <!-- SIN XUXEMONS -->
-    @if (!cargando && !error && xuxemons.length === 0 && !sinResultados) {
+    @if (!cargando && !error && xuxemons.length === 0 && !sinResultados && !sinResultadosFiltroTipo &&
+    !sinResultadosFiltroTamano) {
     <div class="xdex-estado xdex-estado--vacio" role="status">
       <div class="xdex-estado__icono-wrapper" aria-hidden="true">
         <svg width="48" height="48" viewBox="0 0 37 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +64,8 @@
     </div>
     }
     <!-- PANEL PRINCIPAL -->
-    @if (!cargando && !error && (xuxemons.length > 0 || sinResultados)) {
+    @if (!cargando && !error && (xuxemons.length > 0 || sinResultados || sinResultadosFiltroTipo ||
+    sinResultadosFiltroTamano)) {
     <div class="xdex-panel">
       <!-- PANEL IZQUIERDO -->
       <section class="xdex-panel__izq" aria-labelledby="titulo-xuxedex">
@@ -83,23 +85,46 @@
           <input type="search" class="xdex-filtros__input" placeholder="Buscar Xuxemon..."
             aria-label="Buscar por nombre" [formControl]="buscador" />
 
-          <select class="xdex-filtros__select" aria-label="Filtrar por tipo">
+          <select class="xdex-filtros__select" aria-label="Filtrar por tipo"
+            (change)="filtrarPorTipo($any($event.target).value)">
             <option value="">Todos los tipos</option>
             <option value="agua">💧 Agua</option>
             <option value="tierra">🌍 Tierra</option>
             <option value="aire">💨 Aire</option>
           </select>
 
-          <select class="xdex-filtros__select" aria-label="Filtrar por tamaño">
+          <select class="xdex-filtros__select" aria-label="Filtrar por tamaño"
+            (change)="filtrarPorTamano($any($event.target).value)">
             <option value="">Todos los tamaños</option>
             <option value="s">Pequeño</option>
             <option value="m">Mediano</option>
-            <option value="g">Grande</option>
+            <option value="l">Grande</option>
           </select>
         </div>
 
         @if (sinResultados) {
-        <p class="xdex-sin-resultados">Sin resultados para "{{ buscador.value }}", prueba con otro nombre.</p>
+        <div class="xdex-sin-resultados">
+          <span>Sin resultados para "{{ buscador.value }}", prueba con otro nombre.</span>
+          <button class="xdex-sin-resultados__cerrar"
+            (click)="sinResultados = false; buscador.setValue('', {emitEvent: false}); listarXuxemons()"
+            aria-label="Cerrar">✕</button>
+        </div>
+        }
+
+        @if (sinResultadosFiltroTipo) {
+        <div class="xdex-sin-resultados">
+          <span>No tienes Xuxemons de tipo "{{ getNombreTipo(tipoActivo) }}", prueba con otro filtro.</span>
+          <button class="xdex-sin-resultados__cerrar" (click)="sinResultadosFiltroTipo = false; listarXuxemons()"
+            aria-label="Cerrar">✕</button>
+        </div>
+        }
+
+        @if (sinResultadosFiltroTamano) {
+        <div class="xdex-sin-resultados">
+          <span>No tienes Xuxemons de tamaño "{{ getNombreTamano(tamanoActivo) }}", prueba con otro filtro.</span>
+          <button class="xdex-sin-resultados__cerrar" (click)="sinResultados = false; listarXuxemons()"
+            aria-label="Cerrar">✕</button>
+        </div>
         }
 
         <ul class="xdex-grid" aria-label="Lista de Xuxemons">
@@ -156,6 +181,8 @@
           Fecha de adquisición:
           <strong>{{ formatearFecha(xuxemonSeleccionado.created_at) }}</strong>
         </p>
+
+        <button (click)="abrirDialogoBorrar()" class="btn-borrar">Borrar</button>
       </section>
       }
     </div>
@@ -170,6 +197,26 @@
       <button (click)="irAPagina(paginaActual + 1)" [disabled]="paginaActual === ultimaPagina">→</button>
     </div>
 
+    <!--  DIÁLOGO DE CONFIRMACIÓN PARA BORRAR XUXEMON  -->
+    @if (mostrarDialogoBorrar) {
+    <div class="dialogo-overlay" role="dialog" aria-modal="true" aria-labelledby="dialogo-titulo"
+      aria-describedby="dialogo-desc" (click)="cerrarDialogoBorrar()">
+      <div class="dialogo-box" (click)="$event.stopPropagation()">
+        <h3 id="dialogo-titulo">¿Seguro que quieres borrar a {{ xuxemonSeleccionado!.name }}?</h3>
+        <p id="dialogo-desc">
+          Esta acción es permanente. Tu xuxemon se eliminará y no podrás volver a ver su información.
+        </p>
+        <div class="dialogo-botones">
+          <button class="btn-descartar" type="button" (click)="cerrarDialogoBorrar()">
+            Cancelar
+          </button>
+          <button class="btn-borrar" type="button" (click)="confirmarBorrar()">
+            Sí, borrar xuxemon
+          </button>
+        </div>
+      </div>
+    </div>
+    }
     }
   </main>
 

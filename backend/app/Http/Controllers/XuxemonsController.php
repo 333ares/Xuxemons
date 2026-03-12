@@ -11,7 +11,7 @@ class XuxemonsController extends Controller
     {
         // Recogemos los xuxemons del usuario que hace la petición
         $xuxemons = Xuxemons::where('user_id', $request->user()->id)
-        ->paginate(9);
+            ->paginate(9);
 
         // Si el resultado es 0 o menor, se muestra error
         if (count($xuxemons) <= 0) {
@@ -29,139 +29,36 @@ class XuxemonsController extends Controller
         }
     }
 
-    public function listarXuxemonsAire(Request $request)
+    public function listarXuxemonsPorTipo(Request $request)
     {
-        // Si el tipo que pide el usuario es aire
-        if ($request->type == 'aire') {
-            // Cogemos todos los xuxemons del usuario de tipo "aire"
-            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
-                ->where('type', 'aire')
-                ->paginate(9);
+        $xuxemon = Xuxemons::where('user_id', $request->user()->id);
 
-            // Si no encuentra, mostramos error
-            if (!$xuxemons) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors' => 'No tienes xuxemons de tipo aire aún'
-                ], 400);
-
-                // Si encuentra, los devolvemos
-            } else {
-                return response()->json([
-                    'message' => 'success',
-                    'xuxemons' => $xuxemons
-                ], 201);
-            }
+        if ($request->type) {
+            $xuxemon->where('type', $request->type);
         }
+
+        $xuxemons = $xuxemon->paginate(9);
+
+        return response()->json([
+            'message' => 'success',
+            'xuxemons' => $xuxemons
+        ], 200);
     }
 
-    public function listarXuxemonsTierra(Request $request)
+    public function listarXuxemonsPorTamano(Request $request)
     {
-        if ($request->type == 'tierra') {
-            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
-                ->where('type', 'tierra')
-                ->paginate(9);
+        $query = Xuxemons::where('user_id', $request->user()->id);
 
-            if (!$xuxemons) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors' => 'No tienes xuxemons de tipo tierra aún'
-                ], 400);
-            } else {
-                return response()->json([
-                    'message' => 'success',
-                    'xuxemons' => $xuxemons
-                ], 201);
-            }
+        if ($request->size) {
+            $query->where('size', $request->size);
         }
-    }
 
-    public function listarXuxemonsAgua(Request $request)
-    {
-        if ($request->type == 'agua') {
-            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
-                ->where('type', 'agua')
-                ->paginate(9);
+        $xuxemons = $query->paginate(9);
 
-            if (!$xuxemons) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors' => 'No tienes xuxemons de tipo agua aún'
-                ], 400);
-            } else {
-                return response()->json([
-                    'message' => 'success',
-                    'xuxemons' => $xuxemons
-                ], 201);
-            }
-        }
-    }
-
-    public function listarXuxemonsS(Request $request)
-    {
-        // Si el tamaño que pide el usuario es S 
-        if ($request->size == 's') {
-            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
-                ->where('size', 's')
-                ->paginate(9);
-
-            // Cogemos todos los xuxemons del usuario de tamaño "s"
-            if (!$xuxemons) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors' => 'No tienes xuxemons pequeños aún'
-                ], 400);
-
-                // Si encuentra, los devolvemos
-            } else {
-                return response()->json([
-                    'message' => 'success',
-                    'xuxemons' => $xuxemons
-                ], 201);
-            }
-        }
-    }
-
-    public function listarXuxemonsM(Request $request)
-    {
-        if ($request->size == 'm') {
-            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
-                ->where('size', 'm')
-                ->paginate(9);
-
-            if (!$xuxemons) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors' => 'No tienes xuxemons medianos aún'
-                ], 400);
-            } else {
-                return response()->json([
-                    'message' => 'success',
-                    'xuxemons' => $xuxemons
-                ], 201);
-            }
-        }
-    }
-
-    public function listarXuxemonsL(Request $request)
-    {
-        if ($request->size == 'l') {
-            $xuxemons = Xuxemons::where('user_id', $request->user()->id)
-                ->where('size', 'l')
-                ->paginate(9);
-
-            if (!$xuxemons) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors' => 'No tienes xuxemons grandes aún'
-                ], 400);
-            } else {
-                return response()->json([
-                    'message' => 'success',
-                    'xuxemons' => $xuxemons
-                ], 201);
-            }
-        }
+        return response()->json([
+            'message' => 'success',
+            'xuxemons' => $xuxemons
+        ], 200);
     }
 
     public function borrarXuxemon(Request $request)

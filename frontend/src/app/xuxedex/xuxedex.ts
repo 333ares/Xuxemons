@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ICONS } from '../shared/icons';
@@ -46,6 +46,7 @@ export class Xuxedex implements OnInit {
   constructor(
     private sanitizer: DomSanitizer,
     private auth: Auth,
+    private router: Router,
   ) {
     Object.keys(ICONS).forEach((key) => {
       this.icons[key] = this.sanitizer.bypassSecurityTrustHtml(ICONS[key]);
@@ -95,11 +96,85 @@ export class Xuxedex implements OnInit {
         this.cargando = false;
       },
       error: (err) => {
-        this.error = err.error?.errors ?? 'Error al cargar los Xuxemons.';
+        this.error = err.error?.errors ?? 'Error al cargar los xuxemons.';
         this.cargando = false;
       }
     });
   }
+
+  // Filtrado de xuxemons por tipo
+  sinResultadosFiltroTipo = false;
+  tipoActivo = '';
+  cargandoFiltro = false;
+
+  filtrarPorTipo(type: string): void {
+    if (type === '') {
+      this.listarXuxemons();
+      return;
+    }
+
+    this.cargando = false;
+    this.tipoActivo = type;
+    this.paginaActual = 1;
+    this.cargandoFiltro = true;
+    this.sinResultadosFiltroTipo = false;
+
+    this.auth.getXuxemonsPorTipo(type).subscribe({
+      next: (res) => {
+        this.xuxemons = res.xuxemons.data;
+        this.paginaActual = res.xuxemons.current_page;
+        this.ultimaPagina = res.xuxemons.last_page;
+        if (this.xuxemons.length === 0) {
+          this.sinResultadosFiltroTipo = true;
+        } else {
+          this.xuxemonSeleccionado = this.xuxemons[0];
+        }
+        this.cargando = false;
+      },
+      error: (err) => {
+        this.sinResultadosFiltroTipo = true;
+        this.xuxemons = [];
+        this.cargando = false;
+      }
+    });
+  }
+
+  // Filtrado de xuxemons por tamaño
+  sinResultadosFiltroTamano = false;
+  tamanoActivo = '';
+  filtrarPorTamano(size: string): void {
+    if (size === '') {
+      this.tamanoActivo = '';
+      this.listarXuxemons();
+      return;
+    }
+
+    this.tamanoActivo = size;
+    this.paginaActual = 1;
+    this.cargandoFiltro = true;
+    this.cargando = false;
+    this.sinResultadosFiltroTamano = false;
+
+    this.auth.getXuxemonsPorTamano(size).subscribe({
+      next: (res) => {
+        this.xuxemons = res.xuxemons.data;
+        this.paginaActual = res.xuxemons.current_page;
+        this.ultimaPagina = res.xuxemons.last_page;
+        if (this.xuxemons.length === 0) {
+          this.sinResultadosFiltroTamano = true;
+        } else {
+          this.xuxemonSeleccionado = this.xuxemons[0];
+        }
+        this.cargandoFiltro = false;
+      },
+      error: (err) => {
+        this.sinResultadosFiltroTamano = true;
+        this.xuxemons = [];
+        this.cargandoFiltro = false;
+      }
+    });
+  }
+
 
   // Paginación de datos
   irAPagina(pagina: number): void {
@@ -117,11 +192,10 @@ export class Xuxedex implements OnInit {
   sinResultados = false;
 
   buscarXuxemons(termino: string): void {
-    this.busqueda = termino;
     this.sinResultados = false;
+    this.busqueda = termino;
 
     if (termino.trim() === '') {
-      this.sinResultados = false;
       this.xuxemons = [];
       this.listarXuxemons();
       return;
@@ -167,7 +241,7 @@ export class Xuxedex implements OnInit {
     const mapa: Record<string, string> = {
       s: 'Pequeño',
       m: 'Mediano',
-      g: 'Grande',
+      l: 'Grande',
     };
     return mapa[size] ?? size;
   }
@@ -206,5 +280,34 @@ export class Xuxedex implements OnInit {
   estaSeleccionado(grupo: Xuxemons): boolean {
     // La función estaSeleccionado simplemente devuelve true o false para saber si debe aplicarle un estilo de "activo/resaltado" en el HTML.
     return this.xuxemonSeleccionado?.name === grupo.name;
+  }
+
+  mostrarDialogoBorrar: boolean = false;
+
+  abrirDialogoBorrar() {
+    this.mostrarDialogoBorrar = true;
+  }
+
+  cerrarDialogoBorrar() {
+    this.mostrarDialogoBorrar = false;
+  }
+
+  confirmarBorrar() {
+    if (!this.xuxemonSeleccionado) return;
+
+    this.auth.borrarXuxemon(this.xuxemonSeleccionado.id).subscribe({
+      next: () => {
+        // quitarlo de la lista
+        this.xuxemons = this.xuxemons.filter(
+          x => x.id !== this.xuxemonSeleccionado?.id
+        );
+
+        this.xuxemonSeleccionado = this.xuxemons[0] ?? null;
+        this.cerrarDialogoBorrar();
+      },
+      error: (err) => {
+        console.error('Error al borrar xuxemon', err);
+      }
+    });
   }
 }
