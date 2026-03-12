@@ -15,6 +15,7 @@ import { DashboardAdmin } from './dashboard-admin/dashboard-admin';
 import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
 import { AgregarXuxemon } from './agregar-xuxemon/agregar-xuxemon';
 import { AgregarObjeto } from './agregar-objeto/agregar-objeto';
+import { Parametros } from './parametros/parametros';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -114,6 +115,13 @@ export const routes: Routes = [
   {
     path: 'agregarObjeto',
     component: AgregarObjeto,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Parametros del Juego
+  {
+    path: 'parametros',
+    component: Parametros,
     canActivate: [AuthGuard],
   },
 

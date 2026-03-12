@@ -132,11 +132,56 @@
                 y estado de cuenta. También puedes buscar usuarios por nombre, apellidos, email o ID
                 público y asignarles recursos manualmente.
               </p>
-              <a routerLink="/gestionUsuarios" class="card-link">
+              <a routerLink="/gestionUsuarios">
                 <button class="btn-card" type="button" aria-label="Acceder a Gestión de Usuarios">
                   Acceder
-                </button></a
-              >
+                </button>
+              </a>
+            </section>
+
+            <!-- Tarjeta: Parámetros del Juego -->
+            <section class="admin-card" aria-labelledby="card-params-titulo">
+              <div class="admin-card-header">
+                <div class="card-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFAA4A"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06
+                      a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                      A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83
+                      l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09
+                      A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83
+                      l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09
+                      a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83
+                      l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09
+                      a1.65 1.65 0 0 0-1.51 1z"
+                    />
+                  </svg>
+                </div>
+                <h2 id="card-params-titulo" class="admin-card-titulo">Parámetros del Juego</h2>
+              </div>
+              <p class="admin-card-desc">
+                Ajusta los valores globales que controlan el funcionamiento del sistema: la cantidad
+                de xuxes necesarias para hacer crecer a un Xuxemon, el porcentaje de probabilidad de
+                infección y el intervalo de recompensas diarias.
+              </p>
+              <a routerLink="/parametros">
+                <button class="btn-card" type="button" aria-label="Editar Parámetros del Juego">
+                  Editar
+                </button>
+              </a>
             </section>
 
       <!-- DIÁLOGO DE CONFIRMACIÓN PARA CERRAR SESIÓN -->
