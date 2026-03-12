@@ -98,3 +98,80 @@
             </button>
           </div>
         </aside>
+        <!-- COLUMNA DERECHA: módulos de administración -->
+        <div class="admin-contenido">
+          <!-- FILA SUPERIOR -->
+          <div class="admin-cards-grid">
+            <!-- Tarjeta: Gestión de Usuarios -->
+            <section class="admin-card" aria-labelledby="card-usuarios-titulo">
+              <div class="admin-card-header">
+                <div class="card-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFAA4A"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+                <h2 id="card-usuarios-titulo" class="admin-card-titulo">Gestión de Usuarios</h2>
+              </div>
+              <p class="admin-card-desc">
+                Accede al listado completo de jugadores registrados. Consulta su ID, nombre, correo
+                y estado de cuenta. También puedes buscar usuarios por nombre, apellidos, email o ID
+                público y asignarles recursos manualmente.
+              </p>
+              <a routerLink="/gestionUsuarios" class="card-link">
+                <button class="btn-card" type="button" aria-label="Acceder a Gestión de Usuarios">
+                  Acceder
+                </button></a
+              >
+            </section>
+
+      <!-- DIÁLOGO DE CONFIRMACIÓN PARA CERRAR SESIÓN -->
+      @if (mostrarDialogoSesion) {
+        <div
+          class="dialogo-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dialogo-titulo"
+          aria-describedby="dialogo-desc"
+          (click)="cerrarDialogoSesion()"
+        >
+          <div class="dialogo-box" (click)="$event.stopPropagation()">
+            <h3 id="dialogo-titulo">¿Cerrar sesión?</h3>
+            <p id="dialogo-desc">
+              Se cerrará tu sesión de administrador. Deberás volver a iniciar sesión para acceder al
+              panel.
+            </p>
+            <div class="dialogo-botones">
+              <button class="btn-cancelar" type="button" (click)="cerrarDialogoSesion()">
+                Cancelar
+              </button>
+              <button class="btn-confirmar-salir" type="button" (click)="confirmarCierreSesion()">
+                Sí, cerrar sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <app-nav></app-nav>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Xuxemons</p>
+  </footer>
+</body>
