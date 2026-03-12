@@ -113,6 +113,7 @@ export class Xuxedex implements OnInit {
       return;
     }
 
+    this.cargando = false;
     this.tipoActivo = type;
     this.paginaActual = 1;
     this.cargandoFiltro = true;
@@ -139,6 +140,7 @@ export class Xuxedex implements OnInit {
   tamanoActivo = '';
   filtrarPorTamano(size: string): void {
     if (size === '') {
+      this.tamanoActivo = '';
       this.listarXuxemons();
       return;
     }
@@ -146,6 +148,7 @@ export class Xuxedex implements OnInit {
     this.tamanoActivo = size;
     this.paginaActual = 1;
     this.cargandoFiltro = true;
+    this.cargando = false;
     this.sinResultadosFiltroTamano = false;
 
     this.auth.getXuxemonsPorTamano(size).subscribe({
@@ -154,15 +157,16 @@ export class Xuxedex implements OnInit {
         this.paginaActual = res.xuxemons.current_page;
         this.ultimaPagina = res.xuxemons.last_page;
         if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
-        this.cargando = false;
+        this.cargandoFiltro = false;
       },
       error: (err) => {
         this.sinResultadosFiltroTamano = true;
         this.xuxemons = [];
-        this.cargando = false;
+        this.cargandoFiltro = false;
       }
     });
   }
+
 
   // Paginación de datos
   irAPagina(pagina: number): void {
@@ -282,12 +286,20 @@ export class Xuxedex implements OnInit {
   }
 
   confirmarBorrar() {
-    this.auth.borrarXuxemon().subscribe({
+    if (!this.xuxemonSeleccionado) return;
+
+    this.auth.borrarXuxemon(this.xuxemonSeleccionado.id).subscribe({
       next: () => {
+        // quitarlo de la lista
+        this.xuxemons = this.xuxemons.filter(
+          x => x.id !== this.xuxemonSeleccionado?.id
+        );
 
+        this.xuxemonSeleccionado = this.xuxemons[0] ?? null;
+        this.cerrarDialogoBorrar();
       },
-      error: () => {
-
+      error: (err) => {
+        console.error('Error al borrar xuxemon', err);
       }
     });
   }

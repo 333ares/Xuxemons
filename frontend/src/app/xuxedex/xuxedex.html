@@ -47,7 +47,8 @@
     }
 
     <!-- SIN XUXEMONS -->
-    @if (!cargando && !error && xuxemons.length === 0 && !sinResultados) {
+    @if (!cargando && !error && xuxemons.length === 0 && !sinResultados && !sinResultadosFiltroTipo &&
+    !sinResultadosFiltroTamano) {
     <div class="xdex-estado xdex-estado--vacio" role="status">
       <div class="xdex-estado__icono-wrapper" aria-hidden="true">
         <svg width="48" height="48" viewBox="0 0 37 40" fill="none" xmlns="http://www.w3.org/2000/svg">
