@@ -16,6 +16,7 @@ import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
 import { AgregarXuxemon } from './agregar-xuxemon/agregar-xuxemon';
 import { AgregarObjeto } from './agregar-objeto/agregar-objeto';
 import { Parametros } from './parametros/parametros';
+import { Estadisticas } from './estadisticas/estadisticas';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -122,6 +123,13 @@ export const routes: Routes = [
   {
     path: 'parametros',
     component: Parametros,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Estadísticas Globales
+  {
+    path: 'estadisticas',
+    component: Estadisticas,
     canActivate: [AuthGuard],
   },
 

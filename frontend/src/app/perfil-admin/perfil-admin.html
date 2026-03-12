@@ -183,6 +183,45 @@
                 </button>
               </a>
             </section>
+            <!-- Tarjeta: Estadísticas globales -->
+            <section class="admin-card" aria-labelledby="card-stats-titulo">
+              <div class="admin-card-header">
+                <div class="card-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FFAA4A"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                  </svg>
+                </div>
+                <h2 id="card-stats-titulo" class="admin-card-titulo">Estadísticas globales</h2>
+              </div>
+              <p class="admin-card-desc">
+                Supervisa el estado general de la plataforma: total de jugadores registrados,
+                actividad reciente, partidas realizadas y distribución de Xuxemons por tipo y
+                tamaño. Permite detectar posibles desequilibrios en el sistema.
+              </p>
+              <a routerLink="/estadisticas">
+                <button
+                  class="btn-card"
+                  type="button"
+                  aria-label="Supervisar Estadísticas globales"
+                >
+                  Supervisar
+                </button>
+              </a>
+            </section>
 
       <!-- DIÁLOGO DE CONFIRMACIÓN PARA CERRAR SESIÓN -->
       @if (mostrarDialogoSesion) {
