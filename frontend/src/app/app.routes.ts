@@ -12,6 +12,9 @@ import { Mochila } from './mochila/mochila';
 import { Xuxedex } from './xuxedex/xuxedex';
 import { PerfilAdmin } from './perfil-admin/perfil-admin';
 import { DashboardAdmin } from './dashboard-admin/dashboard-admin';
+import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
+import { AgregarXuxemon } from './agregar-xuxemon/agregar-xuxemon';
+import { AgregarObjeto } from './agregar-objeto/agregar-objeto';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -95,22 +98,22 @@ export const routes: Routes = [
 
   // Ruta Gestion de Usuarios
   {
-    path: 'dashboardAdmin',
-    component: DashboardAdmin,
+    path: 'gestionUsuarios',
+    component: GestionUsuarios,
     canActivate: [AuthGuard],
   },
 
   // Ruta Agregar Xuxemons
   {
-    path: 'dashboardAdmin',
-    component: DashboardAdmin,
+    path: 'agregarXuxemnon',
+    component: AgregarXuxemon,
     canActivate: [AuthGuard],
   },
 
   // Ruta Agregar Objeto
   {
-    path: 'dashboardAdmin',
-    component: DashboardAdmin,
+    path: 'agregarObjeto',
+    component: AgregarObjeto,
     canActivate: [AuthGuard],
   },
 
