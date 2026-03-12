@@ -93,6 +93,27 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
 
+  // Ruta Gestion de Usuarios
+  {
+    path: 'dashboardAdmin',
+    component: DashboardAdmin,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Agregar Xuxemons
+  {
+    path: 'dashboardAdmin',
+    component: DashboardAdmin,
+    canActivate: [AuthGuard],
+  },
+
+  // Ruta Agregar Objeto
+  {
+    path: 'dashboardAdmin',
+    component: DashboardAdmin,
+    canActivate: [AuthGuard],
+  },
+
   // Si alguien entra a una pagina inexistente lo reedirige al login. (Esto se tiene que dejar al final de las rutas)
   { path: '**', redirectTo: 'login' },
 ];
