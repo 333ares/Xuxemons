@@ -3,11 +3,12 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../services/auth';
 import { Nav } from '../shared/nav/nav';
+import { Adminav } from '../shared/adminav/adminav';
 
 @Component({
   selector: 'app-perfil-admin',
   standalone: true,
-  imports: [CommonModule, Nav, RouterLink],
+  imports: [CommonModule, Adminav, RouterLink],
   templateUrl: './perfil-admin.html',
   styleUrl: './perfil-admin.css',
 })
