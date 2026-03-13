@@ -6,7 +6,7 @@ import { GestionUsuarios } from '../gestion-usuarios/gestion-usuarios';
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule, Nav, GestionUsuarios],
+  imports: [CommonModule, GestionUsuarios],
   templateUrl: './dashboard-admin.html',
   styleUrls: ['./dashboard-admin.css'],
 })

@@ -1,5 +1,4 @@
 /* Reutiliza el mismo sistema de diseño que pagina-principal */
-
 .dashboard-wrapper {
   background-color: #f4f3f3;
   min-height: 100vh;
@@ -7,7 +6,7 @@
   padding-bottom: 90px;
 }
 
-/* ─── CABECERA ───────────────────────────────────── */
+/* CABECERA */
 .dashboard-header {
   position: sticky;
   top: 0;
@@ -97,7 +96,7 @@
   color: #999;
 }
 
-/* ─── CONTENIDO PRINCIPAL ────────────────────────── */
+/* CONTENIDO PRINCIPAL */
 .dashboard-main {
   max-width: 1400px;
   margin: 0 auto;
@@ -107,7 +106,7 @@
   gap: 24px;
 }
 
-/* ─── BIENVENIDA ─────────────────────────────────── */
+/* BIENVENIDA */
 .bienvenida-section {
   display: flex;
   align-items: flex-end;
@@ -140,7 +139,7 @@
   text-transform: capitalize;
 }
 
-/* ─── KPIs ───────────────────────────────────────── */
+/* KPIs */
 .kpi-row {
   display: flex;
   gap: 16px;
@@ -223,7 +222,7 @@
   margin-top: 3px;
 }
 
-/* ─── RESPONSIVE ─────────────────────────────────── */
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .kpi-row {
     flex-wrap: wrap;
