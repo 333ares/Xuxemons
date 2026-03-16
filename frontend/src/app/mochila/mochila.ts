@@ -138,7 +138,7 @@ const DATOS_PRUEBA: ItemMochila[] = [
 export class Mochila implements OnInit {
   cargando = true;
   error = '';
-
+  usuario: any = null;
   todosLosSlots: Slot[] = [];
   slotSeleccionado: Slot | null = null;
 
@@ -152,10 +152,24 @@ export class Mochila implements OnInit {
   constructor(
     private http: HttpClient,
     private auth: Auth,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.cargarUsuario();
     this.cargarMochila();
+  }
+
+  // Carga los datos del usuario autenticado desde el backend
+  private cargarUsuario(): void {
+    this.auth.getInfoUsuario().subscribe({
+      next: (res) => {
+        // El backend devuelve el usuario dentro de res.usuario o directamente en res
+        this.usuario = res.usuario ?? res;
+      },
+      error: (err) => {
+        console.error('Error al cargar los datos del usuario:', err);
+      },
+    });
   }
 
   cargarMochila(): void {
