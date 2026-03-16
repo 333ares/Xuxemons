@@ -1,1 +1,135 @@
-<p>dashboard-admin works!</p>
+<div class="dashboard-wrapper">
+  <!-- CABECERA -->
+  <header class="dashboard-header">
+    <div class="header-left">
+      <div class="header-logo">
+        <img src="logo.png" alt="Logo Xuxemons" class="logo-img" />
+        <span class="logo-text">Xuxemons</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="admin-chip" aria-label="Modo administrador activo">Admin</span>
+      <div class="header-user">
+        <div class="header-avatar-placeholder" aria-hidden="true">A</div>
+        <div class="header-user-info">
+          <span class="header-user-name">{{ admin?.name ?? 'Administrador' }}</span>
+          <span class="header-user-id">{{ admin?.public_id ?? '#Admin0001' }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="dashboard-main" id="main-content">
+    <!-- Saludo -->
+    <section class="bienvenida-section" aria-label="Bienvenida al panel de administración">
+      <div class="bienvenida-texto">
+        <h1 class="bienvenida-titulo">
+          Panel de <span class="nombre-highlight">Administración</span>
+        </h1>
+        <p class="bienvenida-sub">
+          Gestiona usuarios, Xuxemons y objetos de la plataforma desde aquí.
+        </p>
+      </div>
+      <div class="bienvenida-fecha">
+        <span class="fecha-texto">{{ fechaHoy }}</span>
+      </div>
+    </section>
+
+    <!-- KPIs rápidos -->
+    <section class="kpi-row" aria-label="Métricas globales de la plataforma">
+      <div class="kpi-card kpi-naranja">
+        <div class="kpi-icono" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-numero">{{ kpis.totalUsuarios }}</span>
+          <span class="kpi-label">Usuarios registrados</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icono kpi-icono-verde" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v4l3 3" />
+          </svg>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-numero">{{ kpis.totalXuxemons }}</span>
+          <span class="kpi-label">Xuxemons en circulación</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icono kpi-icono-rojo" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-numero">{{ kpis.xuxemonsEnfermos }}</span>
+          <span class="kpi-label">Xuxemons enfermos</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icono kpi-icono-azul" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+        </div>
+        <div class="kpi-data">
+          <span class="kpi-numero">{{ kpis.totalObjetos }}</span>
+          <span class="kpi-label">Objetos en mochilas</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Módulo de gestión de usuarios -->
+    <app-gestion-usuarios></app-gestion-usuarios>
+  </main>
+</div>

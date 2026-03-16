@@ -1,0 +1,27 @@
+<nav class="nav-inferior" aria-label="Navegación del Administrador">
+
+  <a routerLink="/perfilAdmin" routerLinkActive="nav-activo"
+     class="nav-item" aria-label="Perfil del Administrador">
+    <span [innerHTML]="icons['perfil']"></span>
+  </a>
+
+  <a routerLink="/parametros" routerLinkActive="nav-activo"
+     class="nav-item" aria-label="Parametros del juego">
+    <span [innerHTML]="icons['parametros']"></span>
+  </a>
+  <a routerLink="/dashboardAdmin" routerLinkActive="nav-activo"
+     class="nav-item" aria-label="Dashboard del administrador">
+    <span [innerHTML]="icons['home']"></span>
+  </a>
+
+  <a routerLink="/gestionUsuarios" routerLinkActive="nav-activo"
+     class="nav-item" aria-label="Gestion usuarios">
+    <span [innerHTML]="icons['amigos']"></span>
+  </a>
+
+  <a routerLink="/estadisticas" routerLinkActive="nav-activo"
+     class="nav-item" aria-label="Estadisticas globales">
+    <span [innerHTML]="icons['estadisticas']"></span>
+  </a>
+
+</nav>

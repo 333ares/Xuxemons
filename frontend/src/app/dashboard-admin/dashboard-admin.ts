@@ -1,11 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Nav } from '../shared/nav/nav';
+import { GestionUsuarios } from '../gestion-usuarios/gestion-usuarios';
 
 @Component({
   selector: 'app-dashboard-admin',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, GestionUsuarios],
   templateUrl: './dashboard-admin.html',
-  styleUrl: './dashboard-admin.css',
+  styleUrls: ['./dashboard-admin.css'],
 })
-export class DashboardAdmin {
+export class DashboardAdmin implements OnInit {
+  // Datos del admin autenticado — se cargarán desde el backend
+  admin: any = null;
 
+  fechaHoy: string = '';
+
+  // KPIs globales de la plataforma — se cargarán desde el backend
+  kpis = {
+    totalUsuarios: 128,
+    totalXuxemons: 874,
+    xuxemonsEnfermos: 47,
+    totalObjetos: 312,
+  };
+
+  ngOnInit(): void {
+    this.calcularFechaHoy();
+    // TODO: llamar a AdminService para cargar admin autenticado y KPIs reales
+  }
+
+  private calcularFechaHoy(): void {
+    const hoy = new Date();
+    this.fechaHoy = hoy.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  }
 }
