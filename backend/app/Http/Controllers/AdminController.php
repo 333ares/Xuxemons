@@ -50,6 +50,11 @@ class AdminController extends Controller
                     'errors' => 'No se ha podido añadir el xuxemon'
                 ], 400);
             }
+        } else {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
+            ], 400);
         }
     }
 
