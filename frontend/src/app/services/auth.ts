@@ -95,4 +95,9 @@ export class Auth {
       body: { id: id }
     });
   }
+
+  // --- MOCHILA ---
+  getMochila(pagina: number = 1): Observable<any> {
+    return this.http.get(`${this.apiUrl}/mochila?page=${pagina}`, { headers: this.getHeaders() });
+  }
 }
