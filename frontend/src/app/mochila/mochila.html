@@ -71,12 +71,9 @@
           @for (slot of slotsEnPaginaActual; track slot.indice) {
           <li class="mo-card" [class.mo-card--ocupado]="slot.item !== null" [class.mo-card--vacio]="slot.item === null"
             [class.mo-card--seleccionado]="slotSeleccionado?.indice === slot.indice"
-            [class.mo-card--xuxe]="slot.item?.categoria === 'xuxe'"
-            [class.mo-card--vacuna]="slot.item?.categoria === 'vacuna'" [attr.aria-label]="
-                  slot.item
-                    ? slot.item.nombre + ', ' + slot.cantidadEnSlot + ' unidades'
-                    : 'Espacio vacío'
-                " [attr.tabindex]="slot.item ? 0 : -1" [attr.role]="slot.item ? 'button' : null"
+            [class.mo-card--xuxe]="slot.item?.type === 'xuxe'" [class.mo-card--vacuna]="slot.item?.type === 'vacuna'"
+            [attr.aria-label]="slot.item ? slot.item.name + ', ' + slot.cantidadEnSlot + ' unidades' : 'Espacio vacío'"
+            [attr.tabindex]="slot.item ? 0 : -1" [attr.role]="slot.item ? 'button' : null"
             [attr.aria-pressed]="slot.item ? slotSeleccionado?.indice === slot.indice : null"
             (click)="seleccionarSlot(slot)" (keydown.enter)="seleccionarSlot(slot)"
             (keydown.space)="seleccionarSlot(slot)">
@@ -88,13 +85,12 @@
 
             <!-- Imagen del objeto desde public/chuches/ -->
             <div class="mo-card__imagen">
-              <img [src]="getImagenItem(slot.item.nombre)" [alt]="slot.item.nombre" class="mo-card__img"
-                loading="lazy" />
+              <img [src]="getImagenItem(slot.item.name)" [alt]="slot.item.name" class="mo-card__img" loading="lazy" />
             </div>
 
             <!-- Franja inferior con el nombre -->
             <div class="mo-card__nombre-bar">
-              <span class="mo-card__nombre">{{ slot.item.nombre }}</span>
+              <span class="mo-card__nombre">{{ slot.item.name }}</span>
             </div>
             } @else {
             <div class="mo-card__vacio" aria-hidden="true"></div>
@@ -104,7 +100,7 @@
         </ul>
 
         <!-- Paginación -->
-        @if (totalPaginas > 1) {
+        @if (ultimaPagina > 1) {
         <nav class="mo-paginacion" aria-label="Paginación de la mochila">
           <button class="mo-paginacion__btn" (click)="irAPagina(paginaActual - 1)" [disabled]="paginaActual === 1"
             aria-label="Página anterior">
@@ -124,7 +120,7 @@
           }
 
           <button class="mo-paginacion__btn" (click)="irAPagina(paginaActual + 1)"
-            [disabled]="paginaActual === totalPaginas" aria-label="Página siguiente">
+            [disabled]="paginaActual === ultimaPagina" aria-label="Página siguiente">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 12h14" />
@@ -164,39 +160,38 @@
         <div class="mo-detalle">
           <!-- Imagen grande del objeto -->
           <div class="mo-detalle__ilustracion">
-            <img [src]="getImagenItem(slotSeleccionado!.item!.nombre)" [alt]="slotSeleccionado!.item!.nombre"
+            <img [src]="getImagenItem(slotSeleccionado!.item!.name)" [alt]="slotSeleccionado!.item!.name"
               class="mo-detalle__img" />
           </div>
 
           <!-- Tarjeta de información -->
           <div class="mo-detalle__card">
             <div class="mo-detalle__cabecera">
-              <p class="mo-detalle__nombre">{{ slotSeleccionado!.item!.nombre }}</p>
+              <p class="mo-detalle__nombre">{{ slotSeleccionado!.item!.name }}</p>
               <span class="mo-detalle__cantidad">x{{ slotSeleccionado!.cantidadEnSlot }}</span>
             </div>
 
             <div class="mo-detalle__etiquetas" role="list" aria-label="Características del objeto">
-              <span class="mo-etiqueta" [class.mo-etiqueta--no-apilable]="
-                      slotSeleccionado!.item!.tipo === 'no_apilable'
-                    " [class.mo-etiqueta--apilable]="slotSeleccionado!.item!.tipo === 'apilable'" role="listitem">
-                {{ getNombreTipo(slotSeleccionado!.item!.tipo) }}
+              <!-- Apilable o no apilable según el campo stackable -->
+              <span class="mo-etiqueta" [class.mo-etiqueta--no-apilable]="!slotSeleccionado!.item!.stackable"
+                [class.mo-etiqueta--apilable]="slotSeleccionado!.item!.stackable" role="listitem">
+                {{ slotSeleccionado!.item!.stackable ? 'Apilable' : 'No apilable' }}
               </span>
-              <span class="mo-etiqueta" [class.mo-etiqueta--vacuna]="slotSeleccionado!.item!.categoria === 'vacuna'"
-                [class.mo-etiqueta--xuxe]="slotSeleccionado!.item!.categoria === 'xuxe'" role="listitem">
-                {{ getNombreCategoria(slotSeleccionado!.item!.categoria) }}
-              </span>
-              <span class="mo-etiqueta mo-etiqueta--efecto" role="listitem">
-                {{ slotSeleccionado!.item!.efecto }}
+              <!-- Tipo del objeto -->
+              <span class="mo-etiqueta" [class.mo-etiqueta--vacuna]="slotSeleccionado!.item!.type === 'vacuna'"
+                [class.mo-etiqueta--xuxe]="slotSeleccionado!.item!.type === 'xuxe'" role="listitem">
+                {{ slotSeleccionado!.item!.type }}
               </span>
             </div>
 
+            <!-- Fecha de adquisición -->
             <p class="mo-detalle__fecha">
               Fecha de adquisición:
-              <strong>{{ slotSeleccionado!.item!.fechaAdquisicion }}</strong>
+              <strong>{{ formatearFecha(slotSeleccionado!.item!.created_at) }}</strong>
             </p>
 
             <button class="mo-btn-eliminar" (click)="eliminarSeleccionado()"
-              [attr.aria-label]="'Eliminar ' + slotSeleccionado!.item!.nombre">
+              [attr.aria-label]="'Eliminar ' + slotSeleccionado!.item!.name">
               Borrar objeto
             </button>
           </div>
