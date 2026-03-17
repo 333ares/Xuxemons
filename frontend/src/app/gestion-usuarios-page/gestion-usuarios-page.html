@@ -1,1 +1,28 @@
-<p>gestion-usuarios-page works!</p>
+<div class="page-wrapper">
+
+  <!-- Misma cabecera que el dashboard-admin -->
+  <header class="dashboard-header">
+    <div class="header-left">
+      <a routerLink="/admin" class="header-logo" aria-label="Volver al panel de administración">
+        <img src="logo.png" alt="Logo Xuxemons" class="logo-img" />
+        <span class="logo-text">Xuxemons</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <a routerLink="/admin" class="btn-volver" aria-label="Volver al panel">
+        ← Panel
+      </a>
+      <span class="admin-chip" aria-label="Modo administrador activo">🤖 Admin</span>
+      <div class="header-user">
+        <div class="header-avatar-placeholder" aria-hidden="true">A</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido centrado -->
+  <main class="page-main" id="main-content">
+    <app-gestion-usuarios></app-gestion-usuarios>
+  </main>
+
+  <app-nav></app-nav>
+</div>
