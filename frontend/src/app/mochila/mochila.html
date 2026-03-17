@@ -134,8 +134,8 @@
       <!-- PANEL DERECHO detalle -->
       <section class="mo-panel__der" aria-label="Detalle del objeto seleccionado" aria-live="polite">
         <!-- Contador de capacidad -->
-        <div class="mo-contador" [attr.aria-label]="slotsUsados + ' de 20 espacios usados'">
-          {{ slotsUsados }}/20
+        <div class="mo-contador" [attr.aria-label]="totalObjetos + ' de 20 espacios usados'">
+          {{ totalObjetos }}/20
         </div>
 
         <!-- Estado sin selección: ilustración de mochila -->
@@ -190,8 +190,7 @@
               <strong>{{ formatearFecha(slotSeleccionado!.item!.created_at) }}</strong>
             </p>
 
-            <button class="mo-btn-eliminar" (click)="eliminarSeleccionado()"
-              [attr.aria-label]="'Eliminar ' + slotSeleccionado!.item!.name">
+            <button class="mo-btn-eliminar" [attr.aria-label]="'Eliminar ' + slotSeleccionado!.item!.name">
               Borrar objeto
             </button>
           </div>

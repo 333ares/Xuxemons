@@ -32,6 +32,7 @@ export class Mochila implements OnInit {
   usuario: any = null;
   todosLosSlots: Slot[] = [];
   slotSeleccionado: Slot | null = null;
+  totalObjetos = 0;
 
   readonly POR_PAGINA = 9; // 3 columnas × 3 filas
   readonly MAX_SLOTS = 20;
@@ -69,9 +70,11 @@ export class Mochila implements OnInit {
         const items: ItemMochila[] = res.objetos.data;
         this.paginaActual = res.objetos.current_page;
         this.ultimaPagina = res.objetos.last_page;
+        this.totalObjetos = res.objetos.total;
         this.todosLosSlots = this.construirSlots(items);
         this.cargando = false;
-      },
+      }
+      ,
       error: (err) => {
         this.error = err.error?.errors ?? 'Error al cargar la mochila.';
         this.cargando = false;
@@ -81,10 +84,10 @@ export class Mochila implements OnInit {
 
   // Construye el array de slots a partir de los items recibidos
   private construirSlots(items: ItemMochila[]): Slot[] {
-    return Array.from({ length: this.MAX_SLOTS }, (_, i) => ({
+    return items.map((item, i) => ({
       indice: i,
-      item: items[i] ?? null,
-      cantidadEnSlot: items[i]?.amount ?? 0,
+      item: item,
+      cantidadEnSlot: item.amount,
     }));
   }
 
