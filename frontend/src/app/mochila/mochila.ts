@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Nav } from '../shared/nav/nav';
 import { Auth } from '../services/auth';
 
@@ -14,7 +13,7 @@ export interface ItemMochila {
   created_at?: string;
 }
 
-export interface Slot {// Representa una "casilla" física en la mochila
+export interface Slot { // Representa una "casilla" física en la mochila
   indice: number;
   item: ItemMochila | null;
   cantidadEnSlot: number;
@@ -38,16 +37,15 @@ export class Mochila implements OnInit {
   readonly MAX_SLOTS = 20;
   readonly MAX_APILABLE = 5; // Máximo de unidades apilables por slot
   paginaActual = 1;
-
-  private readonly API_URL = 'http://localhost:8000/api';
+  ultimaPagina = 1;
 
   constructor(
-    private http: HttpClient,
     private auth: Auth,
   ) { }
 
   ngOnInit(): void {
     this.cargarUsuario();
+    this.cargarMochila();
   }
 
   // Carga los datos del usuario autenticado desde el backend
@@ -63,7 +61,53 @@ export class Mochila implements OnInit {
     });
   }
 
+  // Carga los objetos de la mochila desde el backend
+  cargarMochila(pagina: number = 1): void {
+    this.cargando = true;
+    this.auth.getMochila(pagina).subscribe({
+      next: (res) => {
+        const items: ItemMochila[] = res.objetos.data;
+        this.paginaActual = res.objetos.current_page;
+        this.ultimaPagina = res.objetos.last_page;
+        this.todosLosSlots = this.construirSlots(items);
+        this.cargando = false;
+      },
+      error: (err) => {
+        this.error = err.error?.errors ?? 'Error al cargar la mochila.';
+        this.cargando = false;
+      }
+    });
+  }
 
+  // Construye el array de slots a partir de los items recibidos
+  private construirSlots(items: ItemMochila[]): Slot[] {
+    return Array.from({ length: this.MAX_SLOTS }, (_, i) => ({
+      indice: i,
+      item: items[i] ?? null,
+      cantidadEnSlot: items[i]?.amount ?? 0,
+    }));
+  }
+
+  // Paginación
+  irAPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.ultimaPagina) return;
+    this.cargarMochila(pagina);
+  }
+
+  // Getter de paginas
+  get paginas(): number[] {
+    return Array.from({ length: this.ultimaPagina }, (_, i) => i + 1);
+  }
+
+  // Slots de la página actual
+  get slotsEnPaginaActual(): Slot[] {
+    return this.todosLosSlots;
+  }
+
+  // Slots usados (con item)
+  get slotsUsados(): number {
+    return this.todosLosSlots.filter(s => s.item !== null).length;
+  }
 
   seleccionarSlot(slot: Slot): void {
     if (!slot.item) return;
@@ -86,5 +130,16 @@ export class Mochila implements OnInit {
     };
     const clave = nombre.toLowerCase().trim();
     return mapa[clave] ?? 'chuches/caramelos.png'; // fallback genérico
+  }
+
+  formatearFecha(fecha?: string): string {
+    if (!fecha) return '—';
+    try {
+      return new Date(fecha).toLocaleDateString('es-ES', {
+        day: '2-digit', month: '2-digit', year: 'numeric'
+      });
+    } catch {
+      return '—';
+    }
   }
 }
