@@ -9,7 +9,7 @@ class MochilaController extends Controller
 {
     public function listarObjetos(Request $request)
     {
-        $objetos = Mochila::where('user_id', $request->user()->id)->get();
+        $objetos = Mochila::where('user_id', $request->user()->id)->paginate(9);
 
         if (count($objetos) <= 0) {
             return response()->json([
