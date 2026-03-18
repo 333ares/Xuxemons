@@ -10,6 +10,7 @@ class MochilaController extends Controller
     public function listarObjetos(Request $request)
     {
         $objetos = Mochila::where('user_id', $request->user()->id)->paginate(9);
+        $numObjetos = Mochila::where('user_id', $request->user()->id)->sum('amount');
 
         if (count($objetos) <= 0) {
             return response()->json([
@@ -19,7 +20,8 @@ class MochilaController extends Controller
         } else {
             return response()->json([
                 'message' => 'success',
-                'objetos' => $objetos
+                'objetos' => $objetos,
+                'total' => $numObjetos
             ], 201);
         }
     }
