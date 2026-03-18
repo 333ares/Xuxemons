@@ -190,7 +190,8 @@
               <strong>{{ formatearFecha(slotSeleccionado!.item!.created_at) }}</strong>
             </p>
 
-            <button class="mo-btn-eliminar" [attr.aria-label]="'Eliminar ' + slotSeleccionado!.item!.name">
+            <button class="mo-btn-eliminar" (click)="abrirDialogoBorrar()"
+              [attr.aria-label]="'Eliminar ' + slotSeleccionado!.item!.name">
               Borrar objeto
             </button>
           </div>
@@ -198,6 +199,27 @@
         }
       </section>
     </div>
+
+    <!--  DIÁLOGO DE CONFIRMACIÓN PARA BORRAR OBJETO  -->
+    @if (mostrarDialogoBorrar) {
+    <div class="dialogo-overlay" role="dialog" aria-modal="true" aria-labelledby="dialogo-titulo"
+      aria-describedby="dialogo-desc" (click)="cerrarDialogoBorrar()">
+      <div class="dialogo-box" (click)="$event.stopPropagation()">
+        <h3 id="dialogo-titulo">¿Seguro que quieres borrar {{ slotSeleccionado!.item!.name }}?</h3>
+        <p id="dialogo-desc">
+          Esta acción es permanente. Tu objeto se eliminará y no podrás volver a ver su información.
+        </p>
+        <div class="dialogo-botones">
+          <button class="btn-descartar" type="button" (click)="cerrarDialogoBorrar()">
+            Cancelar
+          </button>
+          <button class="btn-borrar" type="button" (click)="confirmarBorrar()">
+            Sí, borrar objeto
+          </button>
+        </div>
+      </div>
+    </div>
+    }
     }
   </main>
 
