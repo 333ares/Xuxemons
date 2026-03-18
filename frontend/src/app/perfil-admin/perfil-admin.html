@@ -226,34 +226,6 @@
         </div>
       </div>
 
-      <!-- DIÁLOGO DE CONFIRMACIÓN PARA CERRAR SESIÓN -->
-      @if (mostrarDialogoSesion) {
-        <div
-          class="dialogo-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="dialogo-titulo"
-          aria-describedby="dialogo-desc"
-          (click)="cerrarDialogoSesion()"
-        >
-          <div class="dialogo-box" (click)="$event.stopPropagation()">
-            <h3 id="dialogo-titulo">¿Cerrar sesión?</h3>
-            <p id="dialogo-desc">
-              Se cerrará tu sesión de administrador. Deberás volver a iniciar sesión para acceder al
-              panel.
-            </p>
-            <div class="dialogo-botones">
-              <button class="btn-cancelar" type="button" (click)="cerrarDialogoSesion()">
-                Cancelar
-              </button>
-              <button class="btn-confirmar-salir" type="button" (click)="confirmarCierreSesion()">
-                Sí, cerrar sesión
-              </button>
-            </div>
-          </div>
-        </div>
-      }
-
       <app-adminav></app-adminav>
     </div>
   </main>

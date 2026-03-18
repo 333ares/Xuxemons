@@ -22,7 +22,7 @@ export class PerfilAdmin implements OnInit {
   constructor(
     private router: Router,
     private authService: Auth,
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Cargamos los datos del admin autenticado mediante el token JWT almacenado
@@ -46,24 +46,17 @@ export class PerfilAdmin implements OnInit {
   // Gestión de cierre de sesión
 
   cerrarSesion() {
-    this.mostrarDialogoSesion = true;
-  }
-
-  cerrarDialogoSesion() {
-    this.mostrarDialogoSesion = false;
-  }
-
-  confirmarCierreSesion() {
     this.authService.logout().subscribe({
       next: () => {
         this.authService.eliminarToken();
+        this.authService.eliminarUsuario();
         this.router.navigate(['/login']);
       },
       error: () => {
-        // Aunque el backend falle, eliminamos el token local igualmente
+        // Aunque falle el backend, limpiamos igualmente
         this.authService.eliminarToken();
         this.router.navigate(['/login']);
-      },
+      }
     });
   }
 }
