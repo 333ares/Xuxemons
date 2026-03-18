@@ -1,1 +1,211 @@
-<p>gestion-usuarios works!</p>
+<article class="card-dash" aria-labelledby="titulo-gestion">
+  <!-- Cabecera de la card -->
+  <div class="card-dash-header">
+    <div class="card-titulo-grupo">
+      <h2 id="titulo-gestion" class="card-dash-titulo">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#FFAA4A"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        Gestión de usuarios
+      </h2>
+      <p class="card-subtitulo">
+        Consulta el listado completo de jugadores, gestiona sus perfiles y asígnales recursos
+        manualmente.
+      </p>
+    </div>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="buscador-wrap">
+    <label for="buscar-usuario" class="sr-only">
+      Buscar usuario por nombre, apellidos, email o ID público
+    </label>
+    <div class="input-buscar-wrap">
+      <svg
+        class="icono-buscar"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <input
+        id="buscar-usuario"
+        type="search"
+        class="input-buscar"
+        placeholder="Buscar por nombre, email o ID…"
+        [(ngModel)]="terminoBusqueda"
+        (input)="filtrarUsuarios()"
+        aria-controls="tabla-usuarios"
+        aria-label="Buscar usuarios"
+      />
+      @if (terminoBusqueda) {
+        <button class="btn-limpiar" (click)="limpiarBusqueda()" aria-label="Limpiar búsqueda">
+          ✕
+        </button>
+      }
+    </div>
+    <span class="resultados-count" role="status" aria-live="polite">
+      {{ usuariosFiltrados.length }} resultado{{ usuariosFiltrados.length !== 1 ? 's' : '' }}
+    </span>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <div class="tabla-scroll" role="region" aria-label="Lista de usuarios registrados">
+    <table class="tabla-usuarios" id="tabla-usuarios">
+      <thead>
+        <tr>
+          <th scope="col">ID público</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Email</th>
+          <th scope="col" class="col-centro">Xuxemons</th>
+          <th scope="col" class="col-centro">Objetos</th>
+          <th scope="col" class="col-centro">Estado</th>
+          <th scope="col" class="col-acciones">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (usuario of usuariosPaginados; track usuario.id) {
+          <tr class="fila-usuario" [class.inactivo]="!usuario.activo">
+            <td>
+              <code class="id-code">{{ usuario.public_id }}</code>
+            </td>
+
+            <td class="nombre-cel">
+              <div class="usuario-mini">
+                <div class="usuario-avatar" aria-hidden="true">
+                  {{ usuario.name.charAt(0).toUpperCase() }}
+                </div>
+                <span>{{ usuario.name }} {{ usuario.surname }}</span>
+              </div>
+            </td>
+
+            <td class="email-cel">{{ usuario.email }}</td>
+
+            <td class="col-centro">
+              <span class="badge-num badge-xuxemon">🐾 {{ usuario.xuxemons }}</span>
+            </td>
+
+            <td class="col-centro">
+              <span class="badge-num badge-objeto">🍬 {{ usuario.objetos }}/20</span>
+            </td>
+
+            <td class="col-centro">
+              <button
+                class="toggle-estado"
+                [class.activo]="usuario.activo"
+                (click)="toggleActivo(usuario)"
+                [attr.aria-label]="
+                  (usuario.activo ? 'Desactivar' : 'Activar') + ' cuenta de ' + usuario.name
+                "
+                [attr.aria-pressed]="usuario.activo"
+              >
+                {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+              </button>
+            </td>
+
+            <td class="col-acciones">
+              <div class="acciones-grupo">
+                <button
+                  class="btn-accion btn-xuxemon"
+                  (click)="abrirModalXuxemon(usuario)"
+                  [attr.aria-label]="'Añadir Xuxemon a ' + usuario.name"
+                >
+                  🐾 Xuxemon
+                </button>
+                <button
+                  class="btn-accion btn-objeto"
+                  (click)="abrirModalObjeto(usuario)"
+                  [attr.aria-label]="'Añadir objeto a ' + usuario.name"
+                >
+                  🎒 Objeto
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="sin-resultados" role="status" aria-live="polite">
+              <span
+                >🔍 Sin resultados para "<strong>{{ terminoBusqueda }}</strong
+                >"</span
+              >
+              <button class="btn-limpiar-vacio" (click)="limpiarBusqueda()">
+                Limpiar búsqueda
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  @if (totalPaginas > 1) {
+    <nav class="paginacion" aria-label="Paginación de usuarios">
+      <button
+        class="pag-btn"
+        (click)="irAPagina(paginaActual - 1)"
+        [disabled]="paginaActual === 1"
+        aria-label="Página anterior"
+      >
+        ‹
+      </button>
+
+      @for (p of paginas; track p) {
+        <button
+          class="pag-btn"
+          [class.activo]="p === paginaActual"
+          (click)="irAPagina(p)"
+          [attr.aria-label]="'Ir a página ' + p"
+          [attr.aria-current]="p === paginaActual ? 'page' : null"
+        >
+          {{ p }}
+        </button>
+      }
+
+      <button
+        class="pag-btn"
+        (click)="irAPagina(paginaActual + 1)"
+        [disabled]="paginaActual === totalPaginas"
+        aria-label="Página siguiente"
+      >
+        ›
+      </button>
+    </nav>
+  }
+</article>
+
+<!-- Modal: Añadir Xuxemon -->
+@if (modalXuxemonAbierto && usuarioSeleccionado) {
+  <app-agregar-xuxemon [usuario]="usuarioSeleccionado" (cerrar)="cerrarModales()">
+  </app-agregar-xuxemon>
+}
+
+<!-- Modal: Añadir Objeto -->
+@if (modalObjetoAbierto && usuarioSeleccionado) {
+  <app-agregar-objeto [usuario]="usuarioSeleccionado" (cerrar)="cerrarModales()">
+  </app-agregar-objeto>
+}
