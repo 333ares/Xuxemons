@@ -123,4 +123,9 @@ export class Auth {
       body: { id: id }
     });
   }
+
+  // --- ADMINISTRACIÓN ---
+  listarUsuarios(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/listarUsuarios`, { headers: this.getHeaders() });
+  }
 }
