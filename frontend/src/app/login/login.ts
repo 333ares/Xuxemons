@@ -48,7 +48,14 @@ export class Login {
       next: (res) => {
         // Guardamos el token y redirigimos
         this.authService.guardarToken(res.token);
-        this.router.navigate(['/paginaPrincipal']);
+        localStorage.setItem('usuario', JSON.stringify(res.usuario));
+
+        // Si el id es 1 es admin, redirigimos al dashboard admin
+        if (res.usuario?.id === 1) {
+          this.router.navigate(['/dashboardAdmin']);
+        } else {
+          this.router.navigate(['/paginaPrincipal']);
+        }
       },
       error: (err) => {
         // Si el error es un objeto (validación de Laravel) lo aplanamos en un string legible
