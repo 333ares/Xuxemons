@@ -122,7 +122,7 @@ class AdminController extends Controller
                     ->where('amount', '<', $maxStack)
                     ->first();
 
-                // Si se puede aplar
+                // Si se puede apilar
                 if ($xuxe) {
                     $nuevoAmount = $xuxe->amount + $request->amount; // Calculamos el nuevo amount sumando el actual con el que se quiere añadir
 
