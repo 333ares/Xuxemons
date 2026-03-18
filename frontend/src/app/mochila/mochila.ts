@@ -145,4 +145,42 @@ export class Mochila implements OnInit {
       return '—';
     }
   }
+
+  mostrarDialogoBorrar: boolean = false;
+
+  abrirDialogoBorrar() {
+    this.mostrarDialogoBorrar = true;
+  }
+
+  cerrarDialogoBorrar() {
+    this.mostrarDialogoBorrar = false;
+  }
+
+  confirmarBorrar() {
+    if (!this.slotSeleccionado?.item) return;
+
+    this.auth.borrarObjeto(this.slotSeleccionado.item.id).subscribe({
+      next: () => {
+        const item = this.slotSeleccionado!.item!;
+
+        // Si es apilable y tiene más de 1, restamos 1 unidad visualmente
+        if (item.stackable && item.amount > 1) {
+          item.amount -= 1;
+          this.slotSeleccionado!.cantidadEnSlot -= 1;
+        } else {
+          // Si no, eliminamos el slot de la lista
+          this.todosLosSlots = this.todosLosSlots.filter(
+            s => s.item?.id !== item.id
+          );
+          this.slotSeleccionado = null;
+          this.totalObjetos -= 1;
+        }
+
+        this.cerrarDialogoBorrar();
+      },
+      error: (err) => {
+        console.error('Error al borrar objeto', err);
+      }
+    });
+  }
 }
