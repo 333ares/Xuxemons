@@ -37,6 +37,19 @@ class MochilaController extends Controller
             ], 404);
         }
 
+        // Si es apilable y tiene más de 1, restamos 1 unidad
+        if ($objeto->stackable && $objeto->amount > 1) {
+            $objeto->update([
+                'amount' => $objeto->amount - 1
+            ]);
+
+            return response()->json([
+                'message' => 'success',
+                'objeto' => 'Se ha eliminado una unidad del objeto'
+            ], 200);
+        }
+
+        // Si no es apilable o solo queda 1, borramos el objeto entero
         $objeto->delete();
 
         return response()->json([
