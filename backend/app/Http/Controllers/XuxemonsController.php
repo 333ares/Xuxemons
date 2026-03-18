@@ -47,13 +47,13 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsPorTamano(Request $request)
     {
-        $query = Xuxemons::where('user_id', $request->user()->id);
+        $xuxemon = Xuxemons::where('user_id', $request->user()->id);
 
         if ($request->size) {
-            $query->where('size', $request->size);
+            $xuxemon->where('size', $request->size);
         }
 
-        $xuxemons = $query->paginate(9);
+        $xuxemons = $xuxemon->paginate(9);
 
         return response()->json([
             'message' => 'success',

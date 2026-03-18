@@ -187,15 +187,35 @@
       }
     </div>
 
-    <div class="xdex-paginacion">
-      <button (click)="irAPagina(paginaActual - 1)" [disabled]="paginaActual === 1">←</button>
+    @if (ultimaPagina > 1) {
+    <nav class="xdex-paginacion" aria-label="Paginación del xuxedex">
+      <button class="xdex-paginacion__btn" (click)="irAPagina(paginaActual - 1)" [disabled]="paginaActual === 1"
+        aria-label="Página anterior">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5" />
+          <polyline points="12 19 5 12 12 5" />
+        </svg>
+      </button>
 
       @for (p of paginas; track p) {
-      <button (click)="irAPagina(p)" [class.activo]="p === paginaActual">{{ p }}</button>
+      <button class="xdex-paginacion__num" [class.xdex-paginacion__num--activo]="paginaActual === p"
+        [attr.aria-current]="paginaActual === p ? 'page' : null" [attr.aria-label]="'Página ' + p"
+        (click)="irAPagina(p)">
+        {{ p }}
+      </button>
       }
 
-      <button (click)="irAPagina(paginaActual + 1)" [disabled]="paginaActual === ultimaPagina">→</button>
-    </div>
+      <button class="xdex-paginacion__btn" (click)="irAPagina(paginaActual + 1)"
+        [disabled]="paginaActual === ultimaPagina" aria-label="Página siguiente">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </button>
+    </nav>
+    }
 
     <!--  DIÁLOGO DE CONFIRMACIÓN PARA BORRAR XUXEMON  -->
     @if (mostrarDialogoBorrar) {

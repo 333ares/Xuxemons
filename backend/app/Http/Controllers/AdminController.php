@@ -50,6 +50,11 @@ class AdminController extends Controller
                     'errors' => 'No se ha podido añadir el xuxemon'
                 ], 400);
             }
+        } else {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
+            ], 400);
         }
     }
 
@@ -117,7 +122,7 @@ class AdminController extends Controller
                     ->where('amount', '<', $maxStack)
                     ->first();
 
-                // Si se puede aplar
+                // Si se puede apilar
                 if ($xuxe) {
                     $nuevoAmount = $xuxe->amount + $request->amount; // Calculamos el nuevo amount sumando el actual con el que se quiere añadir
 
