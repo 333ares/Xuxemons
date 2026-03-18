@@ -54,7 +54,6 @@
           <th scope="col">Email</th>
           <th scope="col" class="col-centro">Xuxemons</th>
           <th scope="col" class="col-centro">Objetos</th>
-          <th scope="col" class="col-centro">Estado</th>
           <th scope="col" class="col-acciones">Acciones</th>
         </tr>
       </thead>
@@ -82,14 +81,6 @@
 
           <td class="col-centro">
             <span class="badge-num badge-objeto">🍬 {{ usuario.objetos ?? '—' }}/20</span>
-          </td>
-
-          <td class="col-centro">
-            <button class="toggle-estado" [class.activo]="usuario.activo" (click)="toggleActivo(usuario)"
-              [attr.aria-label]="(usuario.activo ? 'Desactivar' : 'Activar') + ' cuenta de ' + usuario.name"
-              [attr.aria-pressed]="usuario.activo">
-              {{ usuario.activo ? 'Activo' : 'Inactivo' }}
-            </button>
           </td>
 
           <td class="col-acciones">

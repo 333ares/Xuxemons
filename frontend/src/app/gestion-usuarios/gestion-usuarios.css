@@ -164,10 +164,6 @@
   background: #fffbf5;
 }
 
-.fila-usuario.inactivo td {
-  opacity: 0.55;
-}
-
 /* CELDAS */
 .col-centro {
   text-align: center;
@@ -226,39 +222,6 @@
 .badge-objeto {
   background: #f0fdf4;
   color: #16a34a;
-}
-
-/* Toggle activo/inactivo */
-.toggle-estado {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  border: none;
-  border-radius: 99px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    background 0.2s,
-    transform 0.1s;
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.toggle-estado.activo {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.toggle-estado:hover {
-  transform: scale(1.04);
-}
-
-.toggle-estado:focus-visible {
-  outline: 2px solid #ffaa4a;
-  outline-offset: 2px;
 }
 
 /* Botones de acción por fila */
