@@ -1,1 +1,76 @@
 <p>agregar-xuxemon works!</p>
+<!-- Overlay del modal -->
+<div
+  class="modal-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-xuxemon-titulo"
+  (click)="onOverlayClick($event)"
+>
+  <div class="modal-box">
+    <!-- Cabecera -->
+    <div class="modal-header">
+      <h3 id="modal-xuxemon-titulo" class="modal-titulo">🐾 Añadir Xuxemon aleatorio</h3>
+      <button class="modal-cerrar" (click)="close()" aria-label="Cerrar modal">✕</button>
+    </div>
+
+    <!-- Usuario destinatario -->
+    <div class="usuario-destino">
+      <div class="usuario-avatar" aria-hidden="true">
+        {{ usuario.name.charAt(0).toUpperCase() }}
+      </div>
+      <div>
+        <p class="usuario-nombre">{{ usuario.name }} {{ usuario.surname }}</p>
+        <code class="usuario-id">{{ usuario.public_id }}</code>
+      </div>
+    </div>
+
+    <!-- Información del proceso -->
+    <div class="info-lista" aria-label="Información sobre el proceso">
+      <div class="info-item">
+        <span aria-hidden="true">🎲</span>
+        <span>Se elegirá un Xuxemon de entre los 48 disponibles en la base de datos</span>
+      </div>
+      <div class="info-item">
+        <span aria-hidden="true">📏</span>
+        <span>Siempre empezará en tamaño <strong>Pequeño</strong></span>
+      </div>
+      <div class="info-item">
+        <span aria-hidden="true">💊</span>
+        <span>Se añadirá sin enfermedades activas</span>
+      </div>
+    </div>
+
+    <!-- Feedback -->
+    @if (mensaje) {
+      <div
+        class="mensaje-feedback"
+        [class.exito]="mensajeTipo === 'exito'"
+        [class.error]="mensajeTipo === 'error'"
+        role="status"
+        aria-live="polite"
+      >
+        {{ mensaje }}
+      </div>
+    }
+
+    <!-- Acciones -->
+    <div class="modal-acciones">
+      <button class="btn-cancelar" (click)="close()">Cancelar</button>
+      <button
+        class="btn-confirmar"
+        (click)="confirmar()"
+        [disabled]="cargando || mensajeTipo === 'exito'"
+        [attr.aria-busy]="cargando"
+      >
+        @if (cargando) {
+          Añadiendo…
+        } @else if (mensajeTipo === 'exito') {
+          ✓ Añadido
+        } @else {
+          Confirmar
+        }
+      </button>
+    </div>
+  </div>
+</div>

@@ -17,6 +17,7 @@ import { AgregarXuxemon } from './agregar-xuxemon/agregar-xuxemon';
 import { AgregarObjeto } from './agregar-objeto/agregar-objeto';
 import { Parametros } from './parametros/parametros';
 import { Estadisticas } from './estadisticas/estadisticas';
+import { GestionUsuariosPage } from './gestion-usuarios-page/gestion-usuarios-page';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -101,7 +102,7 @@ export const routes: Routes = [
   // Ruta Gestion de Usuarios
   {
     path: 'gestionUsuarios',
-    component: GestionUsuarios,
+    component: GestionUsuariosPage,
     canActivate: [AuthGuard],
   },
 

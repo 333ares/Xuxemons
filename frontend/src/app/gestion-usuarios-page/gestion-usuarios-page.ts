@@ -5,10 +5,10 @@ import { Adminav } from '../shared/adminav/adminav';
 import { GestionUsuarios } from '../gestion-usuarios/gestion-usuarios';
 
 @Component({
-  selector: 'app-estadisticas',
+  selector: 'app-gestion-usuarios-page',
   standalone: true,
-  imports: [CommonModule, Adminav],
-  templateUrl: './estadisticas.html',
-  styleUrl: './estadisticas.css',
+  imports: [CommonModule, RouterLink, Adminav, GestionUsuarios],
+  templateUrl: './gestion-usuarios-page.html',
+  styleUrls: ['./gestion-usuarios-page.css'],
 })
-export class Estadisticas {}
+export class GestionUsuariosPage {}

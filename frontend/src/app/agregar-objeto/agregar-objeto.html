@@ -1,1 +1,145 @@
-<p>agregar-objeto works!</p>
+<div
+  class="modal-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-objeto-titulo"
+  (click)="onOverlayClick($event)"
+>
+  <div class="modal-box">
+    <!-- Cabecera -->
+    <div class="modal-header">
+      <h3 id="modal-objeto-titulo" class="modal-titulo">🎒 Añadir objeto</h3>
+      <button class="modal-cerrar" (click)="close()" aria-label="Cerrar modal">✕</button>
+    </div>
+
+    <!-- Usuario destinatario -->
+    <div class="usuario-destino">
+      <div class="usuario-avatar" aria-hidden="true">
+        {{ usuario.name.charAt(0).toUpperCase() }}
+      </div>
+      <div>
+        <p class="usuario-nombre">{{ usuario.name }} {{ usuario.surname }}</p>
+        <code class="usuario-id">{{ usuario.public_id }}</code>
+      </div>
+    </div>
+
+    <!-- Toggle tipo -->
+    <div class="campo-grupo">
+      <label class="campo-label">Tipo de objeto</label>
+      <div class="tipo-toggle" role="group" aria-label="Selecciona el tipo de objeto">
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.activo]="tipoSeleccionado === 'xuxe'"
+          (click)="cambiarTipo('xuxe')"
+          [attr.aria-pressed]="tipoSeleccionado === 'xuxe'"
+        >
+          🍬 Xuxe <span class="toggle-hint">(apilable)</span>
+        </button>
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.activo]="tipoSeleccionado === 'vacuna'"
+          (click)="cambiarTipo('vacuna')"
+          [attr.aria-pressed]="tipoSeleccionado === 'vacuna'"
+        >
+          💉 Vacuna <span class="toggle-hint">(no apilable)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Selector de objeto con buscador -->
+    <div class="campo-grupo">
+      <label for="buscar-objeto" class="campo-label">
+        {{ tipoSeleccionado === 'vacuna' ? 'Vacuna' : 'Xuxe' }}
+      </label>
+      <div class="objeto-selector">
+        <input
+          id="buscar-objeto"
+          type="search"
+          class="input-buscar-objeto"
+          placeholder="Buscar…"
+          [(ngModel)]="terminoBusquedaObjeto"
+          aria-label="Buscar objeto por nombre"
+        />
+        <div
+          class="objeto-lista"
+          role="listbox"
+          [attr.aria-label]="'Opciones de ' + tipoSeleccionado"
+        >
+          @for (obj of objetosDisponibles; track obj) {
+            <button
+              class="objeto-opcion"
+              [class.seleccionado]="nombreSeleccionado === obj"
+              (click)="nombreSeleccionado = obj"
+              role="option"
+              [attr.aria-selected]="nombreSeleccionado === obj"
+            >
+              {{ obj }}
+            </button>
+          } @empty {
+            <span class="objeto-vacio" role="status">Sin resultados</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Cantidad (solo para xuxes) -->
+    @if (tipoSeleccionado === 'xuxe') {
+      <div class="campo-grupo">
+        <label for="cantidad-obj" class="campo-label">
+          Cantidad <span class="campo-hint">— máximo 5 por pila</span>
+        </label>
+        <input
+          id="cantidad-obj"
+          type="number"
+          class="input-num"
+          [(ngModel)]="cantidad"
+          min="1"
+          max="5"
+          aria-describedby="cantidad-hint"
+        />
+        <span id="cantidad-hint" class="campo-hint">Entre 1 y 5</span>
+      </div>
+    }
+
+    @if (tipoSeleccionado === 'vacuna') {
+      <div class="info-item-single" aria-live="polite">
+        <span aria-hidden="true">💉</span>
+        <span>Las vacunas ocupan 1 espacio por unidad y no son apilables</span>
+      </div>
+    }
+
+    <!-- Feedback -->
+    @if (mensaje) {
+      <div
+        class="mensaje-feedback"
+        [class.exito]="mensajeTipo === 'exito'"
+        [class.error]="mensajeTipo === 'error'"
+        role="status"
+        aria-live="polite"
+      >
+        {{ mensaje }}
+      </div>
+    }
+
+    <!-- Acciones -->
+    <div class="modal-acciones">
+      <button class="btn-cancelar" (click)="close()">Cancelar</button>
+      <button
+        class="btn-confirmar"
+        (click)="confirmar()"
+        [disabled]="!nombreSeleccionado || cargando || mensajeTipo === 'exito'"
+        [attr.aria-busy]="cargando"
+      >
+        @if (cargando) {
+          Añadiendo…
+        } @else if (mensajeTipo === 'exito') {
+          ✓ Añadido
+        } @else {
+          Confirmar
+        }
+      </button>
+    </div>
+  </div>
+</div>

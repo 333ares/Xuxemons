@@ -1,0 +1,180 @@
+/* Importa los estilos base del modal de xuxemon */
+@import url('../agregar-xuxemon/agregar-xuxemon.css');
+
+/* Estilos específicos del modal de objeto */
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.campo-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #3b2101;
+}
+
+.campo-hint {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #aaa;
+}
+
+/* Toggle tipo */
+.tipo-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 10px;
+  background: #fafafa;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    color 0.2s;
+}
+
+.toggle-btn:hover {
+  border-color: #ffaa4a88;
+  color: #555;
+}
+
+.toggle-btn.activo {
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  border-color: #ffaa4a;
+  color: white;
+}
+
+.toggle-btn:focus-visible {
+  outline: 2px solid #ffaa4a;
+  outline-offset: 2px;
+}
+
+.toggle-hint {
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+/* Selector de objeto con buscador */
+.objeto-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-buscar-objeto {
+  padding: 9px 12px;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #333;
+  background: #fafafa;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.input-buscar-objeto:focus {
+  outline: none;
+  border-color: #ffaa4a;
+  box-shadow: 0 0 0 3px rgba(255, 170, 74, 0.12);
+  background: #fff;
+}
+
+.objeto-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.objeto-opcion {
+  text-align: left;
+  padding: 10px 14px;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  background: #fafafa;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #444;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.objeto-opcion:hover {
+  background: #fff8f0;
+  border-color: #ffaa4a44;
+}
+
+.objeto-opcion.seleccionado {
+  background: #fff8f0;
+  border-color: #ffaa4a;
+  color: #e8962e;
+  font-weight: 700;
+}
+
+.objeto-opcion:focus-visible {
+  outline: 2px solid #ffaa4a;
+  outline-offset: 2px;
+}
+
+.objeto-vacio {
+  font-size: 0.85rem;
+  color: #bbb;
+  text-align: center;
+  padding: 12px;
+}
+
+/* Input numérico */
+.input-num {
+  padding: 10px 12px;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #3b2101;
+  background: #fafafa;
+  width: 100px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.input-num:focus {
+  outline: none;
+  border-color: #ffaa4a;
+  box-shadow: 0 0 0 3px rgba(255, 170, 74, 0.12);
+  background: #fff;
+}
+
+/* Info vacuna */
+.info-item-single {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fafafa;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  color: #666;
+  border-left: 3px solid #ffaa4a44;
+  margin-bottom: 16px;
+}
