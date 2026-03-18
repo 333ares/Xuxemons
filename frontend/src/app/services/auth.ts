@@ -100,4 +100,11 @@ export class Auth {
   getMochila(pagina: number = 1): Observable<any> {
     return this.http.get(`${this.apiUrl}/mochila?page=${pagina}`, { headers: this.getHeaders() });
   }
+
+  borrarObjeto(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/mochila`, {
+      headers: this.getHeaders(),
+      body: { id: id }
+    });
+  }
 }
