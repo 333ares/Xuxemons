@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Nav } from '../shared/nav/nav';
 import { Auth } from '../services/auth';
@@ -22,7 +21,7 @@ export interface Slot { // Representa una "casilla" física en la mochila
 @Component({
   selector: 'app-mochila',
   standalone: true,
-  imports: [RouterLink, CommonModule, Nav],
+  imports: [CommonModule, Nav],
   templateUrl: './mochila.html',
   styleUrl: './mochila.css',
 })

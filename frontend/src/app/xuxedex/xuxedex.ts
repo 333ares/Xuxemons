@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ICONS } from '../shared/icons';
@@ -27,7 +27,7 @@ export interface Xuxemons {
 @Component({
   selector: 'app-xuxedex',
   standalone: true,
-  imports: [RouterLink, CommonModule, Nav, ReactiveFormsModule],
+  imports: [CommonModule, Nav, ReactiveFormsModule],
   templateUrl: './xuxedex.html',
   styleUrl: './xuxedex.css',
 })
