@@ -70,7 +70,7 @@ export class Mochila implements OnInit {
         const items: ItemMochila[] = res.objetos.data;
         this.paginaActual = res.objetos.current_page;
         this.ultimaPagina = res.objetos.last_page;
-        this.totalObjetos = res.objetos.total;
+        this.totalObjetos = items.reduce((acc, item) => acc + item.amount, 0);
         this.todosLosSlots = this.construirSlots(items);
         this.cargando = false;
       }
@@ -167,6 +167,7 @@ export class Mochila implements OnInit {
         if (item.stackable && item.amount > 1) {
           item.amount -= 1;
           this.slotSeleccionado!.cantidadEnSlot -= 1;
+          this.totalObjetos -= 1;
         } else {
           // Si no, eliminamos el slot de la lista
           this.todosLosSlots = this.todosLosSlots.filter(
