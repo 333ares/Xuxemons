@@ -55,6 +55,22 @@ export class Auth {
     localStorage.removeItem('token');
   }
 
+  // Guarda el usuario en localStorage (AdminGuard)
+  guardarUsuario(usuario: any): void {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+  }
+
+  // Obtiene el usuario del localStorage (AdminGuard)
+  getUsuario(): any {
+    const usuario = localStorage.getItem('usuario');
+    return usuario ? JSON.parse(usuario) : null;
+  }
+
+  // para cuando se haga logout (AdminGuard)
+  eliminarUsuario(): void {
+    localStorage.removeItem('usuario');
+  }
+
   // --- USUARIOS ---
   // Obtiene los datos del usuario autenticado desde el backend
   getInfoUsuario(): Observable<any> {
