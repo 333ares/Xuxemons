@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Nav } from '../shared/nav/nav';
+import { Adminav } from '../shared/adminav/adminav';
 import { GestionUsuarios } from '../gestion-usuarios/gestion-usuarios';
 
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule, GestionUsuarios],
+  imports: [CommonModule, Adminav, GestionUsuarios],
   templateUrl: './dashboard-admin.html',
   styleUrls: ['./dashboard-admin.css'],
 })

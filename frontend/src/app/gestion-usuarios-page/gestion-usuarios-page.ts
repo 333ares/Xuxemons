@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Nav } from '../shared/nav/nav';
+import { Adminav } from '../shared/adminav/adminav';
 import { GestionUsuarios } from '../gestion-usuarios/gestion-usuarios';
 
 @Component({
   selector: 'app-gestion-usuarios-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, Nav, GestionUsuarios],
+  imports: [CommonModule, RouterLink, Adminav, GestionUsuarios],
   templateUrl: './gestion-usuarios-page.html',
   styleUrls: ['./gestion-usuarios-page.css'],
 })
