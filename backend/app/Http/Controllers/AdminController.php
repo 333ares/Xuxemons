@@ -197,7 +197,7 @@ class AdminController extends Controller
             $numObjetos = Mochila::count();
 
             // Si no se han encontrado los usuarios, se devuelve error
-            if (!$usuarios) {
+            if (count($usuarios) <= 0) {
                 return response()->json([
                     'message' => 'error',
                     'errors' => 'No se han podido listar los usuarios'
