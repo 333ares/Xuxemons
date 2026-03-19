@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Auth } from '../services/auth';
 
 @Component({
   selector: 'app-agregar-objeto',
@@ -10,6 +11,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./agregar-objeto.css'],
 })
 export class AgregarObjeto implements OnInit {
+  constructor(private auth: Auth) { }
+
   @Input() usuario: any = null;
   @Output() cerrar = new EventEmitter<void>();
 
@@ -30,7 +33,7 @@ export class AgregarObjeto implements OnInit {
   mensaje: string = '';
   mensajeTipo: 'exito' | 'error' | '' = '';
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   get objetosDisponibles(): string[] {
     const lista =
@@ -55,21 +58,29 @@ export class AgregarObjeto implements OnInit {
     this.cargando = true;
     this.mensaje = '';
 
-    // TODO: llamar a AdminService.agregarObjeto({
-    //   user_id: this.usuario.id,
-    //   type: this.tipoSeleccionado,
-    //   name: this.nombreSeleccionado,
-    //   amount: this.tipoSeleccionado === 'xuxe' ? this.cantidad : 1
-    // })
-
-    setTimeout(() => {
-      this.cargando = false;
-      const tipo = this.tipoSeleccionado === 'vacuna' ? 'Vacuna' : 'Xuxe';
-      this.mensaje = `${tipo} "${this.nombreSeleccionado}" añadida correctamente a ${this.usuario.name}.`;
-      this.mensajeTipo = 'exito';
-    }, 800);
+    this.auth.agregarObjeto({
+      user_id: this.usuario.id,
+      type: this.tipoSeleccionado,
+      name: this.nombreSeleccionado,
+      amount: this.tipoSeleccionado === 'xuxe' ? this.cantidad : 1
+    }).subscribe({
+      next: () => {
+        const tipo = this.tipoSeleccionado === 'vacuna' ? 'Vacuna' : 'Xuxe';
+        this.mensaje = `${tipo} "${this.nombreSeleccionado}" añadida correctamente a ${this.usuario.name}.`;
+        this.mensajeTipo = 'exito';
+        this.cargando = false;
+      },
+      error: (err) => {
+        if (typeof err.error?.errors === 'object') {
+          this.mensaje = Object.values(err.error.errors).flat().join(', ');
+        } else {
+          this.mensaje = err.error?.errors ?? 'Error al añadir el objeto.';
+        }
+        this.mensajeTipo = 'error';
+        this.cargando = false;
+      }
+    });
   }
-
   close(): void {
     this.cerrar.emit();
   }
