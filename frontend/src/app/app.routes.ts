@@ -18,6 +18,7 @@ import { AgregarObjeto } from './agregar-objeto/agregar-objeto';
 import { Parametros } from './parametros/parametros';
 import { Estadisticas } from './estadisticas/estadisticas';
 import { GestionUsuariosPage } from './gestion-usuarios-page/gestion-usuarios-page';
+import { AdminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -89,49 +90,49 @@ export const routes: Routes = [
   {
     path: 'perfilAdmin',
     component: PerfilAdmin,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
 
   // Ruta Pagina Principal del administrador
   {
     path: 'dashboardAdmin',
     component: DashboardAdmin,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
 
   // Ruta Gestion de Usuarios
   {
     path: 'gestionUsuarios',
     component: GestionUsuariosPage,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
 
   // Ruta Agregar Xuxemons
   {
     path: 'agregarXuxemnon',
     component: AgregarXuxemon,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
 
   // Ruta Agregar Objeto
   {
     path: 'agregarObjeto',
     component: AgregarObjeto,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
 
   // Ruta Parametros del Juego
   {
     path: 'parametros',
     component: Parametros,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
 
   // Ruta Estadísticas Globales
   {
     path: 'estadisticas',
     component: Estadisticas,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
 
   // Si alguien entra a una pagina inexistente lo reedirige al login. (Esto se tiene que dejar al final de las rutas)

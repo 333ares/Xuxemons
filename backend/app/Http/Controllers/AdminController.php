@@ -191,9 +191,13 @@ class AdminController extends Controller
         if ($admin === 1) {
             // Recogemos todos los datos de los usuarios
             $usuarios = User::all();
+            $numUsuarios = User::count();
+            $numXuxemons = Xuxemons::count();
+            $numXuxemonsEnf = Xuxemons::where('sickness', 1)->count();
+            $numObjetos = Mochila::count();
 
             // Si no se han encontrado los usuarios, se devuelve error
-            if (!$usuarios) {
+            if (count($usuarios) <= 0) {
                 return response()->json([
                     'message' => 'error',
                     'errors' => 'No se han podido listar los usuarios'
@@ -203,8 +207,12 @@ class AdminController extends Controller
             } else {
                 return response()->json([
                     'message' => 'success',
-                    'xuxemons' => $usuarios
-                ], 201);
+                    'usuarios' => $usuarios,
+                    'totalUsuarios' => $numUsuarios,
+                    'totalXuxemons' => $numXuxemons,
+                    'totalXuxemonsEnfermos' => $numXuxemonsEnf,
+                    'totalObjetos' => $numObjetos
+                ], 200);
             }
             // Si no es el admin, se muestra error de falta de permisos
         } else {
