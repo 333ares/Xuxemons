@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(10)->create();
         $this->call(XuxemonsInfoSeeder::class);
+        $this->call([EnfermedadesInfoSeeder::class]);
     }
 }
