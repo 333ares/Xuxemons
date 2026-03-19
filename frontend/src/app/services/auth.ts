@@ -128,4 +128,8 @@ export class Auth {
   listarUsuarios(): Observable<any> {
     return this.http.get(`${this.apiUrl}/listarUsuarios`, { headers: this.getHeaders() });
   }
+
+  agregarXuxemon(userId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/agregarXuxemon`, { user_id: userId }, { headers: this.getHeaders() });
+  }
 }
