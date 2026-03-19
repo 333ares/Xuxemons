@@ -132,4 +132,8 @@ export class Auth {
   agregarXuxemon(userId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/agregarXuxemon`, { user_id: userId }, { headers: this.getHeaders() });
   }
+
+  agregarObjeto(datos: { user_id: number; type: string; name: string; amount: number }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/agregarObjeto`, datos, { headers: this.getHeaders() });
+  }
 }
