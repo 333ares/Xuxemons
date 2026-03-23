@@ -7,21 +7,24 @@
     <div class="perfil-wrapper">
       <div class="perfil-layout">
 
-        <!-- COLUMNA IZQUIERDA: datos del usuario -->
+        <!-- Columna izquierda con datos del usuario -->
         <aside class="perfil-lateral" aria-label="Información del usuario">
+          <!-- Avatar del usuario -->
           <div class="avatar-wrapper">
             <img src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
               alt="Avatar de {{ usuario?.name }}" class="avatar-img" />
           </div>
-
+          <!-- Nombre y apellidos -->
           <h1 class="usuario-nombre">{{ usuario?.name }} {{ usuario?.surname }}</h1>
+          <!-- ID público -->
           <p class="usuario-id">ID: {{ usuario?.public_id }}</p>
-
+          <!-- Rol del usuario -->
           <span class="badge-rol">{{ usuario?.rol ?? 'Jugador/a' }}</span>
 
+          <!-- Datos como email -->
           <div class="usuario-datos">
-            <!-- Email -->
             <div class="dato-row">
+              <!-- Icono email -->
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFAA4A" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -30,7 +33,7 @@
               <span>{{ usuario?.email }}</span>
             </div>
           </div>
-
+          <!-- Fecha de registro -->
           <p class="fecha-registro">
             Fecha de registro: {{ usuario?.created_at | date: 'dd MMM yyyy' }}
           </p>
@@ -62,18 +65,23 @@
               <form [formGroup]="perfilForm" (ngSubmit)="onGuardar()" novalidate>
                 <!-- Nombre y Apellidos en la misma fila -->
                 <div class="form-row">
+
+                   <!-- Campo nombre -->
                   <div class="form-group">
                     <label for="name">Nombre</label>
                     <input id="name" type="text" formControlName="name" placeholder="Aether" aria-required="true"
                       aria-describedby="error-name"
                       [class.input-error]="perfilForm.get('name')?.invalid && perfilForm.get('name')?.touched" />
-                    <!-- El span siempre existe en el DOM para que aria-live funcione correctamente -->
+
+                      <!-- Error nombre -->
                     <span id="error-name" class="error-text" aria-live="polite" role="alert">
                       @if (perfilForm.get('name')?.invalid && perfilForm.get('name')?.touched) {
-                      El nombre es obligatorio (mínimo 2 caracteres).
+                      El nombre es obligatorio (mínimo 2 caracteres). <!-- El span siempre existe en el DOM para que aria-live funcione correctamente -->
                       }
                     </span>
                   </div>
+
+                  <!-- Campo apellidos -->
                   <div class="form-group">
                     <label for="surname">Apellidos</label>
                     <input id="surname" type="text" formControlName="surname" placeholder="Byte" aria-required="true"
@@ -107,6 +115,8 @@
                     <input id="password" [type]="mostrarPassword ? 'text' : 'password'" formControlName="password"
                       placeholder="Dejar vacío para no cambiarla" aria-describedby="error-password"
                       [class.input-error]="perfilForm.get('password')?.invalid && perfilForm.get('password')?.touched" />
+
+                      <!-- Botón mostrar/ocultar la contraseña -->
                     <button type="button" class="toggle-password"
                       [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
                       (click)="mostrarPassword = !mostrarPassword">
@@ -129,6 +139,8 @@
                       }
                     </button>
                   </div>
+
+                  <!-- Error contraseña -->
                   <span id="error-password" class="error-text" aria-live="polite" role="alert">
                     @if (perfilForm.get('password')?.errors?.['minlength'] && perfilForm.get('password')?.touched) {
                     La contraseña debe tener al menos 6 caracteres.
@@ -136,6 +148,7 @@
                   </span>
                 </div>
 
+                <!-- Mensajes de éxito o error -->
                 @if (mensajeExito) {
                 <div class="alert-exito" aria-live="polite" role="status">{{ mensajeExito }}</div>
                 }
@@ -143,6 +156,7 @@
                 <div class="alert-error" aria-live="polite" role="alert">{{ mensajeError }}</div>
                 }
 
+                <!-- Botones del formulario -->
                 <div class="form-botones">
                   <button type="button" class="btn-descartar" (click)="onDescartar()">
                     Descartar cambios
@@ -161,6 +175,8 @@
             <div class="card-perfil card-estadisticas">
               <h2 id="estadisticas-titulo" class="card-titulo">Estadísticas</h2>
               <div class="estadisticas-grid">
+
+                <!-- Batallas ganadas -->
                 <div class="stat-item">
                   <div class="stat-top">
                     <span class="stat-numero">{{ usuario?.batallas_ganadas ?? 0 }}</span>
@@ -175,6 +191,8 @@
                   </div>
                   <span class="stat-label">Batallas ganadas</span>
                 </div>
+
+                <!-- Batallas jugadas -->
                 <div class="stat-item">
                   <div class="stat-top">
                     <span class="stat-numero">{{ usuario?.batallas_jugadas ?? 0 }}</span>
@@ -191,6 +209,8 @@
                   </div>
                   <span class="stat-label">Batallas jugadas</span>
                 </div>
+
+                <!-- Mejor racha -->
                 <div class="stat-item">
                   <div class="stat-top">
                     <span class="stat-numero">{{ usuario?.mejor_racha ?? 0 }}</span>
@@ -214,12 +234,18 @@
       @if (mostrarDialogoBaja) {
       <div class="dialogo-overlay" role="dialog" aria-modal="true" aria-labelledby="dialogo-titulo"
         aria-describedby="dialogo-desc" (click)="cerrarDialogoBaja()">
+
+        <!-- Caja del diálogo -->
         <div class="dialogo-box" (click)="$event.stopPropagation()">
+
+          <!-- Título y texto -->
           <h3 id="dialogo-titulo">¿Seguro que quieres darte de baja?</h3>
           <p id="dialogo-desc">
             Esta acción es permanente. Tu cuenta quedará desactivada y no podrás volver a acceder con
             este usuario.
           </p>
+
+          <!-- Botones del diálogo -->
           <div class="dialogo-botones">
             <button class="btn-descartar" type="button" (click)="cerrarDialogoBaja()">
               Cancelar
@@ -237,7 +263,7 @@
 
     </div>
   </main>
-
+  <!-- Footer -->
   <footer>
     <p>© 2025 Xuxemons</p>
   </footer>
