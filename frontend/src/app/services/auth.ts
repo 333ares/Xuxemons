@@ -124,6 +124,10 @@ export class Auth {
     });
   }
 
+  aplicarVacuna(id: number, xuxemonId:number): Observable<any>{
+  return this.http.get(`${this.apiUrl}/mochila?page=$`, { headers: this.getHeaders() });//editar esto
+  }
+
   // --- ADMINISTRACIÓN ---
   listarUsuarios(): Observable<any> {
     return this.http.get(`${this.apiUrl}/listarUsuarios`, { headers: this.getHeaders() });
