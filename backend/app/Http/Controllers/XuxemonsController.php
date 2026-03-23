@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Xuxemons;
 use Illuminate\Http\Request;
+use App\Models\Mochila;
 
 class XuxemonsController extends Controller
 {
@@ -91,6 +92,90 @@ class XuxemonsController extends Controller
         return response()->json([
             'message' => 'success',
             'usuario' => 'El xuxemon se ha borrado correctamente'
+        ], 200);
+    }
+
+    public function alimentarXuxemon(Request $request)
+    {
+        $xuxemon = Xuxemons::where('user_id', $request->user()->id)
+            ->where('id', $request->id)
+            ->first();
+
+        if (!$xuxemon) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes ningún xuxemon con ese ID'
+            ], 404);
+        }
+
+        if ($xuxemon->sickness === 'Atracón') {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Tu xuxemon tiene atracón y no puede comer'
+            ], 400);
+        }
+
+        $xuxe = Mochila::where('user_id', $request->user()->id)
+            ->where('type', 'xuxe')
+            ->first();
+
+        if (!$xuxe) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Tu mochila esta vacía'
+            ], 400);
+        }
+
+        if ($xuxe->amount <= 1) {
+            $xuxe->delete();
+        } else {
+            $xuxe->update([
+                'amount' => $xuxe->amount - 1
+            ]);
+        }
+
+        if ($xuxemon->sickness === null) {
+            $rand = rand(1, 100);
+
+            if ($rand <= 5) {
+                $xuxemon->sickness = 'Bajón de azúcar';
+            } elseif ($rand <= 15) {
+                $xuxemon->sickness = 'Sobredosis de azúcar';
+            } elseif ($rand <= 30) {
+                $xuxemon->sickness = 'Atracón';
+            }
+        }
+
+        // Calculamos las Xuxes necesarias para subir de nivel según el tamaño
+        $xuxesParaSubir = match ($xuxemon->size) {
+            's' => 3,
+            'm' => 5,
+            default => null
+        };
+
+        // Si tiene bajón de azúcar necesita dos xuxes mas para subir de nivel
+        if ($xuxemon->sickness === 'Bajón de azúcar' && $xuxesParaSubir !== null) {
+            $xuxesParaSubir += 2;
+        }
+
+        // Sumamos 1 al contador de Xuxes del xuxemon
+        $xuxemon->xuxes_count += 1;
+
+        // Si ha llegado al límite, sube de nivel y se resetea el contador
+        if ($xuxesParaSubir !== null && $xuxemon->xuxes_count >= $xuxesParaSubir) {
+            $xuxemon->xuxes_count = 0;
+            $xuxemon->size = match ($xuxemon->size) {
+                's' => 'm',
+                'm' => 'g',
+                default => $xuxemon->size
+            };
+        }
+
+        $xuxemon->save();
+
+        return response()->json([
+            'message' => 'success',
+            'xuxemon' => $xuxemon
         ], 200);
     }
 }
