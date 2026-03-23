@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('size');
             $table->string('sickness')->nullable();
-            $table->integer('xuxes_count')->default(0)->after('sickness');
+            $table->integer('xuxes_count')->default(0);
             $table->foreignId('user_id')->onDelete('cascade');
             $table->timestamps();
         });
