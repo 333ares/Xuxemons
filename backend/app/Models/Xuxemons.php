@@ -11,12 +11,12 @@ class Xuxemons extends Model
         'type',
         'size',
         'sickness',
+        'xuxes_count',
         'user_id'
     ];
 
     protected $attributes = [
         'size' => 's',
-        'sickness' => '0'
+        'sickness' => null
     ];
 }
-
