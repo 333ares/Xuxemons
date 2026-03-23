@@ -31,14 +31,18 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsPorTipo(Request $request)
     {
+        // Cogemos todos los xuxemons del usuario 
         $xuxemon = Xuxemons::where('user_id', $request->user()->id);
 
+        // Del tipo que el usuario indique
         if ($request->type) {
             $xuxemon->where('type', $request->type);
         }
 
+        // Devolvemos los datos paginados
         $xuxemons = $xuxemon->paginate(9);
 
+        // Enviamos los xuxemons
         return response()->json([
             'message' => 'success',
             'xuxemons' => $xuxemons
@@ -47,14 +51,18 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsPorTamano(Request $request)
     {
+        // Cogemos todos los xuxemons del usuario 
         $xuxemon = Xuxemons::where('user_id', $request->user()->id);
 
+        // Del tipo que el usuario indique
         if ($request->size) {
             $xuxemon->where('size', $request->size);
         }
 
+        // Devolvemos los datos paginados
         $xuxemons = $xuxemon->paginate(9);
 
+        // Enviamos los xuxemons
         return response()->json([
             'message' => 'success',
             'xuxemons' => $xuxemons
