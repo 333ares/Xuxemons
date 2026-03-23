@@ -168,12 +168,14 @@ class AdminController extends Controller
                         'user_id' => $request->user_id
                     ]);
 
+                    // Devolvemos la xuxe añadida
                     return response()->json([
                         'message' => 'Xuxe añadida correctamente',
                         'xuxe' => $xuxe
                     ], 201);
                 }
             }
+            // Si el usuario no tiene suficientes permisos
         } else {
             return response()->json([
                 'message' => 'error',

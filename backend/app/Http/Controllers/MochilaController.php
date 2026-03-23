@@ -9,14 +9,18 @@ class MochilaController extends Controller
 {
     public function listarObjetos(Request $request)
     {
+        // Cogemos los objetos del usuario y los paginamos
         $objetos = Mochila::where('user_id', $request->user()->id)->paginate(9);
+        // Contamos el n.º de objetos que tiene el usuario (para el admin)
         $numObjetos = Mochila::where('user_id', $request->user()->id)->sum('amount');
 
+        // Si no tiene objetos devolvemos error
         if (count($objetos) <= 0) {
             return response()->json([
                 'message' => 'error',
                 'errors' => 'Mochila vacía'
             ], 404);
+            // Devolvemos datos si hay
         } else {
             return response()->json([
                 'message' => 'success',
@@ -28,10 +32,12 @@ class MochilaController extends Controller
 
     public function borrarObjeto(Request $request)
     {
+        // Buscamos el objeto que del usuario que quiere borrar
         $objeto = Mochila::where('user_id', $request->user()->id)
             ->where('id', $request->id)
             ->first();
 
+        // Si no lo encontramos, devolvemos error
         if (!$objeto) {
             return response()->json([
                 'message' => 'error',
