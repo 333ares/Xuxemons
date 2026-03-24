@@ -12,10 +12,19 @@ export interface ItemMochila {
   created_at?: string;
 }
 
-export interface Slot { // Representa una "casilla" física en la mochila
+export interface Slot {
+  // Representa una "casilla" física en la mochila
   indice: number;
   item: ItemMochila | null;
   cantidadEnSlot: number;
+}
+
+export interface Xuxemon {
+  id: number;
+  name: string;
+  sickness: number;
+  image?: string;
+  level?: number;
 }
 
 @Component({
@@ -39,9 +48,16 @@ export class Mochila implements OnInit {
   paginaActual = 1;
   ultimaPagina = 1;
 
-  constructor(
-    private auth: Auth,
-  ) { }
+  //  Modal de vacuna
+  mostrarModalVacuna: boolean = false;
+  xuxemonsEnfermos: Xuxemon[] = [];
+  cargandoXuxemons: boolean = false;
+  errorXuxemons: string = '';
+
+  //  Diálogo de borrado
+  mostrarDialogoBorrar: boolean = false;
+
+  constructor(private auth: Auth) {}
 
   ngOnInit(): void {
     this.cargarUsuario();
@@ -72,12 +88,11 @@ export class Mochila implements OnInit {
         this.totalObjetos = items.reduce((acc, item) => acc + item.amount, 0);
         this.todosLosSlots = this.construirSlots(items);
         this.cargando = false;
-      }
-      ,
+      },
       error: (err) => {
         this.error = err.error?.errors ?? 'Error al cargar la mochila.';
         this.cargando = false;
-      }
+      },
     });
   }
 
@@ -108,7 +123,7 @@ export class Mochila implements OnInit {
 
   // Slots usados (con item)
   get slotsUsados(): number {
-    return this.todosLosSlots.filter(s => s.item !== null).length;
+    return this.todosLosSlots.filter((s) => s.item !== null).length;
   }
 
   seleccionarSlot(slot: Slot): void {
@@ -138,24 +153,26 @@ export class Mochila implements OnInit {
     if (!fecha) return '—';
     try {
       return new Date(fecha).toLocaleDateString('es-ES', {
-        day: '2-digit', month: '2-digit', year: 'numeric'
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
       });
     } catch {
       return '—';
     }
   }
 
-  mostrarDialogoBorrar: boolean = false;
+  //  Diálogo de borrado
 
-  abrirDialogoBorrar() {
+  abrirDialogoBorrar(): void {
     this.mostrarDialogoBorrar = true;
   }
 
-  cerrarDialogoBorrar() {
+  cerrarDialogoBorrar(): void {
     this.mostrarDialogoBorrar = false;
   }
 
-  confirmarBorrar() {
+  confirmarBorrar(): void {
     if (!this.slotSeleccionado?.item) return;
 
     this.auth.borrarObjeto(this.slotSeleccionado.item.id).subscribe({
@@ -169,9 +186,7 @@ export class Mochila implements OnInit {
           this.totalObjetos -= 1;
         } else {
           // Si no, eliminamos el slot de la lista
-          this.todosLosSlots = this.todosLosSlots.filter(
-            s => s.item?.id !== item.id
-          );
+          this.todosLosSlots = this.todosLosSlots.filter((s) => s.item?.id !== item.id);
           this.slotSeleccionado = null;
           this.totalObjetos -= 1;
         }
@@ -180,7 +195,55 @@ export class Mochila implements OnInit {
       },
       error: (err) => {
         console.error('Error al borrar objeto', err);
-      }
+      },
+    });
+  }
+
+  //  Modal de vacuna
+
+  /** Abre el modal y carga los Xuxemons que están enfermos (sickness !== 0). */
+  abrirModalVacuna(): void {
+    this.mostrarModalVacuna = true;
+    this.cargandoXuxemons = true;
+    this.errorXuxemons = '';
+    this.xuxemonsEnfermos = [];
+
+    this.auth.getXuxemons().subscribe({
+      next: (res) => {
+        const todos: Xuxemon[] = res.xuxemons ?? res;
+        this.xuxemonsEnfermos = todos.filter((x) => x.sickness !== 0);
+        this.cargandoXuxemons = false;
+      },
+      error: (err) => {
+        this.errorXuxemons = err.error?.errors ?? 'No se pudieron cargar los Xuxemons.';
+        this.cargandoXuxemons = false;
+      },
+    });
+  }
+
+  cerrarModalVacuna(): void {
+    this.mostrarModalVacuna = false;
+    this.xuxemonsEnfermos = [];
+    this.errorXuxemons = '';
+  }
+
+  /**
+   * Aplica la vacuna al Xuxemon indicado.
+   * Si tiene éxito, elimina la vacuna de la mochila reutilizando confirmarBorrar().
+   */
+  confirmarAplicarVacuna(xuxemonId: number): void {
+    if (!this.slotSeleccionado?.item) return;
+
+    this.auth.aplicarVacuna(this.slotSeleccionado.item.id, xuxemonId).subscribe({
+      next: () => {
+        this.cerrarModalVacuna();
+        // Reutilizamos la lógica de borrado para descontar la vacuna de la mochila
+        this.confirmarBorrar();
+      },
+      error: (err) => {
+        console.error('Error al aplicar la vacuna', err);
+        this.errorXuxemons = err.error?.errors ?? 'No se pudo aplicar la vacuna.';
+      },
     });
   }
 }
