@@ -241,7 +241,7 @@ export class Xuxedex implements OnInit {
     const mapa: Record<string, string> = {
       s: 'Pequeño',
       m: 'Mediano',
-      l: 'Grande',
+      g: 'Grande',
     };
     return mapa[size] ?? size;
   }

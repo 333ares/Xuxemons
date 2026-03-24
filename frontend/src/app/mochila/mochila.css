@@ -789,3 +789,191 @@
     font-size: 4rem;
   }
 }
+/* BOTÓN "USAR EN XUXEMON" (solo para vacunas)*/
+
+.mo-btn-vacuna {
+  width: 100%;
+  padding: 12px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  box-shadow: 0 3px 10px rgba(74, 144, 226, 0.25);
+}
+
+.mo-btn-vacuna:hover {
+  background: #2f78c5;
+}
+
+/* MODAL SELECTOR DE XUXEMONS*/
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: mo-aparecer 0.2s ease;
+}
+
+.modal-box__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid #f0eeee;
+  flex-shrink: 0;
+}
+
+.modal-box__titulo {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #3b2101;
+  margin: 0;
+}
+
+.modal-box__cerrar {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.modal-box__cerrar:hover {
+  color: #3b2101;
+  background: #f4f3f3;
+}
+
+.modal-box__cerrar:focus-visible {
+  outline: 3px solid #ffaa4a;
+  outline-offset: 2px;
+}
+
+.modal-box__body {
+  overflow-y: auto;
+  padding: 16px 24px 24px;
+  flex: 1;
+}
+
+/* Lista de Xuxemons enfermos */
+
+.modal-xuxemon-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-xuxemon-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fafafa;
+  border: 1.5px solid #f0eeee;
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: border-color 0.15s;
+}
+
+.modal-xuxemon-item:hover {
+  border-color: #ffd49a;
+}
+
+.modal-xuxemon-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.modal-xuxemon-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: contain;
+  background: #f0eeee;
+  flex-shrink: 0;
+}
+
+.modal-xuxemon-img--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+.modal-xuxemon-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.modal-xuxemon-nombre {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #3b2101;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-xuxemon-nivel {
+  font-size: 0.76rem;
+  color: #aaa;
+  font-weight: 600;
+}
+
+.modal-xuxemon-btn {
+  flex-shrink: 0;
+  padding: 8px 18px;
+  background: #ffaa4a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.modal-xuxemon-btn:hover {
+  background: #e8962e;
+}
+
+.modal-xuxemon-btn:focus-visible {
+  outline: 3px solid #ffaa4a;
+  outline-offset: 2px;
+}
