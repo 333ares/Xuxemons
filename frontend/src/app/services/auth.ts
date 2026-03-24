@@ -112,6 +112,14 @@ export class Auth {
     });
   }
 
+  alimentarXuxemon(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/xuxemon/alimentar`, { id }, { headers: this.getHeaders() });
+  }
+
+  subirNivel(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/xuxemon/subirNivel`, { id }, { headers: this.getHeaders() });
+  }
+
   // --- MOCHILA ---
   getMochila(pagina: number = 1): Observable<any> {
     return this.http.get(`${this.apiUrl}/mochila?page=${pagina}`, { headers: this.getHeaders() });
@@ -122,6 +130,10 @@ export class Auth {
       headers: this.getHeaders(),
       body: { id: id }
     });
+  }
+
+  aplicarVacuna(objetoId: number, xuxemonId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/mochila/vacuna`, { objeto_id: objetoId, xuxemon_id: xuxemonId }, { headers: this.getHeaders() });
   }
 
   // --- ADMINISTRACIÓN ---
