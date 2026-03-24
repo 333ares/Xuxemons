@@ -87,8 +87,22 @@ class AdminController extends Controller
                 ], 400);
             }
 
+            $maxSlots = 20; // Límite de slots de la mochila
+
+            // Comprobamos los slots ocupados actualmente
+            $slotsOcupados = Mochila::where('user_id', $request->user_id)->count();
+
             // Si el tipo es vacuna, se añade sin importar si ya tiene o no, ya que no son apilables
             if ($request->type === "vacuna") {
+
+                // Comprobamos si hay espacio en la mochila
+                if ($slotsOcupados >= $maxSlots) {
+                    return response()->json([
+                        'message' => 'Mochila llena',
+                        'errors' => 'No hay espacio en la mochila, la vacuna ha sido descartada'
+                    ], 400);
+                }
+
                 $vacuna = Mochila::create([
                     'type' => $request->type,
                     'name' => $request->name,
@@ -111,6 +125,7 @@ class AdminController extends Controller
                         'errors' => 'No se ha podido añadir la vacuna'
                     ], 400);
                 }
+
                 // Si el tipo es xuxe, se añade comprobando si ya tiene o no, ya que son apilables
             } else {
                 $maxStack = 5; // El máximo de objetos que se pueden apilar
@@ -122,32 +137,41 @@ class AdminController extends Controller
                     ->where('amount', '<', $maxStack)
                     ->first();
 
-                // Si se puede apilar
+                // Si se puede apilar en un stack existente
                 if ($xuxe) {
-                    $nuevoAmount = $xuxe->amount + $request->amount; // Calculamos el nuevo amount sumando el actual con el que se quiere añadir
+                    $nuevoAmount = $xuxe->amount + $request->amount;
 
-                    // Si el nuevo amount es menor o igual al máximo, se actualiza el amount del stack actual
+                    // Si el nuevo amount es menor o igual al máximo, se actualiza el stack actual
                     if ($nuevoAmount <= $maxStack) {
-                        $xuxe->update([
-                            'amount' => $nuevoAmount
-                        ]);
+                        $xuxe->update(['amount' => $nuevoAmount]);
 
                         return response()->json([
                             'message' => 'Xuxe añadida correctamente',
                             'xuxe' => $xuxe
                         ], 201);
 
-                        // Si el nuevo amount supera el máximo, se llena el stack actual y se crea otro stack con el sobrante
+                        // Si el nuevo amount supera el máximo del stack, necesitamos un slot nuevo para el sobrante
                     } else {
-                        // Se actualiza el stack actual al máximo
-                        $xuxe->update([
-                            'amount' => $maxStack
-                        ]);
+                        // Llenamos el stack actual al máximo
+                        $xuxe->update(['amount' => $maxStack]);
+
+                        $sobrante = $nuevoAmount - $maxStack;
+
+                        // Comprobamos si hay espacio para el nuevo slot del sobrante
+                        $slotsOcupados = Mochila::where('user_id', $request->user_id)->count();
+
+                        if ($slotsOcupados >= $maxSlots) {
+                            return response()->json([
+                                'message' => 'Xuxe añadida parcialmente',
+                                'errors' => "El sobrante de {$sobrante} xuxe(s) ha sido descartado por falta de espacio",
+                                'xuxe' => $xuxe
+                            ], 201);
+                        }
 
                         $nuevaXuxe = Mochila::create([
                             'type' => 'xuxe',
                             'name' => $request->name,
-                            'amount' => $nuevoAmount - $maxStack,
+                            'amount' => $sobrante,
                             'stackable' => 1,
                             'user_id' => $request->user_id
                         ]);
@@ -158,8 +182,16 @@ class AdminController extends Controller
                         ], 201);
                     }
 
-                    // Si no se puede apilar
+                    // Si no hay stack existente, creamos uno nuevo
                 } else {
+                    // Comprobamos si hay espacio en la mochila
+                    if ($slotsOcupados >= $maxSlots) {
+                        return response()->json([
+                            'message' => 'Mochila llena',
+                            'errors' => 'No hay espacio en la mochila, la xuxe ha sido descartada'
+                        ], 400);
+                    }
+
                     $xuxe = Mochila::create([
                         'type' => 'xuxe',
                         'name' => $request->name,
@@ -168,13 +200,13 @@ class AdminController extends Controller
                         'user_id' => $request->user_id
                     ]);
 
-                    // Devolvemos la xuxe añadida
                     return response()->json([
                         'message' => 'Xuxe añadida correctamente',
                         'xuxe' => $xuxe
                     ], 201);
                 }
             }
+
             // Si el usuario no tiene suficientes permisos
         } else {
             return response()->json([
