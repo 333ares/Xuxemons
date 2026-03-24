@@ -14,6 +14,7 @@ export interface Xuxemon {
   type: 'agua' | 'tierra' | 'aire';
   size: 's' | 'm' | 'g';
   sickness: string | number;
+  xuxes_count: number; // Contador de xuxes consumidas (para la barra de nivel)
   user_id: number;
   created_at?: string;
 }
@@ -43,6 +44,21 @@ export class Xuxedex implements OnInit {
   paginaActual = 1;
   ultimaPagina = 1;
 
+  // Las xuxes necesarias para subir de nivel dependen del tamaño del Xuxemon:
+  // s → 3 | m → 5 | g → ya está en el nivel máximo
+  get xuxesActuales(): number {
+    return this.xuxemonSeleccionado?.xuxes_count ?? 0;
+  }
+
+  get xuxesNecesarias(): number {
+    return this.calcularXuxesNecesarias(this.xuxemonSeleccionado);
+  }
+
+  //  Feedback de alimentación
+  feedbackMensaje = '';
+  feedbackTipo: 'ok' | 'error' | 'infeccion' | '' = '';
+  cargandoFeed = false;
+
   constructor(
     private sanitizer: DomSanitizer,
     private auth: Auth,
@@ -52,30 +68,29 @@ export class Xuxedex implements OnInit {
       this.icons[key] = this.sanitizer.bypassSecurityTrustHtml(ICONS[key]);
     });
   }
+
   buscador = new FormControl<string>('');
 
   ngOnInit(): void {
     this.cargarUsuario();
     this.listarXuxemons();
 
-    this.buscador.valueChanges.pipe(
-      debounceTime(800),
-      distinctUntilChanged()
-    ).subscribe((termino) => {
-      const valor = termino as string;
-      if (!valor || valor.trim() === '') {
-        this.listarXuxemons();
-      } else {
-        this.buscarXuxemons(valor);
-      }
-    });
+    this.buscador.valueChanges
+      .pipe(debounceTime(800), distinctUntilChanged())
+      .subscribe((termino) => {
+        const valor = termino as string;
+        if (!valor || valor.trim() === '') {
+          this.listarXuxemons();
+        } else {
+          this.buscarXuxemons(valor);
+        }
+      });
   }
 
   // Carga los datos del usuario autenticado desde el backend
   private cargarUsuario(): void {
     this.auth.getInfoUsuario().subscribe({
       next: (res) => {
-        // El backend devuelve el usuario dentro de res.usuario o directamente en res
         this.usuario = res.usuario ?? res;
       },
       error: (err) => {
@@ -98,11 +113,124 @@ export class Xuxedex implements OnInit {
       error: (err) => {
         this.error = err.error?.errors ?? 'Error al cargar los xuxemons.';
         this.cargando = false;
-      }
+      },
     });
   }
 
-  // Filtrado de xuxemons por tipo
+  //  Alimentar Xuxemon
+
+  /**
+   * Llama al endpoint de alimentación y actualiza el estado local del Xuxemon.
+   * Si el servidor devuelve una enfermedad nueva, activa el feedback de infección.
+   */
+  alimentarXuxemon(xuxemon: Xuxemon): void {
+    if (this.cargandoFeed) return;
+    this.cargandoFeed = true;
+    this.feedbackMensaje = '';
+    this.feedbackTipo = '';
+
+    const sicknessAntes = xuxemon.sickness;
+
+    this.auth.alimentarXuxemon(xuxemon.id).subscribe({
+      next: (res) => {
+        const actualizado: Xuxemon = res.xuxemon;
+
+        // Actualizamos el Xuxemon tanto en la lista como en la selección
+        this.aplicarActualizacion(actualizado);
+
+        // Detectamos si ha aparecido una enfermedad nueva tras alimentarle
+        const seInfecto =
+          (!sicknessAntes || sicknessAntes === '0' || sicknessAntes === 0) &&
+          this.estaEnfermo(actualizado);
+
+        if (seInfecto) {
+          this.feedbackTipo = 'infeccion';
+          this.feedbackMensaje = `¡${actualizado.name} ha caído enfermo: ${this.getNombreEnfermedad(actualizado.sickness)}!`;
+        } else {
+          this.feedbackTipo = 'ok';
+          this.feedbackMensaje = `¡${actualizado.name} ha comido una xuxe!`;
+        }
+
+        this.cargandoFeed = false;
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.feedbackTipo = 'error';
+        this.feedbackMensaje = err.error?.errors ?? 'No se ha podido alimentar al Xuxemon.';
+        this.cargandoFeed = false;
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3500);
+      },
+    });
+  }
+
+  //  Subir de nivel
+
+  /* Solicita al backend que suba de nivel al Xuxemon y actualiza el size localmente. */
+  subirNivel(xuxemon: Xuxemon): void {
+    this.auth.subirNivel(xuxemon.id).subscribe({
+      next: (res) => {
+        const actualizado: Xuxemon = res.xuxemon;
+        this.aplicarActualizacion(actualizado);
+        this.feedbackTipo = 'ok';
+        this.feedbackMensaje = `¡${actualizado.name} ha subido de nivel!`;
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.feedbackTipo = 'error';
+        this.feedbackMensaje = err.error?.errors ?? 'No se ha podido subir de nivel.';
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3500);
+      },
+    });
+  }
+
+  // Aplica los datos del Xuxemon actualizado tanto en la lista como en la selección
+  private aplicarActualizacion(actualizado: Xuxemon): void {
+    const idx = this.xuxemons.findIndex((x) => x.id === actualizado.id);
+    if (idx !== -1) {
+      this.xuxemons[idx] = { ...this.xuxemons[idx], ...actualizado };
+    }
+    if (this.xuxemonSeleccionado?.id === actualizado.id) {
+      this.xuxemonSeleccionado = { ...this.xuxemonSeleccionado, ...actualizado };
+    }
+  }
+
+  // Devuelve el número de xuxes necesarias para subir de nivel según el tamaño.
+  // Si el Xuxemon tiene bajón de azúcar, se necesitan 2 xuxes extra (lógica del backend).
+  calcularXuxesNecesarias(xuxemon: Xuxemon | null): number {
+    if (!xuxemon) return 3;
+    const base: Record<string, number> = { s: 3, m: 5 };
+    const xuxesBase = base[xuxemon.size] ?? 0; // 0 → nivel máximo (g)
+    const extra = xuxemon.sickness === 'Bajón de azúcar' || xuxemon.sickness === 'bajon' ? 2 : 0;
+    return xuxesBase + extra;
+  }
+
+  get porcentajeNivel(): number {
+    const necesarias = this.xuxesNecesarias;
+    if (necesarias === 0) return 100;
+    return Math.min(100, Math.round((this.xuxesActuales / necesarias) * 100));
+  }
+
+  get puedeSubirNivel(): boolean {
+    return (
+      !!this.xuxemonSeleccionado &&
+      this.xuxemonSeleccionado.size !== 'g' &&
+      this.xuxesActuales >= this.xuxesNecesarias
+    );
+  }
+
+  //  Filtrado de xuxemons por tipo
   sinResultadosFiltroTipo = false;
   tipoActivo = '';
   cargandoFiltro = false;
@@ -131,17 +259,18 @@ export class Xuxedex implements OnInit {
         }
         this.cargando = false;
       },
-      error: (err) => {
+      error: () => {
         this.sinResultadosFiltroTipo = true;
         this.xuxemons = [];
         this.cargando = false;
-      }
+      },
     });
   }
 
-  // Filtrado de xuxemons por tamaño
+  //  Filtrado de xuxemons por tamaño
   sinResultadosFiltroTamano = false;
   tamanoActivo = '';
+
   filtrarPorTamano(size: string): void {
     if (size === '') {
       this.tamanoActivo = '';
@@ -167,27 +296,25 @@ export class Xuxedex implements OnInit {
         }
         this.cargandoFiltro = false;
       },
-      error: (err) => {
+      error: () => {
         this.sinResultadosFiltroTamano = true;
         this.xuxemons = [];
         this.cargandoFiltro = false;
-      }
+      },
     });
   }
 
-
-  // Paginación de datos
+  //  Paginación
   irAPagina(pagina: number): void {
     if (pagina < 1 || pagina > this.ultimaPagina) return;
     this.listarXuxemons(pagina);
   }
 
-  // Getter de paginas
   get paginas(): number[] {
     return Array.from({ length: this.ultimaPagina }, (_, i) => i + 1);
   }
 
-  // Navgeador de xuxemons
+  //  Búsqueda
   busqueda = '';
   sinResultados = false;
 
@@ -202,7 +329,6 @@ export class Xuxedex implements OnInit {
     }
 
     this.cargando = true;
-
     this.auth.navXuxemons(termino).subscribe({
       next: (res) => {
         this.xuxemons = res.xuxemons;
@@ -210,49 +336,37 @@ export class Xuxedex implements OnInit {
         this.paginaActual = 1;
         if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
         this.cargando = false;
-
       },
-      error: (err) => {
+      error: () => {
         this.sinResultados = true;
-        this.xuxemons = [];  // limpia la lista anterior
+        this.xuxemons = [];
         this.cargando = false;
-      }
+      },
     });
   }
 
-  // Convierte el nombre del xuxemon al nombre del archivo PNG
+  //  Helpers de visualización
+
   getImagenXuxemon(nombre: string): string {
-    // Coge el nombre, lo pasa a minúsculas y usa una expresión regular (/[\s\-_]+/g) para quitar espacios, guiones bajos o normales.
     const slug = nombre.toLowerCase().replace(/[\s\-_]+/g, '');
     return `/animales/${slug}.png`;
   }
 
   getNombreTipo(type: string): string {
-    // Usan diccionarios (Record<string, string>) para cambiar un valor como 's' por 'Xuxemon Pequeño'
-    const mapa: Record<string, string> = {
-      agua: 'Agua',
-      tierra: 'Tierra',
-      aire: 'Aire',
-    };
+    const mapa: Record<string, string> = { agua: 'Agua', tierra: 'Tierra', aire: 'Aire' };
     return mapa[type] ?? type;
   }
 
   getNombreTamano(size: string): string {
-    const mapa: Record<string, string> = {
-      s: 'Pequeño',
-      m: 'Mediano',
-      g: 'Grande',
-    };
+    const mapa: Record<string, string> = { s: 'Pequeño', m: 'Mediano', g: 'Grande' };
     return mapa[size] ?? size;
   }
 
   estaEnfermo(xuxemon: Xuxemon): boolean {
-    // Evalúa si el Xuxemon tiene alguna enfermedad comprobando que no sea cero ni esté vacío.
     return xuxemon.sickness !== '0' && xuxemon.sickness !== 0 && xuxemon.sickness !== '';
   }
 
   getNombreEnfermedad(sickness: string | number): string {
-    // Normaliza los nombres de las enfermedades.
     const mapa: Record<string, string> = {
       bajon: 'Bajón de azúcar',
       bajón: 'Bajón de azúcar',
@@ -260,6 +374,8 @@ export class Xuxedex implements OnInit {
       'bajon de azucar': 'Bajón de azúcar',
       atracón: 'Atracón',
       atracon: 'Atracón',
+      'sobredosis de azúcar': 'Sobredosis de azúcar',
+      'sobredosis de azucar': 'Sobredosis de azúcar',
     };
     return mapa[String(sickness).toLowerCase().trim()] ?? String(sickness);
   }
@@ -278,36 +394,31 @@ export class Xuxedex implements OnInit {
   }
 
   estaSeleccionado(grupo: Xuxemons): boolean {
-    // La función estaSeleccionado simplemente devuelve true o false para saber si debe aplicarle un estilo de "activo/resaltado" en el HTML.
     return this.xuxemonSeleccionado?.name === grupo.name;
   }
 
-  mostrarDialogoBorrar: boolean = false;
+  //  Diálogo de borrado
+  mostrarDialogoBorrar = false;
 
-  abrirDialogoBorrar() {
+  abrirDialogoBorrar(): void {
     this.mostrarDialogoBorrar = true;
   }
-
-  cerrarDialogoBorrar() {
+  cerrarDialogoBorrar(): void {
     this.mostrarDialogoBorrar = false;
   }
 
-  confirmarBorrar() {
+  confirmarBorrar(): void {
     if (!this.xuxemonSeleccionado) return;
 
     this.auth.borrarXuxemon(this.xuxemonSeleccionado.id).subscribe({
       next: () => {
-        // quitarlo de la lista
-        this.xuxemons = this.xuxemons.filter(
-          x => x.id !== this.xuxemonSeleccionado?.id
-        );
-
+        this.xuxemons = this.xuxemons.filter((x) => x.id !== this.xuxemonSeleccionado?.id);
         this.xuxemonSeleccionado = this.xuxemons[0] ?? null;
         this.cerrarDialogoBorrar();
       },
       error: (err) => {
         console.error('Error al borrar xuxemon', err);
-      }
+      },
     });
   }
 }
