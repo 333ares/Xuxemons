@@ -87,20 +87,24 @@ class AdminController extends Controller
                 ], 400);
             }
 
-            $maxSlots = 20; // Límite de slots de la mochila
+            $maxMochila = 20; // El máximo de objetos que puede tener la mochila
 
-            // Comprobamos los slots ocupados actualmente
-            $slotsOcupados = Mochila::where('user_id', $request->user_id)->count();
+            // Calculamos el total de objetos que ya tiene el usuario en la mochila
+            $totalActual = Mochila::where('user_id', $request->user_id)->sum('amount');
 
             // Si el tipo es vacuna, se añade sin importar si ya tiene o no, ya que no son apilables
             if ($request->type === "vacuna") {
 
-                // Comprobamos si hay espacio en la mochila
-                if ($slotsOcupados >= $maxSlots) {
+                // Si la mochila está llena, no se puede añadir la vacuna
+                if ($totalActual >= $maxMochila) {
                     return response()->json([
-                        'message' => 'Mochila llena',
-                        'errors' => 'No hay espacio en la mochila, la vacuna ha sido descartada'
-                    ], 400);
+                        'message' => 'warning',
+                        'warning' => 'La mochila está llena. No 
+                        
+                        
+                        
+                        se ha podido añadir la vacuna.'
+                    ], 200);
                 }
 
                 $vacuna = Mochila::create([
@@ -130,6 +134,11 @@ class AdminController extends Controller
             } else {
                 $maxStack = 5; // El máximo de objetos que se pueden apilar
 
+                // Calculamos cuántas xuxes se pueden añadir sin superar el límite de la mochila
+                $espacioDisponible = $maxMochila - $totalActual;
+                $amountReal = min($request->amount, $espacioDisponible);
+                $descartadas = $request->amount - $amountReal;
+
                 // Buscamos si ya tiene esa xuxe y si se puede apilar
                 $xuxe = Mochila::where('user_id', $request->user_id)
                     ->where('name', $request->name)
@@ -137,76 +146,83 @@ class AdminController extends Controller
                     ->where('amount', '<', $maxStack)
                     ->first();
 
-                // Si se puede apilar en un stack existente
+                // Si se puede apilar
                 if ($xuxe) {
-                    $nuevoAmount = $xuxe->amount + $request->amount;
+                    $nuevoAmount = $xuxe->amount + $amountReal; // Calculamos el nuevo amount sumando el actual con el que se quiere añadir
 
-                    // Si el nuevo amount es menor o igual al máximo, se actualiza el stack actual
+                    // Si el nuevo amount es menor o igual al máximo, se actualiza el amount del stack actual
                     if ($nuevoAmount <= $maxStack) {
-                        $xuxe->update(['amount' => $nuevoAmount]);
+                        $xuxe->update([
+                            'amount' => $nuevoAmount
+                        ]);
 
-                        return response()->json([
-                            'message' => 'Xuxe añadida correctamente',
-                            'xuxe' => $xuxe
-                        ], 201);
-
-                        // Si el nuevo amount supera el máximo del stack, necesitamos un slot nuevo para el sobrante
-                    } else {
-                        // Llenamos el stack actual al máximo
-                        $xuxe->update(['amount' => $maxStack]);
-
-                        $sobrante = $nuevoAmount - $maxStack;
-
-                        // Comprobamos si hay espacio para el nuevo slot del sobrante
-                        $slotsOcupados = Mochila::where('user_id', $request->user_id)->count();
-
-                        if ($slotsOcupados >= $maxSlots) {
+                        if ($descartadas > 0) {
                             return response()->json([
-                                'message' => 'Xuxe añadida parcialmente',
-                                'errors' => "El sobrante de {$sobrante} xuxe(s) ha sido descartado por falta de espacio",
+                                'message' => 'warning',
+                                'warning' => 'La mochila no tenía suficiente espacio. Se han descartado ' . $descartadas . ' xuxe(s).',
+                                'xuxe' => $xuxe
+                            ], 201);
+                        } else {
+                            return response()->json([
+                                'message' => 'Xuxe añadida correctamente',
                                 'xuxe' => $xuxe
                             ], 201);
                         }
 
+                        // Si el nuevo amount supera el máximo, se llena el stack actual y se crea otro stack con el sobrante
+                    } else {
+                        // Se actualiza el stack actual al máximo
+                        $xuxe->update([
+                            'amount' => $maxStack
+                        ]);
+
                         $nuevaXuxe = Mochila::create([
                             'type' => 'xuxe',
                             'name' => $request->name,
-                            'amount' => $sobrante,
+                            'amount' => $nuevoAmount - $maxStack,
                             'stackable' => 1,
                             'user_id' => $request->user_id
                         ]);
 
-                        return response()->json([
-                            'message' => 'Xuxe añadida correctamente',
-                            'xuxe' => $nuevaXuxe
-                        ], 201);
+                        if ($descartadas > 0) {
+                            return response()->json([
+                                'message' => 'warning',
+                                'warning' => 'La mochila no tenía suficiente espacio. Se han descartado ' . $descartadas . ' xuxe(s).',
+                                'xuxe' => $nuevaXuxe
+                            ], 201);
+                        } else {
+                            return response()->json([
+                                'message' => 'Xuxe añadida correctamente',
+                                'xuxe' => $nuevaXuxe
+                            ], 201);
+                        }
                     }
 
-                    // Si no hay stack existente, creamos uno nuevo
+                    // Si no se puede apilar
                 } else {
-                    // Comprobamos si hay espacio en la mochila
-                    if ($slotsOcupados >= $maxSlots) {
-                        return response()->json([
-                            'message' => 'Mochila llena',
-                            'errors' => 'No hay espacio en la mochila, la xuxe ha sido descartada'
-                        ], 400);
-                    }
-
                     $xuxe = Mochila::create([
                         'type' => 'xuxe',
                         'name' => $request->name,
-                        'amount' => $request->amount,
+                        'amount' => $amountReal,
                         'stackable' => 1,
                         'user_id' => $request->user_id
                     ]);
 
-                    return response()->json([
-                        'message' => 'Xuxe añadida correctamente',
-                        'xuxe' => $xuxe
-                    ], 201);
+                    if ($descartadas > 0) {
+                        return response()->json([
+                            'message' => 'warning',
+                            'warning' => 'La mochila no tenía suficiente espacio. Se han descartado ' . $descartadas . ' xuxe(s).',
+                            'xuxe' => $xuxe
+                        ], 201);
+                    } else {
+                        // Devolvemos la xuxe añadida
+                        return response()->json([
+                            'message' => 'Xuxe añadida correctamente',
+                            'xuxe' => $xuxe
+                        ], 201);
+                    }
                 }
             }
-
             // Si el usuario no tiene suficientes permisos
         } else {
             return response()->json([
