@@ -1,3 +1,254 @@
+/* Reutiliza el mismo sistema de diseño que pagina-principal */
+.dashboard-wrapper {
+  background-color: #f4f3f3;
+  min-height: 100vh;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  padding-bottom: 90px;
+}
+
+/* CABECERA */
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(244, 243, 243, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 40px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #3b2101;
+  letter-spacing: -0.5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-chip {
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 99px;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-avatar-placeholder {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffaa4a;
+}
+
+.header-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-user-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #3b2101;
+  line-height: 1.2;
+}
+
+.header-user-id {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+/* CONTENIDO PRINCIPAL */
+.dashboard-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* BIENVENIDA */
+.bienvenida-section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bienvenida-titulo {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #3b2101;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.nombre-highlight {
+  color: #ffaa4a;
+}
+
+.bienvenida-sub {
+  font-size: 1rem;
+  color: #777;
+  margin: 0;
+}
+
+.fecha-texto {
+  font-size: 1rem;
+  color: #999;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+/* KPIs */
+.kpi-row {
+  display: flex;
+  gap: 16px;
+}
+
+.kpi-card {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
+}
+
+.kpi-naranja {
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+}
+
+.kpi-naranja .kpi-numero,
+.kpi-naranja .kpi-label {
+  color: white;
+}
+
+.kpi-icono {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 170, 74, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffaa4a;
+}
+
+.kpi-naranja .kpi-icono {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.kpi-icono-rojo {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+}
+.kpi-icono-verde {
+  background: rgba(39, 174, 96, 0.1);
+  color: #27ae60;
+}
+.kpi-icono-azul {
+  background: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+.kpi-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.kpi-numero {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #3b2101;
+  line-height: 1;
+}
+
+.kpi-label {
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 3px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .kpi-row {
+    flex-wrap: wrap;
+  }
+  .kpi-card {
+    min-width: calc(50% - 8px);
+  }
+  .dashboard-main {
+    padding: 20px 16px;
+  }
+  .dashboard-header {
+    padding: 14px 20px;
+  }
+  .bienvenida-titulo {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .kpi-card {
+    min-width: 100%;
+  }
+}
+
+
+
 /*  SECCIÓN DE CONFIGURACIÓN — BASE  */
 
 .config-section {
