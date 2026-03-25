@@ -198,5 +198,4 @@ export class Mochila implements OnInit {
       },
     });
   }
-
 }

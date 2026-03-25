@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class Auth {
   private apiUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Construye las cabeceras con el token JWT para rutas protegidas
   private getHeaders() {
@@ -98,26 +98,38 @@ export class Auth {
   }
 
   getXuxemonsPorTipo(type: string = '', pagina: number = 1): Observable<any> {
-    return this.http.get(`${this.apiUrl}/xuxemons/tipo?type=${type}&page=${pagina}`, { headers: this.getHeaders() });
+    return this.http.get(`${this.apiUrl}/xuxemons/tipo?type=${type}&page=${pagina}`, {
+      headers: this.getHeaders(),
+    });
   }
 
   getXuxemonsPorTamano(size: string = '', pagina: number = 1): Observable<any> {
-    return this.http.get(`${this.apiUrl}/xuxemons/tamano?size=${size}&page=${pagina}`, { headers: this.getHeaders() });
+    return this.http.get(`${this.apiUrl}/xuxemons/tamano?size=${size}&page=${pagina}`, {
+      headers: this.getHeaders(),
+    });
   }
 
   borrarXuxemon(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/xuxemon`, {
       headers: this.getHeaders(),
-      body: { id: id }
+      body: { id: id },
     });
   }
 
   alimentarXuxemon(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/xuxemon/alimentar`, { id }, { headers: this.getHeaders() });
+    return this.http.post(
+      `${this.apiUrl}/xuxemon/alimentar`,
+      { id },
+      { headers: this.getHeaders() },
+    );
   }
 
   subirNivel(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/xuxemon/subirNivel`, { id }, { headers: this.getHeaders() });
+    return this.http.post(
+      `${this.apiUrl}/xuxemon/subirNivel`,
+      { id },
+      { headers: this.getHeaders() },
+    );
   }
 
   // --- MOCHILA ---
@@ -128,12 +140,16 @@ export class Auth {
   borrarObjeto(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/mochila`, {
       headers: this.getHeaders(),
-      body: { id: id }
+      body: { id: id },
     });
   }
 
   aplicarVacuna(objetoId: number, xuxemonId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/mochila/vacuna`, { objeto_id: objetoId, xuxemon_id: xuxemonId }, { headers: this.getHeaders() });
+    return this.http.post(
+      `${this.apiUrl}/mochila/vacuna`,
+      { objeto_id: objetoId, xuxemon_id: xuxemonId },
+      { headers: this.getHeaders() },
+    );
   }
 
   // --- ADMINISTRACIÓN ---
@@ -142,10 +158,19 @@ export class Auth {
   }
 
   agregarXuxemon(userId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/agregarXuxemon`, { user_id: userId }, { headers: this.getHeaders() });
+    return this.http.post(
+      `${this.apiUrl}/agregarXuxemon`,
+      { user_id: userId },
+      { headers: this.getHeaders() },
+    );
   }
 
-  agregarObjeto(datos: { user_id: number; type: string; name: string; amount: number }): Observable<any> {
+  agregarObjeto(datos: {
+    user_id: number;
+    type: string;
+    name: string;
+    amount: number;
+  }): Observable<any> {
     return this.http.post(`${this.apiUrl}/agregarObjeto`, datos, { headers: this.getHeaders() });
   }
 }
