@@ -178,4 +178,46 @@ class XuxemonsController extends Controller
             'xuxemon' => $xuxemon
         ], 200);
     }
+
+    public function curarXuxemon(Request $request)
+    {
+        $xuxemon = Xuxemons::where('user_id', $request->user()->id)
+            ->where('id', $request->id)
+            ->first();
+
+        if (!$xuxemon) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes ningún xuxemon con ese ID'
+            ], 404);
+        }
+
+        if ($xuxemon->sickness === null) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Tu xuxemon no esta enfermo'
+            ], 400);
+        }
+
+        $vacuna = Mochila::where('user_id', $request->user()->id)
+            ->where('type', 'vacuna')
+            ->first();
+
+        if (!$vacuna) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes vacunas en tu mochila'
+            ], 400);
+        }
+
+        $xuxemon->sickness = null;
+        $xuxemon->save();
+
+        $vacuna->delete();
+
+        return response()->json([
+            'message' => 'success',
+            'xuxemon' => $xuxemon
+        ], 200);
+    }
 }
