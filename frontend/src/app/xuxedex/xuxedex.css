@@ -334,6 +334,20 @@
   text-align: center;
   line-height: 1.2;
   word-break: break-word;
+  text-transform: capitalize;
+}
+
+/* Fondo coloreado según tipo dentro del área de la imagen */
+.xdex-card--agua .xdex-card__imagen {
+  background: #ebf8ff;
+}
+
+.xdex-card--tierra .xdex-card__imagen {
+  background: #e6ffed;
+}
+
+.xdex-card--aire .xdex-card__imagen {
+  background: #faf5ff;
 }
 
 .xdex-card--agua .xdex-card__nombre-bar {
@@ -341,7 +355,7 @@
 }
 
 .xdex-card--tierra .xdex-card__nombre-bar {
-  background: #9ae6b4;
+  background: #48bb78;
 }
 
 .xdex-card--aire .xdex-card__nombre-bar {
@@ -494,7 +508,7 @@
 }
 
 .xdex-detalle__imagen-fondo--tierra {
-  background: #f0fff4;
+  background: #c6f6d5;
 }
 
 .xdex-detalle__imagen-fondo--aire {

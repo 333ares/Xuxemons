@@ -147,7 +147,7 @@
               <option value="">Todos los tamaños</option>
               <option value="s">Pequeño</option>
               <option value="m">Mediano</option>
-              <option value="l">Grande</option>
+              <option value="g">Grande</option>
             </select>
           </div>
 
@@ -217,16 +217,76 @@
                 (keydown.enter)="xuxemonSeleccionado = x"
                 (keydown.space)="xuxemonSeleccionado = x"
               >
-                <div class="xdex-card__img-wrap xdex-card__img-wrap--{{ x.type }}">
+                <div class="xdex-card__imagen">
                   <img [src]="getImagenXuxemon(x.name)" [alt]="x.name" class="xdex-card__img" />
                 </div>
-                <span class="xdex-card__nombre">{{ x.name }}</span>
-                <span class="xdex-badge xdex-badge--tipo xdex-badge--{{ x.type }}">
-                  {{ getNombreTipo(x.type) }}
-                </span>
+                <div class="xdex-card__nombre-bar">
+                  <span class="xdex-card__nombre">{{ x.name }}</span>
+                </div>
               </li>
             }
           </ul>
+
+          <!-- Paginación -->
+          @if (ultimaPagina > 1) {
+            <nav class="xdex-paginacion" aria-label="Paginación del xuxedex">
+              <button
+                class="xdex-paginacion__btn"
+                (click)="irAPagina(paginaActual - 1)"
+                [disabled]="paginaActual === 1"
+                aria-label="Página anterior"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M19 12H5" />
+                  <polyline points="12 19 5 12 12 5" />
+                </svg>
+              </button>
+
+              @for (p of paginas; track p) {
+                <button
+                  class="xdex-paginacion__num"
+                  [class.xdex-paginacion__num--activo]="paginaActual === p"
+                  [attr.aria-current]="paginaActual === p ? 'page' : null"
+                  [attr.aria-label]="'Página ' + p"
+                  (click)="irAPagina(p)"
+                >
+                  {{ p }}
+                </button>
+              }
+
+              <button
+                class="xdex-paginacion__btn"
+                (click)="irAPagina(paginaActual + 1)"
+                [disabled]="paginaActual === ultimaPagina"
+                aria-label="Página siguiente"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+            </nav>
+          }
         </section>
 
         <!-- PANEL DERECHO -->
@@ -370,66 +430,6 @@
           </section>
         }
       </div>
-
-      @if (ultimaPagina > 1) {
-        <nav class="xdex-paginacion" aria-label="Paginación del xuxedex">
-          <button
-            class="xdex-paginacion__btn"
-            (click)="irAPagina(paginaActual - 1)"
-            [disabled]="paginaActual === 1"
-            aria-label="Página anterior"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M19 12H5" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-          </button>
-
-          @for (p of paginas; track p) {
-            <button
-              class="xdex-paginacion__num"
-              [class.xdex-paginacion__num--activo]="paginaActual === p"
-              [attr.aria-current]="paginaActual === p ? 'page' : null"
-              [attr.aria-label]="'Página ' + p"
-              (click)="irAPagina(p)"
-            >
-              {{ p }}
-            </button>
-          }
-
-          <button
-            class="xdex-paginacion__btn"
-            (click)="irAPagina(paginaActual + 1)"
-            [disabled]="paginaActual === ultimaPagina"
-            aria-label="Página siguiente"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
-        </nav>
-      }
 
       <!-- MODAL SELECTOR DE VACUNAS -->
       @if (mostrarModalVacuna) {
