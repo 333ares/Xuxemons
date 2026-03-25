@@ -8,7 +8,6 @@
       </div>
     </div>
     <div class="header-right">
-      <!-- Icono notificación: button para ser accesible con teclado -->
       <button class="header-badge" type="button" aria-label="Notificaciones">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -98,7 +97,7 @@
             <option value="">Todos los tamaños</option>
             <option value="s">Pequeño</option>
             <option value="m">Mediano</option>
-            <option value="g">Grande</option>
+            <option value="l">Grande</option>
           </select>
         </div>
 
@@ -130,7 +129,16 @@
         <ul class="xdex-grid" aria-label="Lista de Xuxemons">
           @for (x of xuxemons; track x.id) {
           <li class="xdex-card" [class.xdex-card--activo]="xuxemonSeleccionado?.id === x.id"
-            (click)="xuxemonSeleccionado = x">
+            [class.xdex-card--seleccionado]="xuxemonSeleccionado?.id === x.id"
+            [class.xdex-card--agua]="x.type === 'agua'"
+            [class.xdex-card--tierra]="x.type === 'tierra'"
+            [class.xdex-card--aire]="x.type === 'aire'"
+            tabindex="0" role="button"
+            [attr.aria-pressed]="xuxemonSeleccionado?.id === x.id"
+            [attr.aria-label]="x.name + ', tipo ' + getNombreTipo(x.type)"
+            (click)="xuxemonSeleccionado = x"
+            (keydown.enter)="xuxemonSeleccionado = x"
+            (keydown.space)="xuxemonSeleccionado = x">
             <div class="xdex-card__img-wrap xdex-card__img-wrap--{{ x.type }}">
               <img [src]="getImagenXuxemon(x.name)" [alt]="x.name" class="xdex-card__img" />
             </div>
@@ -154,15 +162,15 @@
           <div class="xdex-detalle__linea" aria-hidden="true"></div>
         </div>
 
+        <!-- Imagen del Xuxemon -->
         <div class="xdex-detalle__imagen-wrap">
-          <div class="xdex-detalle__imagen-fondo xdex-detalle__imagen-fondo--{{
-                  xuxemonSeleccionado.type
-                }}">
+          <div class="xdex-detalle__imagen-fondo xdex-detalle__imagen-fondo--{{ xuxemonSeleccionado.type }}">
             <img [src]="getImagenXuxemon(xuxemonSeleccionado.name)" [alt]="xuxemonSeleccionado.name"
               class="xdex-detalle__img" />
           </div>
         </div>
 
+        <!-- Badges de características -->
         <div class="xdex-detalle__badges" role="list" aria-label="Características del Xuxemon">
           <span class="xdex-badge xdex-badge--tipo xdex-badge--{{ xuxemonSeleccionado.type }}" role="listitem">
             {{ getNombreTipo(xuxemonSeleccionado.type) }}
@@ -177,11 +185,66 @@
           </span>
         </div>
 
+        <!-- Fecha de adquisición -->
         <p class="xdex-detalle__fecha">
           Fecha de adquisición:
           <strong>{{ formatearFecha(xuxemonSeleccionado.created_at) }}</strong>
         </p>
 
+        <!-- SECCIÓN LEVEL-UP -->
+        @if (xuxemonSeleccionado.size !== 'g') {
+        <div class="xdex-levelup" aria-label="Progreso de nivel">
+          <div class="xdex-levelup__cabecera">
+            <span class="xdex-levelup__etiqueta">Xuxes para subir de nivel</span>
+            <span class="xdex-levelup__contador" [attr.aria-label]="xuxesActuales + ' de ' + xuxesNecesarias + ' xuxes'">
+              {{ xuxesActuales }}/{{ xuxesNecesarias }}
+            </span>
+          </div>
+          <div class="xdex-levelup__barra-wrap" role="progressbar"
+            [attr.aria-valuenow]="xuxesActuales"
+            [attr.aria-valuemax]="xuxesNecesarias"
+            [attr.aria-valuemin]="0">
+            <div class="xdex-levelup__barra-relleno" [style.width.%]="porcentajeNivel"></div>
+          </div>
+          @if (puedeSubirNivel) {
+          <button class="xdex-btn-levelup" type="button" (click)="subirNivel(xuxemonSeleccionado)"
+            [attr.aria-label]="'Subir de nivel a ' + xuxemonSeleccionado.name">
+            ⬆️ Subir nivel
+          </button>
+          }
+        </div>
+        } @else {
+        <div class="xdex-levelup xdex-levelup--maximo" aria-label="Nivel máximo alcanzado">
+          <span>🏆 Nivel máximo alcanzado</span>
+        </div>
+        }
+
+        <!-- BOTÓN DAR XUXE-->
+        <button class="xdex-btn-feed" type="button"
+          (click)="alimentarXuxemon(xuxemonSeleccionado)"
+          [disabled]="cargandoFeed"
+          [attr.aria-label]="'Dar una xuxe a ' + xuxemonSeleccionado.name"
+          [class.xdex-btn-feed--cargando]="cargandoFeed">
+          @if (cargandoFeed) {
+          <span class="xdex-feed-spinner" aria-hidden="true"></span>
+          Dando xuxe...
+          } @else {
+          🍬 Dar xuxe
+          }
+        </button>
+
+        <!-- Feedback visual tras alimentar -->
+        @if (feedbackMensaje) {
+        <div class="xdex-feedback"
+          [class.xdex-feedback--ok]="feedbackTipo === 'ok'"
+          [class.xdex-feedback--error]="feedbackTipo === 'error'"
+          [class.xdex-feedback--infeccion]="feedbackTipo === 'infeccion'"
+          role="alert" aria-live="assertive">
+          {{ feedbackMensaje }}
+        </div>
+        }
+
+        <!-- Botón borrar -->
         <button (click)="abrirDialogoBorrar()" class="btn-borrar">Borrar</button>
       </section>
       }
