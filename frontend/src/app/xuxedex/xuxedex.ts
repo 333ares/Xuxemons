@@ -44,6 +44,7 @@ export class Xuxedex implements OnInit {
   paginaActual = 1;
   ultimaPagina = 1;
 
+  //  Barra de level-up
   // Las xuxes necesarias para subir de nivel dependen del tamaño del Xuxemon:
   // s → 3 | m → 5 | g → ya está en el nivel máximo
   get xuxesActuales(): number {
@@ -58,6 +59,12 @@ export class Xuxedex implements OnInit {
   feedbackMensaje = '';
   feedbackTipo: 'ok' | 'error' | 'infeccion' | '' = '';
   cargandoFeed = false;
+
+  //  Modal de vacuna (se abre desde el panel derecho)
+  mostrarModalVacuna = false;
+  vacunasEnMochila: any[] = [];
+  cargandoVacunas = false;
+  errorVacunas = '';
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -418,6 +425,71 @@ export class Xuxedex implements OnInit {
       },
       error: (err) => {
         console.error('Error al borrar xuxemon', err);
+      },
+    });
+  }
+
+  // Modal de vacuna
+
+  /** Abre el modal y carga las vacunas disponibles en la mochila del usuario. */
+  abrirModalVacuna(): void {
+    if (!this.xuxemonSeleccionado || !this.estaEnfermo(this.xuxemonSeleccionado)) return;
+    this.mostrarModalVacuna = true;
+    this.cargandoVacunas = true;
+    this.errorVacunas = '';
+    this.vacunasEnMochila = [];
+
+    // Cargamos todos los objetos de la mochila y filtramos los de tipo vacuna
+    this.auth.getMochila(1).subscribe({
+      next: (res) => {
+        const todos = res.objetos?.data ?? res.objetos ?? [];
+        this.vacunasEnMochila = todos.filter((item: any) => item.type === 'vacuna');
+        this.cargandoVacunas = false;
+      },
+      error: (err) => {
+        this.errorVacunas = err.error?.errors ?? 'No se pudieron cargar las vacunas.';
+        this.cargandoVacunas = false;
+      },
+    });
+  }
+
+  cerrarModalVacuna(): void {
+    this.mostrarModalVacuna = false;
+    this.vacunasEnMochila = [];
+    this.errorVacunas = '';
+  }
+
+  /**
+   * Aplica la vacuna seleccionada al Xuxemon actual.
+   * En caso de éxito, actualiza el estado del Xuxemon localmente.
+   */
+  confirmarAplicarVacuna(vacunaId: number): void {
+    if (!this.xuxemonSeleccionado) return;
+
+    this.auth.aplicarVacuna(vacunaId, this.xuxemonSeleccionado.id).subscribe({
+      next: (res) => {
+        // El backend devuelve el Xuxemon actualizado o simplemente éxito
+        const actualizado = res.xuxemon;
+        if (actualizado) {
+          this.aplicarActualizacion(actualizado);
+        } else {
+          // Si el backend no devuelve el xuxemon, limpiamos el sickness localmente
+          if (this.xuxemonSeleccionado) {
+            const idx = this.xuxemons.findIndex((x) => x.id === this.xuxemonSeleccionado!.id);
+            if (idx !== -1) this.xuxemons[idx] = { ...this.xuxemons[idx], sickness: '' };
+            this.xuxemonSeleccionado = { ...this.xuxemonSeleccionado, sickness: '' };
+          }
+        }
+        this.cerrarModalVacuna();
+        this.feedbackTipo = 'ok';
+        this.feedbackMensaje = `¡${this.xuxemonSeleccionado?.name ?? 'El Xuxemon'} se ha curado!`;
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.errorVacunas = err.error?.errors ?? 'No se pudo aplicar la vacuna.';
       },
     });
   }
