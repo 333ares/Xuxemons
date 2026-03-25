@@ -284,17 +284,7 @@
                   <strong>{{ formatearFecha(slotSeleccionado!.item!.created_at) }}</strong>
                 </p>
 
-                <!-- Botón "Usar en Xuxemon" — solo visible si el objeto es una vacuna -->
-                @if (slotSeleccionado!.item!.type === 'vacuna') {
-                  <button
-                    class="mo-btn-vacuna"
-                    (click)="abrirModalVacuna()"
-                    [attr.aria-label]="'Usar ' + slotSeleccionado!.item!.name + ' en un Xuxemon'"
-                  >
-                    💉 Usar en Xuxemon
-                  </button>
-                }
-
+                <!-- Botón borrar objeto -->
                 <button
                   class="mo-btn-eliminar"
                   (click)="abrirDialogoBorrar()"
@@ -333,118 +323,6 @@
               <button class="btn-borrar" type="button" (click)="confirmarBorrar()">
                 Sí, borrar objeto
               </button>
-            </div>
-          </div>
-        </div>
-      }
-
-      <!-- MODAL SELECTOR DE XUXEMONS ENFERMOS -->
-      @if (mostrarModalVacuna) {
-        <div
-          class="modal-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-vacuna-titulo"
-          (click)="cerrarModalVacuna()"
-        >
-          <div class="modal-box" (click)="$event.stopPropagation()">
-            <!-- Cabecera del modal -->
-            <div class="modal-box__header">
-              <h3 id="modal-vacuna-titulo" class="modal-box__titulo">
-                💉 ¿A qué Xuxemon le aplicas la vacuna?
-              </h3>
-              <button
-                class="modal-box__cerrar"
-                type="button"
-                (click)="cerrarModalVacuna()"
-                aria-label="Cerrar modal"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            </div>
-
-            <!-- Cuerpo del modal: estados -->
-            <div class="modal-box__body">
-              <!-- Cargando -->
-              @if (cargandoXuxemons) {
-                <div class="mo-estado" role="status" aria-live="polite">
-                  <div class="mo-spinner" aria-hidden="true"></div>
-                  <p>Buscando Xuxemons enfermos...</p>
-                </div>
-              }
-
-              <!-- Error -->
-              @if (!cargandoXuxemons && errorXuxemons) {
-                <div class="mo-estado mo-estado--error" role="alert">
-                  <span aria-hidden="true">⚠️</span>
-                  <p>{{ errorXuxemons }}</p>
-                </div>
-              }
-
-              <!-- Sin enfermos -->
-              @if (!cargandoXuxemons && !errorXuxemons && xuxemonsEnfermos.length === 0) {
-                <div class="mo-estado">
-                  <span aria-hidden="true" style="font-size: 2.5rem">🎉</span>
-                  <p>
-                    ¡Todos tus Xuxemons están sanos! No hay ninguno que necesite esta vacuna ahora
-                    mismo.
-                  </p>
-                </div>
-              }
-
-              <!-- Lista de Xuxemons enfermos -->
-              @if (!cargandoXuxemons && xuxemonsEnfermos.length > 0) {
-                <ul class="modal-xuxemon-list" aria-label="Xuxemons enfermos disponibles">
-                  @for (xuxemon of xuxemonsEnfermos; track xuxemon.id) {
-                    <li class="modal-xuxemon-item">
-                      <div class="modal-xuxemon-info">
-                        @if (xuxemon.image) {
-                          <img
-                            [src]="xuxemon.image"
-                            [alt]="xuxemon.name"
-                            class="modal-xuxemon-img"
-                            loading="lazy"
-                          />
-                        } @else {
-                          <div
-                            class="modal-xuxemon-img modal-xuxemon-img--placeholder"
-                            aria-hidden="true"
-                          >
-                            🐾
-                          </div>
-                        }
-                        <div class="modal-xuxemon-datos">
-                          <span class="modal-xuxemon-nombre">{{ xuxemon.name }}</span>
-                          @if (xuxemon.level) {
-                            <span class="modal-xuxemon-nivel">Nv. {{ xuxemon.level }}</span>
-                          }
-                        </div>
-                      </div>
-                      <button
-                        class="modal-xuxemon-btn"
-                        type="button"
-                        (click)="confirmarAplicarVacuna(xuxemon.id)"
-                        [attr.aria-label]="'Aplicar vacuna a ' + xuxemon.name"
-                      >
-                        Aplicar
-                      </button>
-                    </li>
-                  }
-                </ul>
-              }
             </div>
           </div>
         </div>
