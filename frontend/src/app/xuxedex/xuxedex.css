@@ -586,7 +586,6 @@
     transform 0.1s ease;
 }
 
-
 .btn-borrar:hover {
   background-color: #c0392b;
   transform: translateY(-1px);
@@ -620,7 +619,6 @@
   z-index: 100;
 }
 
-
 .dialogo-box {
   background: #fff;
   border-radius: 20px;
@@ -631,7 +629,6 @@
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
 }
 
-
 .dialogo-box h3 {
   font-family: var(--font-display);
   font-size: 1.2rem;
@@ -640,14 +637,12 @@
   margin-bottom: 12px;
 }
 
-
 .dialogo-box p {
   font-size: 1rem;
   color: #555;
   margin-bottom: 28px;
   line-height: 1.6;
 }
-
 
 .dialogo-botones {
   display: flex;
@@ -834,7 +829,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .xdex-card,
   .xdex-spinner,
   .xdex-detalle__img {
@@ -845,7 +839,7 @@
     transform: none;
   }
 }
-/* BARRA DE LEVEL-UP */
+/*  BARRA DE LEVEL-UP  */
 
 .xdex-levelup {
   width: 100%;
@@ -927,7 +921,7 @@
   outline-offset: 2px;
 }
 
-/* BOTÓN "DAR XUXE" */
+/*  BOTÓN "DAR XUXE"  */
 
 .xdex-btn-feed {
   width: 100%;
@@ -971,7 +965,7 @@
   flex-shrink: 0;
 }
 
-/* FEEDBACK DE ALIMENTACIÓN */
+/*  FEEDBACK DE ALIMENTACIÓN  */
 
 .xdex-feedback {
   width: 100%;
@@ -1000,4 +994,199 @@
   background: #fce4ec;
   color: #c62828;
   border: 1px solid #ef9a9a;
+}
+
+/*  BOTÓN "USAR VACUNA"  */
+
+.xdex-btn-vacuna {
+  width: 100%;
+  padding: 12px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
+  box-shadow: 0 3px 10px rgba(74, 144, 226, 0.25);
+}
+
+.xdex-btn-vacuna:hover:not(:disabled) {
+  background: #2f78c5;
+}
+
+/* Cuando el Xuxemon está sano el botón se desactiva visualmente */
+.xdex-btn-vacuna:disabled {
+  background: #b0c4de;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.xdex-btn-vacuna:focus-visible {
+  outline: 3px solid #4a90e2;
+  outline-offset: 2px;
+}
+
+/*  MODAL SELECTOR DE VACUNAS  */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: xdex-aparecer 0.2s ease;
+}
+
+.modal-box__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #f0eeee;
+  flex-shrink: 0;
+}
+
+.modal-box__titulo {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #3b2101;
+  margin: 0;
+}
+
+.modal-box__cerrar {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  flex-shrink: 0;
+}
+
+.modal-box__cerrar:hover {
+  color: #3b2101;
+  background: #f4f3f3;
+}
+
+.modal-box__cerrar:focus-visible {
+  outline: 3px solid #ffaa4a;
+  outline-offset: 2px;
+}
+
+.modal-box__body {
+  overflow-y: auto;
+  padding: 16px 24px 24px;
+  flex: 1;
+}
+
+/* Lista de vacunas disponibles */
+.modal-vacuna-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-vacuna-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fafafa;
+  border: 1.5px solid #f0eeee;
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: border-color 0.15s;
+}
+
+.modal-vacuna-item:hover {
+  border-color: #90cdf4;
+}
+
+.modal-vacuna-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.modal-vacuna-icono {
+  font-size: 1.8rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.modal-vacuna-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.modal-vacuna-nombre {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #3b2101;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-vacuna-cantidad {
+  font-size: 0.76rem;
+  color: #aaa;
+  font-weight: 600;
+}
+
+.modal-vacuna-btn {
+  flex-shrink: 0;
+  padding: 8px 18px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.modal-vacuna-btn:hover {
+  background: #2f78c5;
+}
+
+.modal-vacuna-btn:focus-visible {
+  outline: 3px solid #4a90e2;
+  outline-offset: 2px;
 }

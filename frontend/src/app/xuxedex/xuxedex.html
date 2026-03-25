@@ -62,6 +62,7 @@
       </p>
     </div>
     }
+
     <!-- PANEL PRINCIPAL -->
     @if (!cargando && !error && (xuxemons.length > 0 || sinResultados || sinResultadosFiltroTipo ||
     sinResultadosFiltroTamano)) {
@@ -80,6 +81,7 @@
             <h1 id="titulo-xuxedex" class="xdex-panel__izq-titulo">Xuxedex</h1>
           </div>
         </div>
+
         <div class="xdex-filtros">
           <input type="search" class="xdex-filtros__input" placeholder="Buscar Xuxemon..."
             aria-label="Buscar por nombre" [formControl]="buscador" />
@@ -97,7 +99,7 @@
             <option value="">Todos los tamaños</option>
             <option value="s">Pequeño</option>
             <option value="m">Mediano</option>
-            <option value="g">Grande</option>
+            <option value="l">Grande</option>
           </select>
         </div>
 
@@ -191,7 +193,7 @@
           <strong>{{ formatearFecha(xuxemonSeleccionado.created_at) }}</strong>
         </p>
 
-        <!-- SECCIÓN LEVEL-UP -->
+        <!--  SECCIÓN LEVEL-UP  -->
         @if (xuxemonSeleccionado.size !== 'g') {
         <div class="xdex-levelup" aria-label="Progreso de nivel">
           <div class="xdex-levelup__cabecera">
@@ -219,7 +221,19 @@
         </div>
         }
 
-        <!-- BOTÓN DAR XUXE-->
+        <!--  BOTÓN DAR XUXE  -->
+
+        <!-- Feedback visual — encima del botón para que sea lo primero que se vea -->
+        @if (feedbackMensaje) {
+        <div class="xdex-feedback"
+          [class.xdex-feedback--ok]="feedbackTipo === 'ok'"
+          [class.xdex-feedback--error]="feedbackTipo === 'error'"
+          [class.xdex-feedback--infeccion]="feedbackTipo === 'infeccion'"
+          role="alert" aria-live="assertive">
+          {{ feedbackMensaje }}
+        </div>
+        }
+
         <button class="xdex-btn-feed" type="button"
           (click)="alimentarXuxemon(xuxemonSeleccionado)"
           [disabled]="cargandoFeed"
@@ -233,18 +247,17 @@
           }
         </button>
 
-        <!-- Feedback visual tras alimentar -->
-        @if (feedbackMensaje) {
-        <div class="xdex-feedback"
-          [class.xdex-feedback--ok]="feedbackTipo === 'ok'"
-          [class.xdex-feedback--error]="feedbackTipo === 'error'"
-          [class.xdex-feedback--infeccion]="feedbackTipo === 'infeccion'"
-          role="alert" aria-live="assertive">
-          {{ feedbackMensaje }}
-        </div>
-        }
-
-        <!-- Botón borrar -->
+        <!-- Botón vacuna: siempre visible, activo solo si el Xuxemon está enfermo -->
+        <button class="xdex-btn-vacuna"
+          type="button"
+          (click)="abrirModalVacuna()"
+          [disabled]="!estaEnfermo(xuxemonSeleccionado)"
+          [attr.aria-label]="estaEnfermo(xuxemonSeleccionado)
+            ? 'Usar vacuna en ' + xuxemonSeleccionado.name
+            : xuxemonSeleccionado.name + ' está sano, no necesita vacuna'"
+          [attr.title]="!estaEnfermo(xuxemonSeleccionado) ? xuxemonSeleccionado.name + ' está sano' : null">
+          💉 Usar vacuna
+        </button>
         <button (click)="abrirDialogoBorrar()" class="btn-borrar">Borrar</button>
       </section>
       }
@@ -280,7 +293,74 @@
     </nav>
     }
 
-    <!--  DIÁLOGO DE CONFIRMACIÓN PARA BORRAR XUXEMON  -->
+    <!-- MODAL SELECTOR DE VACUNAS -->
+    @if (mostrarModalVacuna) {
+    <div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-vacuna-xdex-titulo"
+      (click)="cerrarModalVacuna()">
+      <div class="modal-box" (click)="$event.stopPropagation()">
+
+        <div class="modal-box__header">
+          <h3 id="modal-vacuna-xdex-titulo" class="modal-box__titulo">
+            💉 ¿Qué vacuna usas en {{ xuxemonSeleccionado!.name }}?
+          </h3>
+          <button class="modal-box__cerrar" type="button" (click)="cerrarModalVacuna()" aria-label="Cerrar modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-box__body">
+
+          @if (cargandoVacunas) {
+          <div class="xdex-estado" role="status" aria-live="polite">
+            <div class="xdex-spinner" aria-hidden="true"></div>
+            <p>Buscando vacunas en tu mochila...</p>
+          </div>
+          }
+
+          @if (!cargandoVacunas && errorVacunas) {
+          <div class="xdex-estado xdex-estado--error" role="alert">
+            <span aria-hidden="true">⚠️</span>
+            <p>{{ errorVacunas }}</p>
+          </div>
+          }
+
+          @if (!cargandoVacunas && !errorVacunas && vacunasEnMochila.length === 0) {
+          <div class="xdex-estado" role="status">
+            <span aria-hidden="true" style="font-size:2.5rem">🎒</span>
+            <p>No tienes vacunas en la mochila. Consigue una en la tienda para poder curar a tus Xuxemons.</p>
+          </div>
+          }
+
+          @if (!cargandoVacunas && vacunasEnMochila.length > 0) {
+          <ul class="modal-vacuna-list" aria-label="Vacunas disponibles en tu mochila">
+            @for (vacuna of vacunasEnMochila; track vacuna.id) {
+            <li class="modal-vacuna-item">
+              <div class="modal-vacuna-info">
+                <span class="modal-vacuna-icono" aria-hidden="true">💉</span>
+                <div class="modal-vacuna-datos">
+                  <span class="modal-vacuna-nombre">{{ vacuna.name }}</span>
+                  <span class="modal-vacuna-cantidad">x{{ vacuna.amount }} disponibles</span>
+                </div>
+              </div>
+              <button class="modal-vacuna-btn" type="button" (click)="confirmarAplicarVacuna(vacuna.id)"
+                [attr.aria-label]="'Aplicar ' + vacuna.name + ' a ' + xuxemonSeleccionado!.name">
+                Aplicar
+              </button>
+            </li>
+            }
+          </ul>
+          }
+
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- DIÁLOGO DE CONFIRMACIÓN PARA BORRAR XUXEMON -->
     @if (mostrarDialogoBorrar) {
     <div class="dialogo-overlay" role="dialog" aria-modal="true" aria-labelledby="dialogo-titulo"
       aria-describedby="dialogo-desc" (click)="cerrarDialogoBorrar()">
