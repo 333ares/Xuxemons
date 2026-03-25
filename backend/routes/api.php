@@ -29,6 +29,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/xuxemons/tamano', [XuxemonsController::class, 'listarXuxemonsPorTamano']);
     Route::delete('/xuxemon', [XuxemonsController::class, 'borrarXuxemon']);
     Route::post('/xuxemon/alimentar', [XuxemonsController::class, 'alimentarXuxemon']);
+    Route::post('/xuxemon/curar', [XuxemonsController::class, 'curarXuxemon']);
 
     // Mochila
     Route::get('/mochila', [MochilaController::class, 'listarObjetos']);
