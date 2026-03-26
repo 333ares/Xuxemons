@@ -8,7 +8,8 @@ class ConfigXuxes extends Model
 {
     protected $fillable = [
         'cantidad',
-        'hora'
+        'hora',
+        'ultima_entrega'
     ];
 
     protected $table = 'config_xuxes';
