@@ -11,6 +11,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(XuxemonsInfoSeeder::class, ConfigXuxesSeeder::class);
+        $this->call([
+            XuxemonsInfoSeeder::class,
+        ]);
+
+        $this->call([
+            ConfigXuxemonSeeder::class,
+        ]);
+
+        $this->call([
+            ConfigXuxesSeeder::class,
+        ]);
     }
 }
