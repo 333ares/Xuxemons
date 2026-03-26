@@ -16,8 +16,6 @@ services:
     networks:
       - xuxemons_network
 
-  # Podriamos añadir un healthcheck
-
   backend:
     container_name: xuxemons_laravel
     image: php:8.3-apache
@@ -29,9 +27,15 @@ services:
       - ./backend:/var/www/html
     networks:
       - xuxemons_network
+    environment:
+      TZ: Europe/Madrid
     command: >
       bash -c "
       docker-php-ext-install pdo pdo_mysql &&
+      apt-get update && apt-get install -y cron &&
+      echo '* * * * * root /usr/local/bin/php /var/www/html/artisan schedule:run >> /var/log/cron.log 2>&1' > /etc/cron.d/laravel &&
+      chmod 0644 /etc/cron.d/laravel &&
+      service cron start &&
       a2enmod rewrite &&
       sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf &&
       sed -i 's|<Directory /var/www/html>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf &&
