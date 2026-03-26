@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\XuxemonsInfo;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ConfigXuxes;
 
 class AdminController extends Controller
 {
@@ -265,6 +266,57 @@ class AdminController extends Controller
                 ], 200);
             }
             // Si no es el admin, se muestra error de falta de permisos
+        } else {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
+            ], 400);
+        }
+    }
+
+    public function xuxesDiarias(Request $request)
+    {
+        $admin = $request->user()->id;
+
+        if ($admin === 1) {
+            // Validamos los datos
+            $validator = Validator::make($request->all(), [
+                'cantidad' => 'required|integer|min:1',
+                'hora' => 'required|date_format:H:i'
+            ]);
+
+            // Si no lo son, devolvemos error
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => $validator->errors()
+                ], 400);
+            }
+
+            // Actualizamos la configuración (siempre hay un solo registro)
+            $config = ConfigXuxes::first();
+
+            $config->update([
+                'cantidad' => $request->cantidad,
+                'hora' => $request->hora
+            ]);
+
+            // Si se ha actualizado correctamente, devolvemos mensaje de éxito
+            if ($config) {
+                return response()->json([
+                    'message' => 'Configuración actualizada correctamente',
+                    'config' => $config
+                ], 200);
+
+                // Si no, mensaje de error
+            } else {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => 'No se ha podido actualizar la configuración'
+                ], 400);
+            }
+
+            // Si el usuario no tiene suficientes permisos
         } else {
             return response()->json([
                 'message' => 'error',
