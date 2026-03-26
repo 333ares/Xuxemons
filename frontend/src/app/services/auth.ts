@@ -87,14 +87,18 @@ export class Auth {
 
   // GET /xuxemonsNav — búsqueda de Xuxemons por nombre (buscador)
   navXuxemons(nav: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/xuxemonsNav?nav=${nav}`, { headers: this.obtenerCabeceras() });
+    return this.http.get(`${this.apiUrl}/xuxemonsNav?nav=${nav}`, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // --- XUXEDEX ---
 
   // GET /xuxemons — lista paginada de Xuxemons del usuario
   obtenerXuxemons(pagina: number = 1): Observable<any> {
-    return this.http.get(`${this.apiUrl}/xuxemons?page=${pagina}`, { headers: this.obtenerCabeceras() });
+    return this.http.get(`${this.apiUrl}/xuxemons?page=${pagina}`, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // GET /xuxemons/tipo — filtra por tipo (agua / tierra / aire)
@@ -152,7 +156,9 @@ export class Auth {
 
   // GET /mochila — lista paginada de objetos del usuario
   obtenerMochila(pagina: number = 1): Observable<any> {
-    return this.http.get(`${this.apiUrl}/mochila?page=${pagina}`, { headers: this.obtenerCabeceras() });
+    return this.http.get(`${this.apiUrl}/mochila?page=${pagina}`, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // DELETE /mochila — elimina (o resta una unidad de) un objeto por id
@@ -186,13 +192,17 @@ export class Auth {
     name: string;
     amount: number;
   }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/agregarObjeto`, datos, { headers: this.obtenerCabeceras() });
+    return this.http.post(`${this.apiUrl}/agregarObjeto`, datos, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // POST /xuxes-diarias — lanza el reparto diario de xuxes a todos los usuarios
   // NOTA: ruta existente en backend. El front anterior no tenía ningún método para llamarla.
   xuxesDiarias(datos: { hora: string; cantidad: number }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/xuxes-diarias`, datos, { headers: this.obtenerCabeceras() });
+    return this.http.post(`${this.apiUrl}/xuxes-diarias`, datos, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // --- ADMINISTRACIÓN: configuración (pendiente backend) ---
@@ -201,7 +211,9 @@ export class Auth {
 
   // GET /admin/infectionRates — obtiene los porcentajes de infección configurados
   obtenerTasasInfeccion(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/infectionRates`, { headers: this.obtenerCabeceras() });
+    return this.http.get(`${this.apiUrl}/admin/infectionRates`, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // PUT /admin/infectionRates — actualiza los porcentajes de infección
@@ -225,7 +237,9 @@ export class Auth {
     xuxes?: { hora: string; cantidad: number };
     xuxemons?: { hora: string; cantidad: number };
   }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/admin/dailyConfig`, data, { headers: this.obtenerCabeceras() });
+    return this.http.put(`${this.apiUrl}/admin/dailyConfig`, data, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // GET /admin/growthConfig — obtiene las xuxes necesarias para crecer
