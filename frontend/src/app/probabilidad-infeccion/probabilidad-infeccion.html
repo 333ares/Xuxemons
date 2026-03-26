@@ -1,0 +1,144 @@
+  <!--  CONFIGURACIÓN DE PORCENTAJES DE INFECCIÓN  -->
+    <section class="config-section" aria-labelledby="titulo-infeccion">
+      <div class="config-section__header">
+        <div class="config-section__titulo-wrap">
+          <div class="config-section__icono" aria-hidden="true">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#e74c3c"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h2 id="titulo-infeccion" class="config-section__titulo">Probabilidades de infección</h2>
+        </div>
+        <p class="config-section__desc">
+          Define el porcentaje de probabilidad de que un Xuxemon contraiga cada enfermedad al ser
+          alimentado.
+        </p>
+      </div>
+
+      <div class="config-grid" role="group" aria-labelledby="titulo-infeccion">
+        <!-- Bajón de azúcar -->
+        <div class="kpi-card config-card">
+          <div class="config-card__top">
+            <label class="config-card__label" for="input-bajon">
+              <span
+                class="config-card__enfermedad-dot config-card__dot--bajon"
+                aria-hidden="true"
+              ></span>
+              Bajón de azúcar
+            </label>
+            <span class="config-card__actual" aria-hidden="true"
+              >actual: {{ infectionRates.bajon }}%</span
+            >
+          </div>
+          <div class="config-card__input-wrap">
+            <input
+              id="input-bajon"
+              type="number"
+              class="config-card__input"
+              [(ngModel)]="infectionRates.bajon"
+              min="0"
+              max="100"
+              step="1"
+              aria-describedby="desc-bajon"
+            />
+            <span class="config-card__unidad" aria-hidden="true">%</span>
+          </div>
+          <p id="desc-bajon" class="config-card__hint">Valor entre 0 y 100</p>
+        </div>
+
+        <!-- Sobredosis de azúcar -->
+        <div class="kpi-card config-card">
+          <div class="config-card__top">
+            <label class="config-card__label" for="input-sobredosis">
+              <span
+                class="config-card__enfermedad-dot config-card__dot--sobredosis"
+                aria-hidden="true"
+              ></span>
+              Sobredosis de azúcar
+            </label>
+            <span class="config-card__actual" aria-hidden="true"
+              >actual: {{ infectionRates.sobredosis }}%</span
+            >
+          </div>
+          <div class="config-card__input-wrap">
+            <input
+              id="input-sobredosis"
+              type="number"
+              class="config-card__input"
+              [(ngModel)]="infectionRates.sobredosis"
+              min="0"
+              max="100"
+              step="1"
+              aria-describedby="desc-sobredosis"
+            />
+            <span class="config-card__unidad" aria-hidden="true">%</span>
+          </div>
+          <p id="desc-sobredosis" class="config-card__hint">Valor entre 0 y 100</p>
+        </div>
+
+        <!-- Atracón -->
+        <div class="kpi-card config-card">
+          <div class="config-card__top">
+            <label class="config-card__label" for="input-atracon">
+              <span
+                class="config-card__enfermedad-dot config-card__dot--atracon"
+                aria-hidden="true"
+              ></span>
+              Atracón
+            </label>
+            <span class="config-card__actual" aria-hidden="true"
+              >actual: {{ infectionRates.atracon }}%</span
+            >
+          </div>
+          <div class="config-card__input-wrap">
+            <input
+              id="input-atracon"
+              type="number"
+              class="config-card__input"
+              [(ngModel)]="infectionRates.atracon"
+              min="0"
+              max="100"
+              step="1"
+              aria-describedby="desc-atracon"
+            />
+            <span class="config-card__unidad" aria-hidden="true">%</span>
+          </div>
+          <p id="desc-atracon" class="config-card__hint">Valor entre 0 y 100</p>
+        </div>
+      </div>
+
+      <div class="config-section__footer">
+        @if (feedbackInfeccion === 'ok') {
+          <p class="config-feedback config-feedback--ok" role="status" aria-live="polite">
+            ✓ Porcentajes guardados correctamente
+          </p>
+        }
+        @if (feedbackInfeccion === 'error') {
+          <p class="config-feedback config-feedback--error" role="alert" aria-live="assertive">
+            ✗ No se pudieron guardar los cambios
+          </p>
+        }
+        <button
+          class="config-btn-guardar"
+          type="button"
+          (click)="guardarInfectionRates()"
+          [disabled]="guardandoInfeccion"
+          aria-label="Guardar probabilidades de infección"
+        >
+          @if (guardandoInfeccion) {
+            Guardando...
+          } @else {
+            Guardar cambios
+          }
+        </button>
+      </div>
+    </section>
