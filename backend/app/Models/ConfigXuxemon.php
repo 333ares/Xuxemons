@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ConfigXuxes extends Model
+class ConfigXuxemon extends Model
 {
+    protected $table = 'config_xuxemon';
+
     protected $fillable = [
-        'cantidad',
         'hora',
         'ultima_entrega'
     ];
-
-    protected $table = 'config_xuxes';
 }
