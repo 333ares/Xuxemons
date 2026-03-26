@@ -94,3 +94,27 @@
   justify-content: center;
   border: 2px solid #ffaa4a;
 }
+
+/* MAIN Y CONTENEDOR DE PARÁMETROS */
+.page-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 40px 20px;
+}
+
+/* Espacio entre las 3 configuraciones */
+.parametros-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Adaptación para móviles */
+@media (max-width: 900px) {
+  .page-main {
+    padding: 20px 16px;
+  }
+  .parametros-header {
+    padding: 14px 20px;
+  }
+}

@@ -1,8 +1,4 @@
-
-  <!-- BARRA DE NAVEGACIÓN INFERIOR -->
-  <app-adminav></app-adminav>
 <div class="page-wrapper">
-
   <!-- Cabecera-->
   <header class="parametros-header">
     <div class="header-left">
@@ -12,9 +8,7 @@
       </a>
     </div>
     <div class="header-right">
-      <a routerLink="/dashboardAdmin" class="btn-volver" aria-label="Volver al panel">
-        ← Panel
-      </a>
+      <a routerLink="/dashboardAdmin" class="btn-volver" aria-label="Volver al panel"> ← Panel </a>
       <span class="admin-chip" aria-label="Modo administrador activo">🤖 Admin</span>
       <div class="header-user">
         <div class="header-avatar-placeholder" aria-hidden="true">A</div>
@@ -22,4 +16,16 @@
     </div>
   </header>
 
+  <main class="page-main" id="main-content">
+    <div class="parametros-container">
+      <app-generacion-diaria></app-generacion-diaria>
+
+      <app-probabilidad-infeccion></app-probabilidad-infeccion>
+
+      <app-crecimiento-xuxemons></app-crecimiento-xuxemons>
+    </div>
+  </main>
+
+  <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+  <app-adminav></app-adminav>
 </div>
