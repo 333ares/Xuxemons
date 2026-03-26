@@ -1,0 +1,92 @@
+<section class="config-section" aria-labelledby="titulo-crecimiento">
+  <div class="config-section__header">
+    <div class="config-section__titulo-wrap">
+      <div class="config-section__icono" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+      </div>
+      <h2 id="titulo-crecimiento" class="config-section__titulo">Crecimiento de Xuxemons</h2>
+    </div>
+    <p class="config-section__desc">
+      Define la cantidad de xuxes necesarias para que un Xuxemon suba de nivel y aumente de tamaño.
+    </p>
+  </div>
+
+  <div class="config-diario-grid">
+    <fieldset class="kpi-card config-diario-card">
+      <legend class="config-diario-card__titulo">
+        <span aria-hidden="true">🐣 ➔ 🐥</span> Pequeño a Mediano
+      </legend>
+      <div class="config-diario-card__campos">
+        <div class="config-diario-campo">
+          <label for="input-pequeno-mediano" class="config-diario-campo__label">Xuxes requeridas</label>
+          <div class="config-card__input-wrap">
+            <input
+              id="input-pequeno-mediano"
+              type="number"
+              class="config-card__input"
+              [(ngModel)]="growthConfig.pequeno_a_mediano"
+              min="1"
+              max="999"
+              step="1"
+              aria-describedby="desc-crecimiento-1"
+            />
+            <span class="config-card__unidad" aria-hidden="true">xuxes</span>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="kpi-card config-diario-card">
+      <legend class="config-diario-card__titulo">
+        <span aria-hidden="true">🐥 ➔ 🦅</span> Mediano a Grande
+      </legend>
+      <div class="config-diario-card__campos">
+        <div class="config-diario-campo">
+          <label for="input-mediano-grande" class="config-diario-campo__label">Xuxes requeridas</label>
+          <div class="config-card__input-wrap">
+            <input
+              id="input-mediano-grande"
+              type="number"
+              class="config-card__input"
+              [(ngModel)]="growthConfig.mediano_a_grande"
+              min="1"
+              max="999"
+              step="1"
+              aria-describedby="desc-crecimiento-2"
+            />
+            <span class="config-card__unidad" aria-hidden="true">xuxes</span>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="config-section__footer">
+    @if (feedbackCrecimiento === 'ok') {
+      <p class="config-feedback config-feedback--ok" role="status" aria-live="polite">
+        ✓ Configuración de crecimiento guardada
+      </p>
+    }
+    @if (feedbackCrecimiento === 'error') {
+      <p class="config-feedback config-feedback--error" role="alert" aria-live="assertive">
+        ✗ Error al guardar los cambios
+      </p>
+    }
+    <button
+      class="config-btn-guardar"
+      type="button"
+      (click)="guardarGrowthConfig()"
+      [disabled]="guardandoCrecimiento"
+      aria-label="Guardar configuración de crecimiento"
+    >
+      @if (guardandoCrecimiento) {
+        Guardando...
+      } @else {
+        Guardar
+      }
+    </button>
+  </div>
+</section>

@@ -214,4 +214,19 @@ export class Auth {
   }): Observable<any> {
     return this.http.put(`${this.apiUrl}/admin/dailyConfig`, data, { headers: this.getHeaders() });
   }
+
+  // GET /admin/growthConfig — obtiene las xuxes necesarias para crecer
+  getGrowthConfig(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/growthConfig`, { headers: this.getHeaders() });
+  }
+
+  // PUT /admin/growthConfig — actualiza las xuxes necesarias para crecer
+  updateGrowthConfig(data: {
+    pequeno_a_mediano: number;
+    mediano_a_grande: number;
+  }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/admin/growthConfig`, data, {
+      headers: this.getHeaders(),
+    });
+  }
 }
