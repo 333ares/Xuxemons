@@ -4,10 +4,10 @@ import { Auth } from '../services/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AdminGuard implements CanActivate {
-  constructor(private auth: Auth, private router: Router) { }
+  constructor(private auth: Auth, private router: Router) {}
 
   canActivate(): boolean {
-    const usuario = this.auth.getUsuario();
+    const usuario = this.auth.obtenerUsuario();
 
     if (usuario?.id === 1) {
       return true;

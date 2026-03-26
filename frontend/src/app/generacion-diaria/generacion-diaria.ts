@@ -32,12 +32,14 @@ export class GeneracionDiaria implements OnInit {
 
   ngOnInit(): void {
     this.calcularFechaHoy();
-    this.cargarDailyConfig();
+    this.cargarConfigDiaria();
   }
 
   // Carga la configuración de generación diaria desde el backend
-  private cargarDailyConfig(): void {
-    this.auth.getDailyConfig().subscribe({
+  // NOTA: la ruta GET /admin/dailyConfig está pendiente de implementación en el backend.
+  // Mientras no exista, el componente usa los valores por defecto definidos arriba.
+  private cargarConfigDiaria(): void {
+    this.auth.obtenerConfigDiaria().subscribe({
       next: (res) => {
         this.dailyConfig = {
           xuxes: {
@@ -52,6 +54,7 @@ export class GeneracionDiaria implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar la configuración diaria:', err);
+        // Se mantienen los valores por defecto si la ruta aún no existe en el backend
       },
     });
   }
@@ -66,7 +69,7 @@ export class GeneracionDiaria implements OnInit {
     });
   }
 
-  // Guarda la configuración de las Xuxes
+  // Guarda solo la configuración de las Xuxes diarias
   guardarDailyConfigXuxes(): void {
     this.guardandoDiarioXuxes = true;
     this.feedbackDiarioXuxes = '';
@@ -74,26 +77,26 @@ export class GeneracionDiaria implements OnInit {
     const payload = {
       xuxes: {
         hora: this.dailyConfig.xuxes.hora,
-        cantidad: this.dailyConfig.xuxes.cantidad
-      }
+        cantidad: this.dailyConfig.xuxes.cantidad,
+      },
     };
 
-    this.auth.updateDailyConfig(payload).subscribe({
+    this.auth.actualizarConfigDiaria(payload).subscribe({
       next: () => {
         this.guardandoDiarioXuxes = false;
         this.feedbackDiarioXuxes = 'ok';
-        // Limpiamos el mensaje de éxito tras 3 segundos
-        setTimeout(() => this.feedbackDiarioXuxes = '', 3000);
+        setTimeout(() => (this.feedbackDiarioXuxes = ''), 3000);
       },
       error: (err) => {
         console.error('Error guardando configuración de xuxes:', err);
         this.guardandoDiarioXuxes = false;
         this.feedbackDiarioXuxes = 'error';
-      }
+        setTimeout(() => (this.feedbackDiarioXuxes = ''), 3500);
+      },
     });
   }
 
-  // Guarda la configuración de los Xuxemons
+  // Guarda solo la configuración de los Xuxemons diarios
   guardarDailyConfigXuxemons(): void {
     this.guardandoDiarioXuxemons = true;
     this.feedbackDiarioXuxemons = '';
@@ -101,22 +104,22 @@ export class GeneracionDiaria implements OnInit {
     const payload = {
       xuxemons: {
         hora: this.dailyConfig.xuxemons.hora,
-        cantidad: this.dailyConfig.xuxemons.cantidad
-      }
+        cantidad: this.dailyConfig.xuxemons.cantidad,
+      },
     };
 
-    this.auth.updateDailyConfig(payload).subscribe({
+    this.auth.actualizarConfigDiaria(payload).subscribe({
       next: () => {
         this.guardandoDiarioXuxemons = false;
         this.feedbackDiarioXuxemons = 'ok';
-        // Limpiamos el mensaje de éxito tras 3 segundos
-        setTimeout(() => this.feedbackDiarioXuxemons = '', 3000);
+        setTimeout(() => (this.feedbackDiarioXuxemons = ''), 3000);
       },
       error: (err) => {
         console.error('Error guardando configuración de xuxemons:', err);
         this.guardandoDiarioXuxemons = false;
         this.feedbackDiarioXuxemons = 'error';
-      }
+        setTimeout(() => (this.feedbackDiarioXuxemons = ''), 3500);
+      },
     });
   }
 }

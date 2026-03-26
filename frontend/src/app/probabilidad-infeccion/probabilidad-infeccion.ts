@@ -5,8 +5,8 @@ import { Auth } from '../services/auth';
 
 @Component({
   selector: 'app-probabilidad-infeccion',
-  standalone: true, // ¡Importante para que funcionen los imports!
-  imports: [CommonModule, FormsModule], // Necesario para usar [(ngModel)]
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './probabilidad-infeccion.html',
   styleUrl: './probabilidad-infeccion.css',
 })
@@ -20,21 +20,22 @@ export class ProbabilidadInfeccion implements OnInit {
     atracon: 15,
   };
 
-  // Estado de guardado por sección
+  // Estado de guardado
   guardandoInfeccion = false;
   feedbackInfeccion = '';
 
   constructor(private auth: Auth) {}
 
-  // Ahora sí se llamarán estas funciones al cargar la vista
   ngOnInit(): void {
     this.calcularFechaHoy();
-    this.cargarInfectionRates();
+    this.cargarTasasInfeccion();
   }
 
   // Carga los porcentajes de infección actuales desde el backend
-  private cargarInfectionRates(): void {
-    this.auth.getInfectionRates().subscribe({
+  // NOTA: la ruta GET /admin/infectionRates está pendiente de implementación en el backend.
+  // Mientras no exista, el componente usa los valores por defecto definidos arriba.
+  private cargarTasasInfeccion(): void {
+    this.auth.obtenerTasasInfeccion().subscribe({
       next: (res) => {
         this.infectionRates = {
           bajon: res.bajon ?? 5,
@@ -44,6 +45,7 @@ export class ProbabilidadInfeccion implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar los porcentajes de infección:', err);
+        // Se mantienen los valores por defecto si la ruta aún no existe en el backend
       },
     });
   }
@@ -53,7 +55,7 @@ export class ProbabilidadInfeccion implements OnInit {
     this.guardandoInfeccion = true;
     this.feedbackInfeccion = '';
 
-    this.auth.updateInfectionRates(this.infectionRates).subscribe({
+    this.auth.actualizarTasasInfeccion(this.infectionRates).subscribe({
       next: () => {
         this.feedbackInfeccion = 'ok';
         this.guardandoInfeccion = false;
