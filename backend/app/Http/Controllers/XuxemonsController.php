@@ -108,7 +108,7 @@ class XuxemonsController extends Controller
             ], 404);
         }
 
-        if ($xuxemon->sickness === 'Atracón') {
+        if ($xuxemon->sickness === 'atracon') {
             return response()->json([
                 'message' => 'error',
                 'errors' => 'Tu xuxemon tiene atracón y no puede comer'
@@ -138,11 +138,11 @@ class XuxemonsController extends Controller
             $rand = rand(1, 100);
 
             if ($rand <= 5) {
-                $xuxemon->sickness = 'Bajón de azúcar';
+                $xuxemon->sickness = 'bajon de azucar';
             } elseif ($rand <= 15) {
-                $xuxemon->sickness = 'Sobredosis de azúcar';
+                $xuxemon->sickness = 'sobredosis de azucar';
             } elseif ($rand <= 30) {
-                $xuxemon->sickness = 'Atracón';
+                $xuxemon->sickness = 'atracon';
             }
         }
 
@@ -154,7 +154,7 @@ class XuxemonsController extends Controller
         };
 
         // Si tiene bajón de azúcar necesita dos xuxes mas para subir de nivel
-        if ($xuxemon->sickness === 'Bajón de azúcar' && $xuxesParaSubir !== null) {
+        if ($xuxemon->sickness === 'bajon de azucar' && $xuxesParaSubir !== null) {
             $xuxesParaSubir += 2;
         }
 
@@ -185,6 +185,7 @@ class XuxemonsController extends Controller
             ->where('id', $request->id)
             ->first();
 
+        // Si no se encuentra el xuxemon, devolvemos error
         if (!$xuxemon) {
             return response()->json([
                 'message' => 'error',
@@ -192,24 +193,52 @@ class XuxemonsController extends Controller
             ], 404);
         }
 
+        // Si el xuxemon no está enfermo, devolvemos error
         if ($xuxemon->sickness === null) {
             return response()->json([
                 'message' => 'error',
-                'errors' => 'Tu xuxemon no esta enfermo'
+                'errors' => 'Tu xuxemon no está enfermo'
             ], 400);
         }
 
+        // Mapeamos cada enfermedad con su vacuna correspondiente
+        $vacunaRequerida = match ($xuxemon->sickness) {
+            'bajon de azucar' => 'xocolatina',
+            'atracon' => 'xal de fruites',
+            default => null
+        };
+
+        // Buscamos primero si tiene Insulina (cura todas las enfermedades)
         $vacuna = Mochila::where('user_id', $request->user()->id)
             ->where('type', 'vacuna')
+            ->where('name', 'inxulina')
             ->first();
 
+        // Si no tiene Insulina, buscamos la vacuna específica para la enfermedad
         if (!$vacuna) {
-            return response()->json([
-                'message' => 'error',
-                'errors' => 'No tienes vacunas en tu mochila'
-            ], 400);
+            // Si la enfermedad no tiene vacuna específica mapeada, devolvemos error
+            if ($vacunaRequerida === null) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => 'No existe vacuna para esta enfermedad'
+                ], 400);
+            }
+
+            $vacuna = Mochila::where('user_id', $request->user()->id)
+                ->where('type', 'vacuna')
+                ->where('name', $vacunaRequerida)
+                ->first();
+
+            // Si no tiene la vacuna específica, devolvemos error
+            if (!$vacuna) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => 'No tienes la vacuna necesaria para curar esta enfermedad. Necesitas: ' . $vacunaRequerida
+                ], 400);
+            }
         }
 
+        // Curamos el xuxemon y eliminamos la vacuna usada
         $xuxemon->sickness = null;
         $xuxemon->save();
 
