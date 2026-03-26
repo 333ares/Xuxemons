@@ -48,13 +48,13 @@ export class Mochila implements OnInit {
   paginaActual = 1;
   ultimaPagina = 1;
 
-  //  Modal de vacuna
+  // Modal de vacuna
   mostrarModalVacuna: boolean = false;
   xuxemonsEnfermos: Xuxemon[] = [];
   cargandoXuxemons: boolean = false;
   errorXuxemons: string = '';
 
-  //  Diálogo de borrado
+  // Diálogo de borrado
   mostrarDialogoBorrar: boolean = false;
 
   constructor(private auth: Auth) {}
@@ -80,7 +80,7 @@ export class Mochila implements OnInit {
   // Carga los objetos de la mochila desde el backend
   cargarMochila(pagina: number = 1): void {
     this.cargando = true;
-    this.auth.getMochila(pagina).subscribe({
+    this.auth.obtenerMochila(pagina).subscribe({
       next: (res) => {
         const items: ItemMochila[] = res.objetos.data;
         this.paginaActual = res.objetos.current_page;
@@ -111,7 +111,6 @@ export class Mochila implements OnInit {
     this.cargarMochila(pagina);
   }
 
-  // Getter de paginas
   get paginas(): number[] {
     return Array.from({ length: this.ultimaPagina }, (_, i) => i + 1);
   }
@@ -162,7 +161,7 @@ export class Mochila implements OnInit {
     }
   }
 
-  //  Diálogo de borrado
+  // Diálogo de borrado
 
   abrirDialogoBorrar(): void {
     this.mostrarDialogoBorrar = true;

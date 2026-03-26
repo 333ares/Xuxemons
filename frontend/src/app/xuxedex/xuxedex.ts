@@ -44,7 +44,7 @@ export class Xuxedex implements OnInit {
   paginaActual = 1;
   ultimaPagina = 1;
 
-  //  Barra de level-up
+  // Barra de level-up
   // Las xuxes necesarias para subir de nivel dependen del tamaño del Xuxemon:
   // s → 3 | m → 5 | g → ya está en el nivel máximo
   get xuxesActuales(): number {
@@ -55,12 +55,12 @@ export class Xuxedex implements OnInit {
     return this.calcularXuxesNecesarias(this.xuxemonSeleccionado);
   }
 
-  //  Feedback de alimentación
+  // Feedback de alimentación
   feedbackMensaje = '';
   feedbackTipo: 'ok' | 'error' | 'infeccion' | '' = '';
   cargandoFeed = false;
 
-  //  Modal de vacuna (se abre desde el panel derecho)
+  // Modal de vacuna (se abre desde el panel derecho)
   mostrarModalVacuna = false;
   vacunasEnMochila: any[] = [];
   cargandoVacunas = false;
@@ -109,7 +109,7 @@ export class Xuxedex implements OnInit {
   // Mostrar lista de xuxemons
   listarXuxemons(pagina: number = 1): void {
     this.cargando = true;
-    this.auth.getXuxemons(pagina).subscribe({
+    this.auth.obtenerXuxemons(pagina).subscribe({
       next: (res) => {
         this.xuxemons = res.xuxemons.data;
         this.paginaActual = res.xuxemons.current_page;
@@ -124,12 +124,9 @@ export class Xuxedex implements OnInit {
     });
   }
 
-  //  Alimentar Xuxemon
-
-  /**
-   * Llama al endpoint de alimentación y actualiza el estado local del Xuxemon.
-   * Si el servidor devuelve una enfermedad nueva, activa el feedback de infección.
-   */
+  // Alimentar Xuxemon
+  // Llama al endpoint de alimentación y actualiza el estado local del Xuxemon.
+  // Si el servidor devuelve una enfermedad nueva, activa el feedback de infección.
   alimentarXuxemon(xuxemon: Xuxemon): void {
     if (this.cargandoFeed) return;
     this.cargandoFeed = true;
@@ -176,9 +173,9 @@ export class Xuxedex implements OnInit {
     });
   }
 
-  //  Subir de nivel
-
-  /* Solicita al backend que suba de nivel al Xuxemon y actualiza el size localmente. */
+  // Subir de nivel
+  // Solicita al backend que suba de nivel al Xuxemon y actualiza el size localmente.
+  // NOTA: la ruta /xuxemon/subirNivel está pendiente de implementación en el backend.
   subirNivel(xuxemon: Xuxemon): void {
     this.auth.subirNivel(xuxemon.id).subscribe({
       next: (res) => {
@@ -237,7 +234,7 @@ export class Xuxedex implements OnInit {
     );
   }
 
-  //  Filtrado de xuxemons por tipo
+  // Filtrado de xuxemons por tipo
   sinResultadosFiltroTipo = false;
   tipoActivo = '';
   cargandoFiltro = false;
@@ -274,7 +271,7 @@ export class Xuxedex implements OnInit {
     });
   }
 
-  //  Filtrado de xuxemons por tamaño
+  // Filtrado de xuxemons por tamaño
   sinResultadosFiltroTamano = false;
   tamanoActivo = '';
 
@@ -311,7 +308,7 @@ export class Xuxedex implements OnInit {
     });
   }
 
-  //  Paginación
+  // Paginación
   irAPagina(pagina: number): void {
     if (pagina < 1 || pagina > this.ultimaPagina) return;
     this.listarXuxemons(pagina);
@@ -321,7 +318,7 @@ export class Xuxedex implements OnInit {
     return Array.from({ length: this.ultimaPagina }, (_, i) => i + 1);
   }
 
-  //  Búsqueda
+  // Búsqueda
   busqueda = '';
   sinResultados = false;
 
@@ -352,7 +349,7 @@ export class Xuxedex implements OnInit {
     });
   }
 
-  //  Helpers de visualización
+  // Helpers de visualización
 
   getImagenXuxemon(nombre: string): string {
     const slug = nombre.toLowerCase().replace(/[\s\-_]+/g, '');
@@ -404,12 +401,13 @@ export class Xuxedex implements OnInit {
     return this.xuxemonSeleccionado?.name === grupo.name;
   }
 
-  //  Diálogo de borrado
+  // Diálogo de borrado
   mostrarDialogoBorrar = false;
 
   abrirDialogoBorrar(): void {
     this.mostrarDialogoBorrar = true;
   }
+
   cerrarDialogoBorrar(): void {
     this.mostrarDialogoBorrar = false;
   }
@@ -431,7 +429,7 @@ export class Xuxedex implements OnInit {
 
   // Modal de vacuna
 
-  /** Abre el modal y carga las vacunas disponibles en la mochila del usuario. */
+  // Abre el modal y carga las vacunas disponibles en la mochila del usuario.
   abrirModalVacuna(): void {
     if (!this.xuxemonSeleccionado || !this.estaEnfermo(this.xuxemonSeleccionado)) return;
     this.mostrarModalVacuna = true;
@@ -440,7 +438,7 @@ export class Xuxedex implements OnInit {
     this.vacunasEnMochila = [];
 
     // Cargamos todos los objetos de la mochila y filtramos los de tipo vacuna
-    this.auth.getMochila(1).subscribe({
+    this.auth.obtenerMochila(1).subscribe({
       next: (res) => {
         const todos = res.objetos?.data ?? res.objetos ?? [];
         this.vacunasEnMochila = todos.filter((item: any) => item.type === 'vacuna');
@@ -459,14 +457,12 @@ export class Xuxedex implements OnInit {
     this.errorVacunas = '';
   }
 
-  /**
-   * Aplica la vacuna seleccionada al Xuxemon actual.
-   * En caso de éxito, actualiza el estado del Xuxemon localmente.
-   */
+  // Aplica la vacuna seleccionada al Xuxemon actual.
+  // Llama a POST /xuxemon/curar (ruta existente en backend).
   confirmarAplicarVacuna(vacunaId: number): void {
     if (!this.xuxemonSeleccionado) return;
 
-    this.auth.aplicarVacuna(vacunaId, this.xuxemonSeleccionado.id).subscribe({
+    this.auth.curarXuxemon(vacunaId, this.xuxemonSeleccionado.id).subscribe({
       next: (res) => {
         // El backend devuelve el Xuxemon actualizado o simplemente éxito
         const actualizado = res.xuxemon;

@@ -28,8 +28,10 @@ export class CrecimientoXuxemons implements OnInit {
   }
 
   // Carga la configuración actual desde el backend
+  // NOTA: la ruta GET /admin/growthConfig está pendiente de implementación en el backend.
+  // Mientras no exista, el componente usa los valores por defecto definidos arriba.
   private cargarGrowthConfig(): void {
-    this.auth.getGrowthConfig().subscribe({
+    this.auth.obtenerConfigCrecimiento().subscribe({
       next: (res) => {
         this.growthConfig = {
           pequeno_a_mediano: res.pequeno_a_mediano ?? 3,
@@ -38,16 +40,18 @@ export class CrecimientoXuxemons implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar la configuración de crecimiento:', err);
+        // Se mantienen los valores por defecto si la ruta aún no existe en el backend
       },
     });
   }
 
   // Guarda la configuración en el backend
+  // NOTA: la ruta PUT /admin/growthConfig está pendiente de implementación en el backend.
   guardarGrowthConfig(): void {
     this.guardandoCrecimiento = true;
     this.feedbackCrecimiento = '';
 
-    this.auth.updateGrowthConfig(this.growthConfig).subscribe({
+    this.auth.actualizarConfigCrecimiento(this.growthConfig).subscribe({
       next: () => {
         this.feedbackCrecimiento = 'ok';
         this.guardandoCrecimiento = false;
