@@ -15,7 +15,8 @@ class ConfigXuxesSeeder extends Seeder
         if (!ConfigXuxes::exists()) {
             ConfigXuxes::create([
                 'cantidad' => 10,
-                'hora' => '08:00'
+                'hora' => '08:00',
+                'ultima_entrega' => null
             ]);
         }
     }
