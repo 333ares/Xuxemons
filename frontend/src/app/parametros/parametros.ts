@@ -7,7 +7,7 @@ import { GestionUsuarios } from '../gestion-usuarios/gestion-usuarios';
 @Component({
   selector: 'app-parametros',
   standalone: true,
-  imports: [CommonModule, Adminav],
+  imports: [CommonModule, Adminav, RouterLink],
   templateUrl: './parametros.html',
   styleUrl: './parametros.css',
 })

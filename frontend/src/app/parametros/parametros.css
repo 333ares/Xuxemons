@@ -1,0 +1,96 @@
+.page-wrapper {
+  background-color: #f4f3f3;
+  min-height: 100vh;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  padding-bottom: 90px;
+}
+
+/* Cabecera — igual que parametros-admin */
+.parametros-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(244, 243, 243, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 40px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo-img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #3b2101;
+  letter-spacing: -0.5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-volver {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #888;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #e5e5e5;
+  background: white;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-volver:hover {
+  border-color: #ffaa4a;
+  color: #e8962e;
+}
+
+.admin-chip {
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 99px;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+}
+
+.header-avatar-placeholder {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffaa4a;
+}
