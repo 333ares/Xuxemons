@@ -24,72 +24,71 @@ class RepartirXuxesDiarias implements ShouldQueue
             return;
         }
 
-        $cantidadTotal = $config->cantidad;
         $maxMochila = 20;
         $maxStack = 5;
 
-        // Recorremos todos los usuarios
+        $nombresXuxes = [
+            'algodon',
+            'caramelo',
+            'caramelos',
+            'chocolate',
+            'lolly',
+            'macedonia',
+            'navidad',
+            'ovalados',
+            'piruleta',
+            'redondeos',
+            'suggus'
+        ];
+
+        // Mezclamos y cogemos solo la cantidad configurada por el admin
+        shuffle($nombresXuxes);
+        $seleccionadas = array_slice($nombresXuxes, 0, $config->cantidad);
+
         $usuarios = User::all();
 
         foreach ($usuarios as $usuario) {
-            // Calculamos el total de objetos que ya tiene el usuario en la mochila (igual que en agregarObjeto)
-            $totalActual = Mochila::where('user_id', $usuario->id)->sum('amount');
+            foreach ($seleccionadas as $nombre) {
 
-            // Calculamos cuántas xuxes se pueden añadir sin superar el límite de la mochila
-            $espacioDisponible = $maxMochila - $totalActual;
-            $amountReal = min($cantidadTotal, $espacioDisponible);
+                // Recalculamos espacio antes de cada xuxe
+                $totalActual = Mochila::where('user_id', $usuario->id)->sum('amount');
+                $espacioDisponible = $maxMochila - $totalActual;
 
-            // Si no hay espacio, pasamos al siguiente usuario
-            if ($amountReal <= 0) {
-                continue;
-            }
+                if ($espacioDisponible <= 0) break;
 
-            // Repartimos las xuxes respetando el maxStack de 5
-            while ($amountReal > 0) {
-                // Calculamos cuántas añadimos en esta iteración (máximo 5 por stack)
-                $amountIteracion = min($amountReal, $maxStack);
-
-                // Buscamos si ya tiene un stack de xuxe_diaria con hueco (igual que en agregarObjeto)
+                // Buscamos stack existente con hueco
                 $xuxe = Mochila::where('user_id', $usuario->id)
-                    ->where('name', 'xuxe_diaria')
+                    ->where('name', $nombre)
                     ->where('type', 'xuxe')
                     ->where('amount', '<', $maxStack)
                     ->first();
 
-                // Si se puede apilar
                 if ($xuxe) {
-                    $nuevoAmount = $xuxe->amount + $amountIteracion;
+                    $nuevoAmount = $xuxe->amount + 1;
 
-                    // Si el nuevo amount es menor o igual al máximo, se actualiza el stack actual
                     if ($nuevoAmount <= $maxStack) {
-                        $xuxe->update([
-                            'amount' => $nuevoAmount
-                        ]);
-
-                        // Si el nuevo amount supera el máximo, se llena el stack actual y el sobrante se procesa en la siguiente iteración
+                        $xuxe->update(['amount' => $nuevoAmount]);
                     } else {
+                        $xuxe->update(['amount' => $maxStack]);
                         $sobrante = $nuevoAmount - $maxStack;
 
-                        $xuxe->update([
-                            'amount' => $maxStack
+                        Mochila::create([
+                            'type'      => 'xuxe',
+                            'name'      => $nombre,
+                            'amount'    => $sobrante,
+                            'stackable' => 1,
+                            'user_id'   => $usuario->id
                         ]);
-
-                        // Restamos solo lo que hemos podido meter en este stack
-                        $amountIteracion = $amountIteracion - $sobrante;
                     }
-
-                    // Si no se puede apilar, creamos un nuevo stack
                 } else {
-                    $xuxe = Mochila::create([
-                        'type' => 'xuxe',
-                        'name' => 'xuxe_diaria',
-                        'amount' => $amountIteracion,
+                    Mochila::create([
+                        'type'      => 'xuxe',
+                        'name'      => $nombre,
+                        'amount'    => 1,
                         'stackable' => 1,
-                        'user_id' => $usuario->id
+                        'user_id'   => $usuario->id
                     ]);
                 }
-
-                $amountReal -= $amountIteracion;
             }
         }
 
