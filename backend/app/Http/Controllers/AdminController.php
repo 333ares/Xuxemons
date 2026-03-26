@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\XuxemonsInfo;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ConfigXuxes;
+use App\Models\ConfigXuxemon;
 
 class AdminController extends Controller
 {
@@ -321,6 +322,47 @@ class AdminController extends Controller
             return response()->json([
                 'message' => 'error',
                 'errors' => 'No tienes suficientes permisos para ejecutar esta función'
+            ], 400);
+        }
+    }
+
+    public function xuxemonDiario(Request $request)
+    {
+        $admin = $request->user()->id;
+
+        if ($admin === 1) {
+            $validator = Validator::make($request->all(), [
+                'hora' => 'required|date_format:H:i'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors'  => $validator->errors()
+                ], 400);
+            }
+
+            $config = ConfigXuxemon::first();
+
+            $config->update([
+                'hora' => $request->hora
+            ]);
+
+            if ($config) {
+                return response()->json([
+                    'message' => 'Configuración actualizada correctamente',
+                    'config'  => $config
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'error',
+                    'errors'  => 'No se ha podido actualizar la configuración'
+                ], 400);
+            }
+        } else {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'No tienes suficientes permisos para ejecutar esta función'
             ], 400);
         }
     }
