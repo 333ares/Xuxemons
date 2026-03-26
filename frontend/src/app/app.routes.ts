@@ -19,6 +19,9 @@ import { Parametros } from './parametros/parametros';
 import { Estadisticas } from './estadisticas/estadisticas';
 import { GestionUsuariosPage } from './gestion-usuarios-page/gestion-usuarios-page';
 import { AdminGuard } from './guards/admin-guard';
+import { GeneracionDiaria } from './generacion-diaria/generacion-diaria';
+import { ProbabilidadInfeccion } from './probabilidad-infeccion/probabilidad-infeccion';
+import { CrecimientoXuxemons } from './crecimiento-xuxemons/crecimiento-xuxemons';
 
 export const routes: Routes = [
   // Reedireccion automatica a Login
@@ -132,6 +135,27 @@ export const routes: Routes = [
   {
     path: 'estadisticas',
     component: Estadisticas,
+    canActivate: [AuthGuard, AdminGuard],
+  },
+
+  // Ruta Generación diaria de recompensas del Admin
+  {
+    path: 'generacionDiaria',
+    component: GeneracionDiaria,
+    canActivate: [AuthGuard, AdminGuard],
+  },
+
+  // Ruta Probabilidad de infecciones del Admin
+  {
+    path: 'probabilidadInfeccion',
+    component: ProbabilidadInfeccion,
+    canActivate: [AuthGuard, AdminGuard],
+  },
+
+  // Ruta Crecimiento Xuxemons del Admin
+  {
+    path: 'crecimientoXuxemons',
+    component: CrecimientoXuxemons,
     canActivate: [AuthGuard, AdminGuard],
   },
 
