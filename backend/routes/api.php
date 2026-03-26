@@ -22,7 +22,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/agregarXuxemon', [AdminController::class, 'agregarXuxemon']);
     Route::post('/agregarObjeto', [AdminController::class, 'agregarObjeto']);
     Route::get('/listarUsuarios', [AdminController::class, 'listarUsuarios']);
-
+    Route::post('/xuxes-diarias', [AdminController::class, 'xuxesDiarias']);
+    
     // Xuxemons
     Route::get('/xuxemons', [XuxemonsController::class, 'listarXuxemons']);
     Route::get('/xuxemons/tipo', [XuxemonsController::class, 'listarXuxemonsPorTipo']);
