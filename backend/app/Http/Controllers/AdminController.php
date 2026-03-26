@@ -366,4 +366,14 @@ class AdminController extends Controller
             ], 400);
         }
     }
+
+    public function resetConfig(Request $request)
+    {
+        if ($request->user()->id === 1) {
+            ConfigXuxes::first()->update(['ultima_entrega' => null]);
+            ConfigXuxemon::first()->update(['ultima_entrega' => null]);
+
+            return response()->json(['message' => 'Config reseteada correctamente'], 200);
+        }
+    }
 }
