@@ -57,7 +57,7 @@ export class Mochila implements OnInit {
   // Diálogo de borrado
   mostrarDialogoBorrar: boolean = false;
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth) { }
 
   ngOnInit(): void {
     this.cargarUsuario();
@@ -85,7 +85,7 @@ export class Mochila implements OnInit {
         const items: ItemMochila[] = res.objetos.data;
         this.paginaActual = res.objetos.current_page;
         this.ultimaPagina = res.objetos.last_page;
-        this.totalObjetos = items.reduce((acc, item) => acc + item.amount, 0);
+        this.totalObjetos = res.total;
         this.todosLosSlots = this.construirSlots(items);
         this.cargando = false;
       },
