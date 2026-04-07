@@ -10,6 +10,7 @@ use App\Models\XuxemonsInfo;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ConfigXuxes;
 use App\Models\ConfigXuxemon;
+use App\Models\ConfigAlimentar;
 
 class AdminController extends Controller
 {
@@ -387,6 +388,55 @@ class AdminController extends Controller
             ConfigXuxemon::first()->update(['ultima_entrega' => null]);
 
             return response()->json(['message' => 'Config reseteada correctamente'], 200);
+        }
+    }
+
+    public function configAlimentar(Request $request)
+    {
+        if ($request->user()->id === 1) {
+            $validator = Validator::make($request->all(), [
+                'porcentaje_bajon' => 'required|integer|min:1|max:100',
+                'porcentaje_sobredosis' => 'required|integer|min:1|max:100',
+                'porcentaje_atracon' => 'required|integer|min:1|max:100',
+                'xuxes_s_a_m' => 'required|integer|min:1',
+                'xuxes_m_a_g' => 'required|integer|min:1'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => $validator->errors()
+                ], 400);
+            }
+
+            // Validamos que los porcentajes no superen 100 en total
+            $totalPorcentaje = $request->porcentaje_bajon + $request->porcentaje_sobredosis + $request->porcentaje_atracon;
+            if ($totalPorcentaje > 100) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => 'La suma de los porcentajes no puede superar 100'
+                ], 400);
+            }
+
+            $config = ConfigAlimentar::first();
+            // array_filter elimina los valores null, así solo actualiza los campos que vienen en el request
+            $config->update(array_filter([
+                'porcentaje_bajon'      => $request->porcentaje_bajon,
+                'porcentaje_sobredosis' => $request->porcentaje_sobredosis,
+                'porcentaje_atracon'    => $request->porcentaje_atracon,
+                'xuxes_s_a_m'          => $request->xuxes_s_a_m,
+                'xuxes_m_a_g'          => $request->xuxes_m_a_g
+            ]));
+
+            return response()->json([
+                'message' => 'Configuración actualizada correctamente',
+                'config' => $config
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
+            ], 400);
         }
     }
 }

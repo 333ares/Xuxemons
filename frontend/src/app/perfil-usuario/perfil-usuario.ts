@@ -14,20 +14,20 @@ import { Nav } from '../shared/nav/nav';
   styleUrl: './perfil-usuario.css',
 })
 export class PerfilUsuario implements OnInit {
-  perfilForm!: FormGroup;
-  mostrarPassword: boolean = false;
-  mostrarDialogoBaja: boolean = false;
-  mensajeExito: string = '';
-  mensajeError: string = '';
-  cargando: boolean = false;
+  perfilForm!: FormGroup; // Formulario reactivo
+  mostrarPassword: boolean = false; // Controla mostrar/ocultar contraseña
+  mostrarDialogoBaja: boolean = false; // Controla el modal de baja
+  mensajeExito: string = ''; // Mensaje de éxito
+  mensajeError: string = ''; // Mensaje de error
+  cargando: boolean = false; // Estado de carga
 
   // any permite que el template use ?. sin que Angular strict mode genere warnings
   usuario: any = null;
 
   constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private authService: Auth,
+    private fb: FormBuilder, // Para crear formularios
+    private router: Router, // Para navegar
+    private authService: Auth, // Servicio de autenticación
   ) { }
 
   ngOnInit() {
@@ -59,7 +59,7 @@ export class PerfilUsuario implements OnInit {
   }
 
   onGuardar() {
-    if (this.perfilForm.invalid) return;
+    if (this.perfilForm.invalid) return; // No envía si es inválido
 
     this.cargando = true;
     this.mensajeExito = '';
@@ -81,12 +81,13 @@ export class PerfilUsuario implements OnInit {
       return;
     }
 
+    // Llama al backend para actualizar
     this.authService.actualizarUsuario(datos).subscribe({
       next: (res) => {
         this.mensajeExito = 'Cambios guardados correctamente.';
         this.cargando = false;
-        this.usuario = res.usuario;
-        this.perfilForm.patchValue({ password: '' });
+        this.usuario = res.usuario; // Actualiza los datos locales
+        this.perfilForm.patchValue({ password: '' });   // Limpia el campo contraseña
       },
       error: (err) => {
         // Si el error es un objeto (validación de Laravel) lo aplanamos en un string legible
@@ -128,14 +129,15 @@ export class PerfilUsuario implements OnInit {
   }
 
   abrirDialogoBaja() {
-    this.mostrarDialogoBaja = true;
+    this.mostrarDialogoBaja = true; // Abre modal
   }
 
   cerrarDialogoBaja() {
-    this.mostrarDialogoBaja = false;
+    this.mostrarDialogoBaja = false; // Cierra modal
   }
 
   confirmarBaja() {
+     // Llama al backend para eliminar la cuenta
     this.authService.eliminarCuenta().subscribe({
       next: () => {
         this.authService.eliminarToken();
