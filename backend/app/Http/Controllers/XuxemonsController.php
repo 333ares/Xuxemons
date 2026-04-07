@@ -204,7 +204,7 @@ class XuxemonsController extends Controller
         // Mapeamos cada enfermedad con su vacuna correspondiente
         $vacunaRequerida = match ($xuxemon->sickness) {
             'bajon de azucar' => 'xocolatina',
-            'atracon' => 'xal de fruites',
+            'atracon' => 'macedonia',
             default => null
         };
 

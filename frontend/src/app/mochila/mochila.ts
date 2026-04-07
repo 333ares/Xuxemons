@@ -57,7 +57,7 @@ export class Mochila implements OnInit {
   // Diálogo de borrado
   mostrarDialogoBorrar: boolean = false;
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth) { }
 
   ngOnInit(): void {
     this.cargarUsuario();
@@ -85,7 +85,7 @@ export class Mochila implements OnInit {
         const items: ItemMochila[] = res.objetos.data;
         this.paginaActual = res.objetos.current_page;
         this.ultimaPagina = res.objetos.last_page;
-        this.totalObjetos = items.reduce((acc, item) => acc + item.amount, 0);
+        this.totalObjetos = res.total;
         this.todosLosSlots = this.construirSlots(items);
         this.cargando = false;
       },
@@ -131,21 +131,10 @@ export class Mochila implements OnInit {
     this.slotSeleccionado = this.slotSeleccionado?.indice === slot.indice ? null : slot;
   }
 
-  // Mapea el nombre del ítem al archivo PNG de la carpeta public/chuches/
-  getImagenItem(nombre: string): string {
-    const mapa: Record<string, string> = {
-      chocolatina: 'chuches/chocolate.png',
-      'bastón de caramelo': 'chuches/navidad.png',
-      inxulina: 'chuches/Vacuna.png',
-      caramelux: 'chuches/caramelo.png',
-      pirupiru: 'chuches/piruleta.png',
-      chicleto: 'chuches/suggus.png',
-      'chal de frutas': 'chuches/macedonia.png',
-      azucarín: 'chuches/redondos.png',
-      'xocolatina extra': 'chuches/chocolate.png',
-    };
-    const clave = nombre.toLowerCase().trim();
-    return mapa[clave] ?? 'chuches/caramelos.png'; // fallback genérico
+  // Coger la imagen correcta del objeto
+ getImagenItem(nombre: string): string {
+    const slug = nombre.toLowerCase().replace(/[\s\-_]+/g, '');
+    return `/chuches/${slug}.png`;
   }
 
   formatearFecha(fecha?: string): string {

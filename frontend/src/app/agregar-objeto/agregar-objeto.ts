@@ -11,7 +11,7 @@ import { Auth } from '../services/auth';
   styleUrls: ['./agregar-objeto.css'],
 })
 export class AgregarObjeto implements OnInit {
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth) { }
 
   @Input() usuario: any = null;
   @Output() cerrar = new EventEmitter<boolean>();
@@ -20,8 +20,8 @@ export class AgregarObjeto implements OnInit {
   tipoSeleccionado: 'xuxe' | 'vacuna' = 'xuxe';
 
   // Listas de objetos disponibles según tipo
-  xuxesDisponibles = ['Caramelo', 'Piruleta', 'Gominola'];
-  vacunasDisponibles = ['Xocolatina', 'Xal de fruites', 'Inxulina'];
+  xuxesDisponibles = ['Algodón', 'Caramelo', 'Caramelos', 'Lolly', 'Navidad', 'Ovalados', 'Piruleta', 'Redondos', 'Suggus'];
+  vacunasDisponibles = ['Xocolatina', 'Macedonia', 'Inxulina'];
 
   nombreSeleccionado: string = '';
   cantidad: number = 1;
@@ -33,7 +33,7 @@ export class AgregarObjeto implements OnInit {
   mensaje: string = '';
   mensajeTipo: 'exito' | 'error' | '' = '';
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   get objetosDisponibles(): string[] {
     const lista =
