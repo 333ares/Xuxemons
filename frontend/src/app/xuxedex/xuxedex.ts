@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ export interface Xuxemon {
   name: string;
   type: 'agua' | 'tierra' | 'aire';
   size: 's' | 'm' | 'g';
-  sickness: string | number;
+  sickness: string | number | null;
   xuxes_count: number; // Contador de xuxes consumidas (para la barra de nivel)
   user_id: number;
   created_at?: string;
@@ -43,6 +43,13 @@ export class Xuxedex implements OnInit {
   xuxemonSeleccionado: Xuxemon | null = null;
   paginaActual = 1;
   ultimaPagina = 1;
+
+  // Añadimos un flag para controlar resultados de búsqueda
+  sinResultados = false;
+
+  // Panel de notificaciones
+  mostrarNotificaciones = false;
+  notificacionesNuevas = false;
 
   // Barra de level-up
   // Las xuxes necesarias para subir de nivel dependen del tamaño del Xuxemon:
@@ -81,12 +88,14 @@ export class Xuxedex implements OnInit {
   ngOnInit(): void {
     this.cargarUsuario();
     this.listarXuxemons();
+    this.comprobarNotificacionesDiarias();
 
+    // Mejora en el buscador con tipado y manejo de vacíos
     this.buscador.valueChanges
-      .pipe(debounceTime(800), distinctUntilChanged())
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe((termino) => {
-        const valor = termino as string;
-        if (!valor || valor.trim() === '') {
+        const valor = termino?.trim() || '';
+        if (valor === '') {
           this.listarXuxemons();
         } else {
           this.buscarXuxemons(valor);
@@ -106,6 +115,36 @@ export class Xuxedex implements OnInit {
     });
   }
 
+  // Comprueba si las recompensas diarias son nuevas (no vistas hoy)
+  private comprobarNotificacionesDiarias(): void {
+    const hoy = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const ultimaVista = localStorage.getItem('xuxemons_notif_vista');
+    this.notificacionesNuevas = ultimaVista !== hoy;
+  }
+
+  // Abre o cierra el panel de notificaciones y marca como vistas
+  toggleNotificaciones(): void {
+    this.mostrarNotificaciones = !this.mostrarNotificaciones;
+    if (this.mostrarNotificaciones && this.notificacionesNuevas) {
+      const hoy = new Date().toISOString().split('T')[0];
+      localStorage.setItem('xuxemons_notif_vista', hoy);
+      this.notificacionesNuevas = false;
+    }
+  }
+
+  cerrarNotificaciones(): void {
+    this.mostrarNotificaciones = false;
+  }
+
+  // Cierra el panel si el usuario hace clic fuera de él
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.mostrarNotificaciones = false;
+    this.mostrarConfirmacionAlimentar = false;
+    this.mostrarModalVacuna = false;
+    this.mostrarDialogoBorrar = false;
+  }
+
   // Mostrar lista de xuxemons
   listarXuxemons(pagina: number = 1): void {
     this.cargando = true;
@@ -122,6 +161,25 @@ export class Xuxedex implements OnInit {
         this.cargando = false;
       },
     });
+  }
+
+  // Modal de confirmación antes de alimentar
+  mostrarConfirmacionAlimentar = false;
+
+  abrirConfirmacionAlimentar(): void {
+    if (this.cargandoFeed) return;
+    this.mostrarConfirmacionAlimentar = true;
+  }
+
+  cerrarConfirmacionAlimentar(): void {
+    this.mostrarConfirmacionAlimentar = false;
+  }
+
+  confirmarAlimentar(): void {
+    this.mostrarConfirmacionAlimentar = false;
+    if (this.xuxemonSeleccionado) {
+      this.alimentarXuxemon(this.xuxemonSeleccionado);
+    }
   }
 
   // Alimentar Xuxemon
@@ -144,7 +202,7 @@ export class Xuxedex implements OnInit {
 
         // Detectamos si ha aparecido una enfermedad nueva tras alimentarle
         const seInfecto =
-          (!sicknessAntes || sicknessAntes === '0' || sicknessAntes === 0) &&
+          !this.estaEnfermo({ ...xuxemon, sickness: sicknessAntes } as Xuxemon) &&
           this.estaEnfermo(actualizado);
 
         if (seInfecto) {
@@ -216,7 +274,11 @@ export class Xuxedex implements OnInit {
     if (!xuxemon) return 3;
     const base: Record<string, number> = { s: 3, m: 5 };
     const xuxesBase = base[xuxemon.size] ?? 0; // 0 → nivel máximo (g)
-    const extra = xuxemon.sickness === 'Bajón de azúcar' || xuxemon.sickness === 'bajon' ? 2 : 0;
+    const sickness = xuxemon.sickness ? String(xuxemon.sickness).toLowerCase().trim() : '';
+    const extra =
+      sickness === 'bajon de azucar' || sickness === 'bajón de azúcar' || sickness === 'bajon'
+        ? 2
+        : 0;
     return xuxesBase + extra;
   }
 
@@ -320,7 +382,6 @@ export class Xuxedex implements OnInit {
 
   // Búsqueda
   busqueda = '';
-  sinResultados = false;
 
   buscarXuxemons(termino: string): void {
     this.sinResultados = false;
@@ -366,11 +427,26 @@ export class Xuxedex implements OnInit {
     return mapa[size] ?? size;
   }
 
+  // FIX: sickness puede llegar como null, '0', 0 o '' cuando el Xuxemon está sano.
+  // Antes solo se filtraban '0', 0 y '', pero no null, lo que hacía que
+  // el badge apareciera mostrando el texto "null".
   estaEnfermo(xuxemon: Xuxemon): boolean {
-    return xuxemon.sickness !== '0' && xuxemon.sickness !== 0 && xuxemon.sickness !== '';
+    const s = xuxemon.sickness;
+    return s !== null && s !== undefined && s !== '0' && s !== 0 && s !== '';
   }
 
-  getNombreEnfermedad(sickness: string | number): string {
+  // FIX: getNombreEnfermedad ahora acepta null además de string|number,
+  // aunque con estaEnfermo corregido nunca debería llamarse con null.
+  getNombreEnfermedad(sickness: string | number | null | undefined): string {
+    if (
+      sickness === null ||
+      sickness === undefined ||
+      sickness === '' ||
+      sickness === '0' ||
+      sickness === 0
+    ) {
+      return '';
+    }
     const mapa: Record<string, string> = {
       bajon: 'Bajón de azúcar',
       bajón: 'Bajón de azúcar',
@@ -472,8 +548,8 @@ export class Xuxedex implements OnInit {
           // Si el backend no devuelve el xuxemon, limpiamos el sickness localmente
           if (this.xuxemonSeleccionado) {
             const idx = this.xuxemons.findIndex((x) => x.id === this.xuxemonSeleccionado!.id);
-            if (idx !== -1) this.xuxemons[idx] = { ...this.xuxemons[idx], sickness: '' };
-            this.xuxemonSeleccionado = { ...this.xuxemonSeleccionado, sickness: '' };
+            if (idx !== -1) this.xuxemons[idx] = { ...this.xuxemons[idx], sickness: null };
+            this.xuxemonSeleccionado = { ...this.xuxemonSeleccionado, sickness: null };
           }
         }
         this.cerrarModalVacuna();

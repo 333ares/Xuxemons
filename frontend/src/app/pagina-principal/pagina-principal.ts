@@ -17,16 +17,33 @@ export class PaginaPrincipal implements OnInit {
 
   fechaHoy: string = '';
 
-  recompensas = [
-    { dia: 'Lun', esHoy: false, recogida: true },
-    { dia: 'Mar', esHoy: false, recogida: true },
-    { dia: 'Mié', esHoy: false, recogida: true },
-    { dia: 'Jue', esHoy: true, recogida: false },
-    { dia: 'Vie', esHoy: false, recogida: false },
-    { dia: 'Sáb', esHoy: false, recogida: false },
-    { dia: 'Dom', esHoy: false, recogida: false },
-  ];
+  recompensasdiarias = {
+  xuxes: {
+    recibidas: false,     // Cuando el backend confirme la entrega, se pone true
+    cantidad: 10,
+    hora: '08:00',
+  },
+  xuxemon: {
+    recibido: false,      // Ídem para el xuxemon diario
+    hora: '08:00',
+  },
+};
 
+// Modal confirmación alimentar
+mostrarConfirmacionFeed = false;
+
+abrirConfirmacionFeed(): void {
+  this.mostrarConfirmacionFeed = true;
+}
+
+cerrarConfirmacionFeed(): void {
+  this.mostrarConfirmacionFeed = false;
+}
+
+confirmarAlimentar(): void {
+  // Aquí irá la llamada real al backend cuando esté disponible
+  this.mostrarConfirmacionFeed = false;
+}
   coleccion = {
     total: 18,
     enfermos: 2,
