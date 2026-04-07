@@ -188,7 +188,7 @@
     <section class="grid-principal" aria-label="Panel principal">
       <!-- COLUMNA IZQUIERDA -->
       <div class="col-izq">
-        <!-- Recompensas semanales -->
+        <!-- Recompensas diarias -->
         <article class="card-dash" aria-labelledby="titulo-recompensas">
           <div class="card-dash-header">
             <h2 id="titulo-recompensas" class="card-dash-titulo">
@@ -210,60 +210,119 @@
                 <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
                 <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
               </svg>
-              Recompensas de la semana
+              Recompensas diarias
             </h2>
-            <button class="btn-recoger">Recoger hoy</button>
           </div>
-          <div class="recompensas-grid" role="list">
-            @for (r of recompensas; track r.dia) {
-              <div
-                class="recompensa-dia"
-                role="listitem"
-                [class.recompensa-hoy]="r.esHoy"
-                [class.recompensa-recogida]="r.recogida"
-                [attr.aria-label]="
-                  r.dia + (r.esHoy ? ' — hoy' : '') + (r.recogida ? ' — recogida' : '')
-                "
-              >
-                <span class="dia-nombre" aria-hidden="true">{{ r.dia }}</span>
-                <div class="regalo-box" aria-hidden="true">
-                  @if (r.recogida) {
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#4ade80"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  } @else {
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <polyline points="20 12 20 22 4 22 4 12" />
-                      <rect x="2" y="7" width="20" height="5" />
-                      <line x1="12" y1="22" x2="12" y2="7" />
-                    </svg>
-                  }
-                </div>
-                <span class="recompensa-cantidad">+10 xuxes</span>
-              </div>
-            }
+
+          <!-- Xuxes del día -->
+          <div
+            class="recompensa-diaria-row"
+            [class.recompensa-diaria--recibida]="recompensasdiarias.xuxes.recibidas"
+            [class.recompensa-diaria--pendiente]="!recompensasdiarias.xuxes.recibidas"
+            role="status"
+            [attr.aria-label]="
+              recompensasdiarias.xuxes.recibidas
+                ? 'Xuxes diarias ya recibidas'
+                : 'Xuxes diarias pendientes de recibir a las ' + recompensasdiarias.xuxes.hora
+            "
+          >
+            <div class="recompensa-diaria__icono" aria-hidden="true">🍬</div>
+            <div class="recompensa-diaria__info">
+              <span class="recompensa-diaria__titulo">Xuxes del día</span>
+              <span class="recompensa-diaria__sub">
+                @if (recompensasdiarias.xuxes.recibidas) {
+                  Ya has recibido tus +{{ recompensasdiarias.xuxes.cantidad }} xuxes de hoy
+                } @else {
+                  +{{ recompensasdiarias.xuxes.cantidad }} xuxes disponibles a las
+                  {{ recompensasdiarias.xuxes.hora }}
+                }
+              </span>
+            </div>
+            <div class="recompensa-diaria__estado" aria-hidden="true">
+              @if (recompensasdiarias.xuxes.recibidas) {
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#4ade80"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              } @else {
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#FFAA4A"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              }
+            </div>
+          </div>
+
+          <!-- Xuxemon del día -->
+          <div
+            class="recompensa-diaria-row"
+            [class.recompensa-diaria--recibida]="recompensasdiarias.xuxemon.recibido"
+            [class.recompensa-diaria--pendiente]="!recompensasdiarias.xuxemon.recibido"
+            role="status"
+            [attr.aria-label]="
+              recompensasdiarias.xuxemon.recibido
+                ? 'Xuxemon diario ya recibido'
+                : 'Xuxemon diario pendiente a las ' + recompensasdiarias.xuxemon.hora
+            "
+          >
+            <div class="recompensa-diaria__icono" aria-hidden="true">🐾</div>
+            <div class="recompensa-diaria__info">
+              <span class="recompensa-diaria__titulo">Xuxemon del día</span>
+              <span class="recompensa-diaria__sub">
+                @if (recompensasdiarias.xuxemon.recibido) {
+                  Ya has recibido tu Xuxemon de hoy
+                } @else {
+                  Nuevo Xuxemon disponible a las {{ recompensasdiarias.xuxemon.hora }}
+                }
+              </span>
+            </div>
+            <div class="recompensa-diaria__estado" aria-hidden="true">
+              @if (recompensasdiarias.xuxemon.recibido) {
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#4ade80"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              } @else {
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#FFAA4A"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              }
+            </div>
           </div>
         </article>
 

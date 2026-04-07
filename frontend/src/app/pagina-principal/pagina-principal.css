@@ -320,80 +320,44 @@
 }
 
 /* RECOMPENSAS */
-
-.btn-recoger {
-  background: #ffaa4a;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 7px 16px;
-  font-size: 1rem;
-  font-weight: 600;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-recoger:hover {
-  background: #e8962e;
-}
-
-.recompensas-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-}
-
-.recompensa-dia {
+.recompensa-diaria-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 10px 6px;
-  border-radius: 14px;
-  background: #fafafa;
-  border: 2px solid transparent;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  background: var(--color-fondo, #f9f9f9);
+  border: 1.5px solid transparent;
   transition: border-color 0.2s;
 }
-
-/* Día actual destacado con borde naranja */
-.recompensa-hoy {
-  border-color: #ffaa4a;
-  background: #fff8f0;
+.recompensa-diaria--pendiente {
+  border-color: #ffaa4a44;
 }
-
-/* Días ya recogidos */
-.recompensa-recogida {
-  background: #f0fdf4;
-  border-color: #86efac;
+.recompensa-diaria--recibida {
+  border-color: #4ade8044;
+  opacity: 0.75;
 }
-
-.dia-nombre {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #888;
-  text-transform: uppercase;
+.recompensa-diaria__icono {
+  font-size: 1.6rem;
+  flex-shrink: 0;
 }
-
-.regalo-box {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #ffaa4a22, #ffaa4a44);
+.recompensa-diaria__info {
+  flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffaa4a;
+  flex-direction: column;
+  gap: 2px;
 }
-
-.recompensa-recogida .regalo-box {
-  background: linear-gradient(135deg, #bbf7d0, #86efac);
+.recompensa-diaria__titulo {
+  font-weight: 600;
+  font-size: 0.88rem;
 }
-
-.recompensa-cantidad {
-  font-size: 1rem;
-  color: #aaa;
-  white-space: nowrap;
+.recompensa-diaria__sub {
+  font-size: 0.78rem;
+  color: #888;
+}
+.recompensa-diaria__estado {
+  flex-shrink: 0;
 }
 
 /* ACTIVIDAD */
