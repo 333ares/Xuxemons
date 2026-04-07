@@ -96,18 +96,16 @@ class AdminController extends Controller
 
             // Si el tipo es vacuna, se añade sin importar si ya tiene o no, ya que no son apilables
             if ($request->type === "vacuna") {
+                // Contar slots, no sum de amounts
+                $slotsUsados = Mochila::where('user_id', $request->user_id)->count();
 
-                // Si la mochila está llena, no se puede añadir la vacuna
-                if ($totalActual >= $maxMochila) {
+                if ($slotsUsados >= $maxMochila) {
                     return response()->json([
                         'message' => 'warning',
-                        'warning' => 'La mochila está llena. No 
-                        
-                        
-                        
-                        se ha podido añadir la vacuna.'
+                        'warning' => 'La mochila está llena. No se ha podido añadir la vacuna.'
                     ], 200);
                 }
+
 
                 $vacuna = Mochila::create([
                     'type' => $request->type,
@@ -141,8 +139,8 @@ class AdminController extends Controller
 
                 if ($espacioDisponible <= 0) {
                     return response()->json([
-                        'message' => 'error',
-                        'error' => 'La mochila está llena. No se ha podido añadir la xuxe.'
+                        'message' => 'warning',
+                        'warning' => 'La mochila está llena. No se ha podido añadir la xuxe.'
                     ], 200);
                 }
 
