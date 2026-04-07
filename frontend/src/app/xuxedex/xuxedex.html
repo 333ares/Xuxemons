@@ -8,24 +8,113 @@
       </div>
     </div>
     <div class="header-right">
-      <button class="header-badge" type="button" aria-label="Notificaciones">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          focusable="false"
+      <!-- Botón de notificaciones con panel desplegable -->
+      <div class="notif-wrapper">
+        <button
+          class="header-badge"
+          type="button"
+          aria-label="Notificaciones"
+          [attr.aria-expanded]="mostrarNotificaciones"
+          (click)="toggleNotificaciones()"
         >
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
-        <span class="badge-dot" aria-label="Tienes notificaciones nuevas"></span>
-      </button>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          @if (notificacionesNuevas) {
+            <span class="badge-dot" aria-label="Tienes notificaciones nuevas"></span>
+          }
+        </button>
+
+        <!-- Panel de notificaciones -->
+        @if (mostrarNotificaciones) {
+          <div
+            class="notif-panel"
+            role="region"
+            aria-label="Panel de notificaciones"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="notif-panel__header">
+              <span class="notif-panel__titulo">Notificaciones</span>
+              <button
+                class="notif-panel__cerrar"
+                type="button"
+                aria-label="Cerrar notificaciones"
+                (click)="cerrarNotificaciones()"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Recompensas diarias -->
+            <div class="notif-seccion">
+              <p class="notif-seccion__etiqueta">Recompensas diarias</p>
+              <div class="notif-item">
+                <span class="notif-item__icono" aria-hidden="true">🍬</span>
+                <div class="notif-item__contenido">
+                  <span class="notif-item__titulo">Xuxes del día</span>
+                  <span class="notif-item__desc"
+                    >Recibes xuxes cada día de forma automática. ¡Úsalas para alimentar a tus
+                    Xuxemons!</span
+                  >
+                </div>
+              </div>
+              <div class="notif-item">
+                <span class="notif-item__icono" aria-hidden="true">🐾</span>
+                <div class="notif-item__contenido">
+                  <span class="notif-item__titulo">Xuxemon del día</span>
+                  <span class="notif-item__desc"
+                    >Una vez al día puedes recibir un nuevo Xuxemon aleatorio asignado por el
+                    administrador.</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Recordatorio de vacunas si algún Xuxemon está enfermo -->
+            @if (xuxemons.some(estaEnfermo.bind(this))) {
+              <div class="notif-seccion notif-seccion--alerta">
+                <p class="notif-seccion__etiqueta">Atención</p>
+                <div class="notif-item">
+                  <span class="notif-item__icono" aria-hidden="true">🤒</span>
+                  <div class="notif-item__contenido">
+                    <span class="notif-item__titulo">Tienes Xuxemons enfermos</span>
+                    <span class="notif-item__desc"
+                      >Selecciona un Xuxemon enfermo y usa una vacuna desde la mochila para
+                      curarlo.</span
+                    >
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
       <div class="header-user">
         <img
           src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
@@ -39,6 +128,11 @@
       </div>
     </div>
   </header>
+
+  <!-- Overlay transparente para cerrar el panel de notificaciones haciendo clic fuera -->
+  @if (mostrarNotificaciones) {
+    <div class="notif-overlay" aria-hidden="true" (click)="cerrarNotificaciones()"></div>
+  }
 
   <main class="xdex-main">
     <!-- CARGANDO -->
@@ -316,6 +410,9 @@
             </div>
 
             <!-- Badges de características -->
+            <!-- FIX: el badge de enfermedad solo aparece si estaEnfermo() devuelve true.
+                 Con sickness === null, estaEnfermo() ahora devuelve false correctamente,
+                 así que el badge no se renderiza y no aparece el texto "null". -->
             <div class="xdex-detalle__badges" role="list" aria-label="Características del Xuxemon">
               <span
                 class="xdex-badge xdex-badge--tipo xdex-badge--{{ xuxemonSeleccionado.type }}"
@@ -396,7 +493,7 @@
             <button
               class="xdex-btn-feed"
               type="button"
-              (click)="alimentarXuxemon(xuxemonSeleccionado)"
+              (click)="abrirConfirmacionAlimentar()"
               [disabled]="cargandoFeed"
               [attr.aria-label]="'Dar una xuxe a ' + xuxemonSeleccionado.name"
               [class.xdex-btn-feed--cargando]="cargandoFeed"
@@ -430,6 +527,126 @@
           </section>
         }
       </div>
+
+      <!-- MODAL CONFIRMACIÓN ALIMENTAR -->
+      <!-- FIX: preview completa del Xuxemon antes de confirmar la alimentación.
+           Muestra imagen, nombre, badges de tipo/tamaño/enfermedad y barra de progreso.
+           El badge de enfermedad en el modal también usa estaEnfermo(), así que
+           tampoco mostrará "null" con el fix aplicado. -->
+      @if (mostrarConfirmacionAlimentar && xuxemonSeleccionado) {
+        <div
+          class="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-feed-titulo"
+          (click)="cerrarConfirmacionAlimentar()"
+        >
+          <div class="modal-box" (click)="$event.stopPropagation()">
+            <div class="modal-box__header">
+              <h3 id="modal-feed-titulo" class="modal-box__titulo">
+                🍬 Dar xuxe a {{ xuxemonSeleccionado.name }}
+              </h3>
+              <button
+                class="modal-box__cerrar"
+                type="button"
+                (click)="cerrarConfirmacionAlimentar()"
+                aria-label="Cerrar modal"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="modal-box__body">
+              <!-- Preview del xuxemon -->
+              <div class="modal-feed-preview">
+                <div class="modal-feed-imagen">
+                  <img
+                    [src]="getImagenXuxemon(xuxemonSeleccionado.name)"
+                    [alt]="xuxemonSeleccionado.name"
+                  />
+                </div>
+                <div class="modal-feed-datos">
+                  <p class="modal-feed-nombre">{{ xuxemonSeleccionado.name }}</p>
+                  <div class="modal-feed-badges">
+                    <span
+                      class="xdex-badge xdex-badge--tipo xdex-badge--{{ xuxemonSeleccionado.type }}"
+                    >
+                      {{ getNombreTipo(xuxemonSeleccionado.type) }}
+                    </span>
+                    <span class="xdex-badge xdex-badge--tamano">
+                      {{ getNombreTamano(xuxemonSeleccionado.size) }}
+                    </span>
+                    @if (estaEnfermo(xuxemonSeleccionado)) {
+                      <span class="xdex-badge xdex-badge--enfermo">
+                        🤒 {{ getNombreEnfermedad(xuxemonSeleccionado.sickness) }}
+                      </span>
+                    }
+                  </div>
+                  <!-- Barra de progreso de nivel en miniatura -->
+                  @if (xuxemonSeleccionado.size !== 'g') {
+                    <div class="modal-feed-nivel">
+                      <span class="modal-feed-nivel__label">
+                        Xuxes: {{ xuxesActuales }}/{{ xuxesNecesarias }}
+                      </span>
+                      <div class="modal-feed-nivel__barra">
+                        <div
+                          class="modal-feed-nivel__relleno"
+                          [style.width.%]="porcentajeNivel"
+                        ></div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Aviso de riesgo de enfermedad -->
+              <div class="modal-feed-aviso" role="note">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                  />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Alimentar tiene una pequeña probabilidad de provocar una enfermedad.
+              </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="modal-acciones">
+              <button class="btn-cancelar" type="button" (click)="cerrarConfirmacionAlimentar()">
+                Cancelar
+              </button>
+              <button class="btn-confirmar" type="button" (click)="confirmarAlimentar()">
+                🍬 Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      }
 
       <!-- MODAL SELECTOR DE VACUNAS -->
       @if (mostrarModalVacuna) {
