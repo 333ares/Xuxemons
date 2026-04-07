@@ -221,7 +221,12 @@ export class Xuxedex implements OnInit {
       },
       error: (err) => {
         this.feedbackTipo = 'error';
-        this.feedbackMensaje = err.error?.errors ?? 'No se ha podido alimentar al Xuxemon.';
+        // Intentamos extraer el mensaje real del backend en cualquier formato que lo mande
+        this.feedbackMensaje =
+          err.error?.errors ??
+          err.error?.message ??
+          (typeof err.error === 'string' ? err.error : null) ??
+          'No se ha podido alimentar al Xuxemon.';
         this.cargandoFeed = false;
         setTimeout(() => {
           this.feedbackMensaje = '';
