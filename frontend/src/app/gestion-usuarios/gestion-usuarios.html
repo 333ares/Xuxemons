@@ -135,12 +135,13 @@
 
 <!-- Modal: Añadir Xuxemon -->
 @if (modalXuxemonAbierto && usuarioSeleccionado) {
-<app-agregar-xuxemon [usuario]="usuarioSeleccionado" (cerrar)="cerrarModales()">
+<app-agregar-xuxemon [usuario]="usuarioSeleccionado" (cerrar)="cerrarModales($event)">
 </app-agregar-xuxemon>
+
 }
 
 <!-- Modal: Añadir Objeto -->
 @if (modalObjetoAbierto && usuarioSeleccionado) {
-<app-agregar-objeto [usuario]="usuarioSeleccionado" (cerrar)="cerrarModales()">
+<app-agregar-objeto [usuario]="usuarioSeleccionado" (cerrar)="cerrarModales($event)">
 </app-agregar-objeto>
 }

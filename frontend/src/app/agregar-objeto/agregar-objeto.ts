@@ -14,7 +14,7 @@ export class AgregarObjeto implements OnInit {
   constructor(private auth: Auth) {}
 
   @Input() usuario: any = null;
-  @Output() cerrar = new EventEmitter<void>();
+  @Output() cerrar = new EventEmitter<boolean>();
 
   // Tipo de objeto: 'xuxe' (apilable) | 'vacuna' (no apilable)
   tipoSeleccionado: 'xuxe' | 'vacuna' = 'xuxe';
