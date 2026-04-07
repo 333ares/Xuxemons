@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Xuxemons;
 use Illuminate\Http\Request;
 use App\Models\Mochila;
+use App\Models\ConfigAlimentar;
 
 class XuxemonsController extends Controller
 {
@@ -104,14 +105,14 @@ class XuxemonsController extends Controller
         if (!$xuxemon) {
             return response()->json([
                 'message' => 'error',
-                'errors' => 'No tienes ningún xuxemon con ese ID'
+                'errors'  => 'No tienes ningún xuxemon con ese ID'
             ], 404);
         }
 
         if ($xuxemon->sickness === 'atracon') {
             return response()->json([
                 'message' => 'error',
-                'errors' => 'Tu xuxemon tiene atracón y no puede comer'
+                'errors'  => 'Tu xuxemon tiene atracón y no puede comer'
             ], 400);
         }
 
@@ -122,46 +123,45 @@ class XuxemonsController extends Controller
         if (!$xuxe) {
             return response()->json([
                 'message' => 'error',
-                'errors' => 'Tu mochila esta vacía'
+                'errors'  => 'Tu mochila esta vacía'
             ], 400);
         }
 
         if ($xuxe->amount <= 1) {
             $xuxe->delete();
         } else {
-            $xuxe->update([
-                'amount' => $xuxe->amount - 1
-            ]);
+            $xuxe->update(['amount' => $xuxe->amount - 1]);
         }
+
+        // Cogemos la config
+        $config = ConfigAlimentar::first();
 
         if ($xuxemon->sickness === null) {
             $rand = rand(1, 100);
 
-            if ($rand <= 5) {
+            if ($rand <= $config->porcentaje_bajon) {
                 $xuxemon->sickness = 'bajon de azucar';
-            } elseif ($rand <= 15) {
+            } elseif ($rand <= $config->porcentaje_bajon + $config->porcentaje_sobredosis) {
                 $xuxemon->sickness = 'sobredosis de azucar';
-            } elseif ($rand <= 30) {
+            } elseif ($rand <= $config->porcentaje_bajon + $config->porcentaje_sobredosis + $config->porcentaje_atracon) {
                 $xuxemon->sickness = 'atracon';
             }
         }
 
-        // Calculamos las Xuxes necesarias para subir de nivel según el tamaño
+        // Xuxes necesarias para subir de nivel según config
         $xuxesParaSubir = match ($xuxemon->size) {
-            's' => 3,
-            'm' => 5,
+            's' => $config->xuxes_s_a_m,
+            'm' => $config->xuxes_m_a_g,
             default => null
         };
 
-        // Si tiene bajón de azúcar necesita dos xuxes mas para subir de nivel
+        // Si tiene bajón de azúcar necesita dos xuxes más para subir de nivel
         if ($xuxemon->sickness === 'bajon de azucar' && $xuxesParaSubir !== null) {
             $xuxesParaSubir += 2;
         }
 
-        // Sumamos 1 al contador de Xuxes del xuxemon
         $xuxemon->xuxes_count += 1;
 
-        // Si ha llegado al límite, sube de nivel y se resetea el contador
         if ($xuxesParaSubir !== null && $xuxemon->xuxes_count >= $xuxesParaSubir) {
             $xuxemon->xuxes_count = 0;
             $xuxemon->size = match ($xuxemon->size) {

@@ -22,5 +22,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ConfigXuxesSeeder::class,
         ]);
+
+        $this->call([
+            ConfigAlimentarSeeder::class,
+        ]);
     }
 }
