@@ -242,11 +242,17 @@ class AdminController extends Controller
         // Si el id es 1, es el admin
         if ($admin === 1) {
             // Recogemos todos los datos de los usuarios
-            $usuarios = User::all();
-            $numUsuarios = User::count();
+            $usuarios = User::all()->map(function ($user) {
+                $user->xuxemons = Xuxemons::where('user_id', $user->id)->count();
+                $user->objetos = Mochila::where('user_id', $user->id)->sum('amount');
+                return $user;
+            });
+
+            // Datos generales
+            $numUsuarios = $usuarios->count();
             $numXuxemons = Xuxemons::count();
-            $numXuxemonsEnf = Xuxemons::where('sickness', 1)->count();
-            $numObjetos = Mochila::count();
+            $numXuxemonsEnf = Xuxemons::whereNotNull('sickness')->count();
+            $numObjetos = Mochila::sum('amount');
 
             // Si no se han encontrado los usuarios, se devuelve error
             if (count($usuarios) <= 0) {
