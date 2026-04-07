@@ -24,7 +24,7 @@ export class GestionUsuarios implements OnInit {
   cargando = true;
   error = '';
 
-  constructor(private auth: Auth) { }
+  constructor(private auth: Auth) {}
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -36,13 +36,13 @@ export class GestionUsuarios implements OnInit {
     this.auth.listarUsuarios().subscribe({
       next: (res) => {
         this.usuarios = res.usuarios;
-        this.usuariosFiltrados = [...this.usuarios];
+        this.filtrarUsuarios();
         this.cargando = false;
       },
       error: (err) => {
         this.error = err.error?.errors ?? 'Error al cargar los usuarios.';
         this.cargando = false;
-      }
+      },
     });
   }
 
@@ -94,12 +94,12 @@ export class GestionUsuarios implements OnInit {
     this.modalObjetoAbierto = true;
   }
 
-  cerrarModales(): void {
+  cerrarModales(recargar: boolean = false): void {
     this.modalXuxemonAbierto = false;
     this.modalObjetoAbierto = false;
     this.usuarioSeleccionado = null;
+    if (recargar) this.cargarUsuarios();
   }
-
   toggleActivo(usuario: any): void {
     usuario.activo = !usuario.activo;
     // TODO: llamar al backend cuando esté disponible

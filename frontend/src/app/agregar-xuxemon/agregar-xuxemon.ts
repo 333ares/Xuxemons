@@ -11,20 +11,19 @@ import { Auth } from '../services/auth';
   styleUrls: ['./agregar-xuxemon.css'],
 })
 export class AgregarXuxemon implements OnInit {
-
-  constructor(private auth: Auth) { }
+  constructor(private auth: Auth) {}
 
   // Usuario al que se añadirá el Xuxemon — lo recibe desde GestionUsuarios
   @Input() usuario: any = null;
 
   // Evento que cierra el modal
-  @Output() cerrar = new EventEmitter<void>();
+  @Output() cerrar = new EventEmitter<boolean>();
 
   cargando: boolean = false;
   mensaje: string = '';
   mensajeTipo: 'exito' | 'error' | '' = '';
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   // Llama al backend para asignar un Xuxemon aleatorio al usuario
   // La lógica de selección aleatoria reside en AdminController::agregarXuxemon
@@ -44,10 +43,9 @@ export class AgregarXuxemon implements OnInit {
         this.mensaje = err.error?.errors ?? 'Error al añadir el Xuxemon.';
         this.mensajeTipo = 'error';
         this.cargando = false;
-      }
+      },
     });
   }
-
 
   close(): void {
     this.cerrar.emit();
