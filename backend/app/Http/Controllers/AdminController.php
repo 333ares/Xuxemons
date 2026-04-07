@@ -95,19 +95,16 @@ class AdminController extends Controller
             // Calculamos el total de objetos que ya tiene el usuario en la mochila
             $totalActual = Mochila::where('user_id', $request->user_id)->sum('amount');
 
+            // Check general para vacuna Y xuxe
+            if ($totalActual >= $maxMochila) {
+                return response()->json([
+                    'message' => 'warning',
+                    'warning' => 'La mochila está llena. No se ha podido añadir el objeto.'
+                ], 200);
+            }
+
             // Si el tipo es vacuna, se añade sin importar si ya tiene o no, ya que no son apilables
             if ($request->type === "vacuna") {
-                // Contar slots, no sum de amounts
-                $slotsUsados = Mochila::where('user_id', $request->user_id)->count();
-
-                if ($slotsUsados >= $maxMochila) {
-                    return response()->json([
-                        'message' => 'warning',
-                        'warning' => 'La mochila está llena. No se ha podido añadir la vacuna.'
-                    ], 200);
-                }
-
-
                 $vacuna = Mochila::create([
                     'type' => $request->type,
                     'name' => $request->name,
@@ -134,19 +131,8 @@ class AdminController extends Controller
                 // Si el tipo es xuxe, se añade comprobando si ya tiene o no, ya que son apilables
             } else {
                 $maxStack = 5; // El máximo de objetos que se pueden apilar
-
-                // Calculamos cuántas xuxes se pueden añadir sin superar el límite de la mochila
                 $espacioDisponible = $maxMochila - $totalActual;
-
-                if ($espacioDisponible <= 0) {
-                    return response()->json([
-                        'message' => 'warning',
-                        'warning' => 'La mochila está llena. No se ha podido añadir la xuxe.'
-                    ], 200);
-                }
-
-                // Asegurar que nunca sea negativo
-                $amountReal = max(0, min($request->amount, $espacioDisponible));
+                $amountReal = max(0, min($request->amount, $espacioDisponible)); // Asegurar que nunca sea negativo
                 $descartadas = $request->amount - $amountReal;
 
                 // Buscamos si ya tiene esa xuxe y si se puede apilar
