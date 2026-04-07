@@ -138,7 +138,16 @@ class AdminController extends Controller
 
                 // Calculamos cuántas xuxes se pueden añadir sin superar el límite de la mochila
                 $espacioDisponible = $maxMochila - $totalActual;
-                $amountReal = min($request->amount, $espacioDisponible);
+
+                if ($espacioDisponible <= 0) {
+                    return response()->json([
+                        'message' => 'error',
+                        'error' => 'La mochila está llena. No se ha podido añadir la xuxe.'
+                    ], 200);
+                }
+
+                // Asegurar que nunca sea negativo
+                $amountReal = max(0, min($request->amount, $espacioDisponible));
                 $descartadas = $request->amount - $amountReal;
 
                 // Buscamos si ya tiene esa xuxe y si se puede apilar
