@@ -182,7 +182,7 @@ class XuxemonsController extends Controller
     public function curarXuxemon(Request $request)
     {
         $xuxemon = Xuxemons::where('user_id', $request->user()->id)
-            ->where('id', $request->id)
+            ->where('id', $request->xuxemon_id)
             ->first();
 
         // Si no se encuentra el xuxemon, devolvemos error
