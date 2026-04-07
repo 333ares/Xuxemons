@@ -20,8 +20,8 @@ export class AgregarObjeto implements OnInit {
   tipoSeleccionado: 'xuxe' | 'vacuna' = 'xuxe';
 
   // Listas de objetos disponibles según tipo
-  xuxesDisponibles = ['Algodón', 'Caramelo', 'Caramelos', 'Chocolate', 'Lolly', 'Macedonia', 'Navidad', 'Ovalados', 'Piruleta', 'Redondos', 'Suggus'];
-  vacunasDisponibles = ['Xocolatina', 'Xal de fruites', 'Inxulina'];
+  xuxesDisponibles = ['Algodón', 'Caramelo', 'Caramelos', 'Lolly', 'Navidad', 'Ovalados', 'Piruleta', 'Redondos', 'Suggus'];
+  vacunasDisponibles = ['Xocolatina', 'Macedonia', 'Inxulina'];
 
   nombreSeleccionado: string = '';
   cantidad: number = 1;
