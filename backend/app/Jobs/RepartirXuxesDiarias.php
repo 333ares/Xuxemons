@@ -31,13 +31,11 @@ class RepartirXuxesDiarias implements ShouldQueue
             'algodon',
             'caramelo',
             'caramelos',
-            'chocolate',
             'lolly',
-            'macedonia',
             'navidad',
             'ovalados',
             'piruleta',
-            'redondeos',
+            'redondos',
             'suggus'
         ];
 

@@ -21,7 +21,7 @@ export class CrecimientoXuxemons implements OnInit {
   guardandoCrecimiento = false;
   feedbackCrecimiento = '';
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth) { }
 
   ngOnInit(): void {
     this.cargarGrowthConfig();
@@ -34,8 +34,8 @@ export class CrecimientoXuxemons implements OnInit {
     this.auth.obtenerConfigCrecimiento().subscribe({
       next: (res) => {
         this.growthConfig = {
-          pequeno_a_mediano: res.pequeno_a_mediano ?? 3,
-          mediano_a_grande: res.mediano_a_grande ?? 5,
+          pequeno_a_mediano: res.config.xuxes_s_a_m,
+          mediano_a_grande: res.config.xuxes_m_a_g
         };
       },
       error: (err) => {

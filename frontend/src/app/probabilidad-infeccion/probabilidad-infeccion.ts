@@ -24,7 +24,7 @@ export class ProbabilidadInfeccion implements OnInit {
   guardandoInfeccion = false;
   feedbackInfeccion = '';
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth) { }
 
   ngOnInit(): void {
     this.calcularFechaHoy();
@@ -38,10 +38,11 @@ export class ProbabilidadInfeccion implements OnInit {
     this.auth.obtenerTasasInfeccion().subscribe({
       next: (res) => {
         this.infectionRates = {
-          bajon: res.bajon ?? 5,
-          sobredosis: res.sobredosis ?? 10,
-          atracon: res.atracon ?? 15,
+          bajon: res.config.porcentaje_bajon ?? 5,
+          sobredosis: res.config.porcentaje_sobredosis ?? 10,
+          atracon: res.config.porcentaje_atracon ?? 15,
         };
+
       },
       error: (err) => {
         console.error('Error al cargar los porcentajes de infección:', err);
