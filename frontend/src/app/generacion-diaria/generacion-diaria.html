@@ -1,159 +1,109 @@
- <!--  CONFIGURACIÓN DIARIA  -->
-    <section class="config-section" aria-labelledby="titulo-diario">
-      <div class="config-section__header">
-        <div class="config-section__titulo-wrap">
-          <div class="config-section__icono" aria-hidden="true">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#ffaa4a"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-          </div>
-          <h2 id="titulo-diario" class="config-section__titulo">Generación diaria automática</h2>
+<!--  CONFIGURACIÓN DIARIA  -->
+<section class="config-section" aria-labelledby="titulo-diario">
+  <div class="config-section__header">
+    <div class="config-section__titulo-wrap">
+      <div class="config-section__icono" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffaa4a" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      </div>
+      <h2 id="titulo-diario" class="config-section__titulo">Generación diaria automática</h2>
+    </div>
+    <p class="config-section__desc">
+      Establece a qué hora y cuántos recursos se reparten automáticamente cada día a todos los
+      usuarios.
+    </p>
+  </div>
+
+  <div class="config-diario-grid">
+    <!-- Xuxes diarias -->
+    <fieldset class="kpi-card config-diario-card">
+      <legend class="config-diario-card__titulo">
+        <span aria-hidden="true">🍬</span> Xuxes diarias
+      </legend>
+      <div class="config-diario-card__campos">
+        <div class="config-diario-campo">
+          <label class="config-diario-campo__label" for="xuxes-hora">Hora de reparto</label>
+          <input id="xuxes-hora" type="time" class="config-card__input config-card__input--time"
+            [(ngModel)]="dailyConfig.xuxes.hora" aria-describedby="xuxes-hora-desc" />
+          <span id="xuxes-hora-desc" class="config-card__hint">Formato 24 h</span>
         </div>
-        <p class="config-section__desc">
-          Establece a qué hora y cuántos recursos se reparten automáticamente cada día a todos los
-          usuarios.
+        <div class="config-diario-campo">
+          <label class="config-diario-campo__label" for="xuxes-cantidad">Cantidad por usuario</label>
+          <div class="config-card__input-wrap">
+            <input id="xuxes-cantidad" type="number" class="config-card__input" [(ngModel)]="dailyConfig.xuxes.cantidad"
+              min="1" max="99" step="1" aria-describedby="xuxes-cantidad-desc" />
+            <span class="config-card__unidad" aria-hidden="true">ud.</span>
+          </div>
+          <span id="xuxes-cantidad-desc" class="config-card__hint">Mínimo 1</span>
+        </div>
+      </div>
+      <div class="config-section__footer">
+        @if (feedbackDiarioXuxes === 'ok') {
+        <p class="config-feedback config-feedback--ok" role="status" aria-live="polite">
+          ✓ Configuración guardada
         </p>
+        }
+        @if (feedbackDiarioXuxes === 'error') {
+        <p class="config-feedback config-feedback--error" role="alert" aria-live="assertive">
+          ✗ Error al guardar
+        </p>
+        }
+        <button class="config-btn-reset" type="button" (click)="resetearConfigXuxes()" [disabled]="reseteandoXuxes"
+          aria-label="Resetear última entrega de xuxes">
+          @if (reseteandoXuxes) { Reseteando... } @else { Resetear entrega }
+        </button>
+        <button class="config-btn-guardar" type="button" (click)="guardarDailyConfigXuxes()"
+          [disabled]="guardandoDiarioXuxes" aria-label="Guardar configuración de xuxes diarias">
+          @if (guardandoDiarioXuxes) { Guardando... } @else { Guardar }
+        </button>
       </div>
+    </fieldset>
 
-      <div class="config-diario-grid">
-        <!-- Xuxes diarias -->
-        <fieldset class="kpi-card config-diario-card">
-          <legend class="config-diario-card__titulo">
-            <span aria-hidden="true">🍬</span> Xuxes diarias
-          </legend>
-          <div class="config-diario-card__campos">
-            <div class="config-diario-campo">
-              <label class="config-diario-campo__label" for="xuxes-hora">Hora de reparto</label>
-              <input
-                id="xuxes-hora"
-                type="time"
-                class="config-card__input config-card__input--time"
-                [(ngModel)]="dailyConfig.xuxes.hora"
-                aria-describedby="xuxes-hora-desc"
-              />
-              <span id="xuxes-hora-desc" class="config-card__hint">Formato 24 h</span>
-            </div>
-            <div class="config-diario-campo">
-              <label class="config-diario-campo__label" for="xuxes-cantidad"
-                >Cantidad por usuario</label
-              >
-              <div class="config-card__input-wrap">
-                <input
-                  id="xuxes-cantidad"
-                  type="number"
-                  class="config-card__input"
-                  [(ngModel)]="dailyConfig.xuxes.cantidad"
-                  min="1"
-                  max="99"
-                  step="1"
-                  aria-describedby="xuxes-cantidad-desc"
-                />
-                <span class="config-card__unidad" aria-hidden="true">ud.</span>
-              </div>
-              <span id="xuxes-cantidad-desc" class="config-card__hint">Mínimo 1</span>
-            </div>
+    <!-- Xuxemons diarios -->
+    <fieldset class="kpi-card config-diario-card">
+      <legend class="config-diario-card__titulo">
+        <span aria-hidden="true">🐾</span> Xuxemons diarios
+      </legend>
+      <div class="config-diario-card__campos">
+        <div class="config-diario-campo">
+          <label class="config-diario-campo__label" for="xuxemons-hora">Hora de asignación</label>
+          <input id="xuxemons-hora" type="time" class="config-card__input config-card__input--time"
+            [(ngModel)]="dailyConfig.xuxemons.hora" aria-describedby="xuxemons-hora-desc" />
+          <span id="xuxemons-hora-desc" class="config-card__hint">Formato 24 h</span>
+        </div>
+        <div class="config-diario-campo">
+          <label class="config-diario-campo__label" for="xuxemons-cantidad">Cantidad por usuario</label>
+          <div class="config-card__input-wrap">
+            <input id="xuxemons-cantidad" type="number" class="config-card__input"
+              [(ngModel)]="dailyConfig.xuxemons.cantidad" step="1" aria-describedby="xuxemons-cantidad-desc" disabled />
+            <span class="config-card__unidad" aria-hidden="true">ud.</span>
           </div>
-          <div class="config-section__footer">
-            @if (feedbackDiarioXuxes === 'ok') {
-              <p class="config-feedback config-feedback--ok" role="status" aria-live="polite">
-                ✓ Configuración guardada
-              </p>
-            }
-            @if (feedbackDiarioXuxes === 'error') {
-              <p class="config-feedback config-feedback--error" role="alert" aria-live="assertive">
-                ✗ Error al guardar
-              </p>
-            }
-            <button
-              class="config-btn-guardar"
-              type="button"
-              (click)="guardarDailyConfigXuxes()"
-              [disabled]="guardandoDiarioXuxes"
-              aria-label="Guardar configuración de xuxes diarias"
-            >
-              @if (guardandoDiarioXuxes) {
-                Guardando...
-              } @else {
-                Guardar
-              }
-            </button>
-          </div>
-        </fieldset>
-
-        <!-- Xuxemons diarios -->
-        <fieldset class="kpi-card config-diario-card">
-          <legend class="config-diario-card__titulo">
-            <span aria-hidden="true">🐾</span> Xuxemons diarios
-          </legend>
-          <div class="config-diario-card__campos">
-            <div class="config-diario-campo">
-              <label class="config-diario-campo__label" for="xuxemons-hora"
-                >Hora de asignación</label
-              >
-              <input
-                id="xuxemons-hora"
-                type="time"
-                class="config-card__input config-card__input--time"
-                [(ngModel)]="dailyConfig.xuxemons.hora"
-                aria-describedby="xuxemons-hora-desc"
-              />
-              <span id="xuxemons-hora-desc" class="config-card__hint">Formato 24 h</span>
-            </div>
-            <div class="config-diario-campo">
-              <label class="config-diario-campo__label" for="xuxemons-cantidad"
-                >Cantidad por usuario</label
-              >
-              <div class="config-card__input-wrap">
-                <input
-                  id="xuxemons-cantidad"
-                  type="number"
-                  class="config-card__input"
-                  [(ngModel)]="dailyConfig.xuxemons.cantidad"
-                  min="1"
-                  max="99"
-                  step="1"
-                  aria-describedby="xuxemons-cantidad-desc"
-                />
-                <span class="config-card__unidad" aria-hidden="true">ud.</span>
-              </div>
-              <span id="xuxemons-cantidad-desc" class="config-card__hint">Mínimo 1</span>
-            </div>
-          </div>
-          <div class="config-section__footer">
-            @if (feedbackDiarioXuxemons === 'ok') {
-              <p class="config-feedback config-feedback--ok" role="status" aria-live="polite">
-                ✓ Configuración guardada
-              </p>
-            }
-            @if (feedbackDiarioXuxemons === 'error') {
-              <p class="config-feedback config-feedback--error" role="alert" aria-live="assertive">
-                ✗ Error al guardar
-              </p>
-            }
-            <button
-              class="config-btn-guardar"
-              type="button"
-              (click)="guardarDailyConfigXuxemons()"
-              [disabled]="guardandoDiarioXuxemons"
-              aria-label="Guardar configuración de xuxemons diarios"
-            >
-              @if (guardandoDiarioXuxemons) {
-                Guardando...
-              } @else {
-                Guardar
-              }
-            </button>
-          </div>
-        </fieldset>
+          <span id="xuxemons-cantidad-desc" class="config-card__hint">Siempre será 1</span>
+        </div>
       </div>
-    </section>
+      <div class="config-section__footer">
+        @if (feedbackDiarioXuxemons === 'ok') {
+        <p class="config-feedback config-feedback--ok" role="status" aria-live="polite">
+          ✓ Configuración guardada
+        </p>
+        }
+        @if (feedbackDiarioXuxemons === 'error') {
+        <p class="config-feedback config-feedback--error" role="alert" aria-live="assertive">
+          ✗ Error al guardar
+        </p>
+        }
+        <button class="config-btn-reset" type="button" (click)="resetearConfigXuxemons()"
+          [disabled]="reseteandoXuxemons" aria-label="Resetear última entrega de xuxemons">
+          @if (reseteandoXuxemons) { Reseteando... } @else { Resetear entrega }
+        </button>
+        <button class="config-btn-guardar" type="button" (click)="guardarDailyConfigXuxemons()"
+          [disabled]="guardandoDiarioXuxemons" aria-label="Guardar configuración de xuxemons diarios">
+          @if (guardandoDiarioXuxemons) { Guardando... } @else { Guardar }
+        </button>
+      </div>
+    </fieldset>
+  </div>
+</section>
