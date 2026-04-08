@@ -39,6 +39,10 @@
           </div>
           <span id="xuxes-cantidad-desc" class="config-card__hint">Mínimo 1</span>
         </div>
+        <div class="config-diario-campo">
+          <label class="config-diario-campo__label">Última entrega</label>
+          <span class="config-card__hint">{{ ultimaEntregaXuxes || 'Nunca' }}</span>
+        </div>
       </div>
       <div class="config-section__footer">
         @if (feedbackDiarioXuxes === 'ok') {
@@ -82,6 +86,10 @@
             <span class="config-card__unidad" aria-hidden="true">ud.</span>
           </div>
           <span id="xuxemons-cantidad-desc" class="config-card__hint">Siempre será 1</span>
+        </div>
+        <div class="config-diario-campo">
+          <label class="config-diario-campo__label">Última entrega</label>
+          <span class="config-card__hint">{{ ultimaEntregaXuxemons || 'Nunca' }}</span>
         </div>
       </div>
       <div class="config-section__footer">

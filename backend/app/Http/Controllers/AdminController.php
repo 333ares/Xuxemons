@@ -393,11 +393,13 @@ class AdminController extends Controller
 
             return response()->json([
                 'xuxes' => [
-                    'hora'    => $configXuxes->hora,
-                    'cantidad' => $configXuxes->cantidad
+                    'hora'           => $configXuxes->hora,
+                    'cantidad'       => $configXuxes->cantidad,
+                    'ultima_entrega' => $configXuxes->ultima_entrega
                 ],
                 'xuxemons' => [
-                    'hora' => $configXuxemon->hora
+                    'hora'           => $configXuxemon->hora,
+                    'ultima_entrega' => $configXuxemon->ultima_entrega
                 ]
             ], 200);
         }

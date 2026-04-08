@@ -38,6 +38,9 @@ export class GeneracionDiaria implements OnInit {
   // Carga la configuración de generación diaria desde el backend
   // NOTA: la ruta GET /admin/dailyConfig está pendiente de implementación en el backend.
   // Mientras no exista, el componente usa los valores por defecto definidos arriba.
+  ultimaEntregaXuxes: string = '';
+  ultimaEntregaXuxemons: string = '';
+
   private cargarConfigDiaria(): void {
     this.auth.obtenerConfigDiaria().subscribe({
       next: (res) => {
@@ -51,6 +54,8 @@ export class GeneracionDiaria implements OnInit {
             cantidad: res.xuxemons?.cantidad ?? 1,
           },
         };
+        this.ultimaEntregaXuxes = res.xuxes?.ultima_entrega ?? 'Nunca';
+        this.ultimaEntregaXuxemons = res.xuxemons?.ultima_entrega ?? 'Nunca';
       },
       error: (err) => {
         console.error('Error al cargar la configuración diaria:', err);
@@ -122,6 +127,7 @@ export class GeneracionDiaria implements OnInit {
     this.auth.resetConfigXuxes().subscribe({
       next: () => {
         this.reseteandoXuxes = false;
+        this.ultimaEntregaXuxes = 'Nunca';
         this.feedbackDiarioXuxes = 'ok';
         setTimeout(() => (this.feedbackDiarioXuxes = ''), 3000);
       },
@@ -139,6 +145,7 @@ export class GeneracionDiaria implements OnInit {
     this.auth.resetConfigXuxemons().subscribe({
       next: () => {
         this.reseteandoXuxemons = false;
+        this.ultimaEntregaXuxemons = 'Nunca';
         this.feedbackDiarioXuxemons = 'ok';
         setTimeout(() => (this.feedbackDiarioXuxemons = ''), 3000);
       },
