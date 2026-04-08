@@ -377,15 +377,33 @@ class AdminController extends Controller
         }
     }
 
+    public function getConfigDiaria(Request $request)
+    {
+        if ($request->user()->id === 1) {
+            $configXuxes = ConfigXuxes::first();
+            $configXuxemon = ConfigXuxemon::first();
+
+            return response()->json([
+                'xuxes' => [
+                    'hora'    => $configXuxes->hora,
+                    'cantidad' => $configXuxes->cantidad
+                ],
+                'xuxemons' => [
+                    'hora' => $configXuxemon->hora
+                ]
+            ], 200);
+        }
+    }
+
     public function configAlimentar(Request $request)
     {
         if ($request->user()->id === 1) {
             $validator = Validator::make($request->all(), [
-                'porcentaje_bajon' => 'required|integer|min:1|max:100',
-                'porcentaje_sobredosis' => 'required|integer|min:1|max:100',
-                'porcentaje_atracon' => 'required|integer|min:1|max:100',
-                'xuxes_s_a_m' => 'required|integer|min:1',
-                'xuxes_m_a_g' => 'required|integer|min:1'
+                'porcentaje_bajon' => 'nullable|integer|min:1|max:100',
+                'porcentaje_sobredosis' => 'nullable|integer|min:1|max:100',
+                'porcentaje_atracon' => 'nullable|integer|min:1|max:100',
+                'xuxes_s_a_m' => 'nullable|integer|min:1',
+                'xuxes_m_a_g' => 'nullable|integer|min:1'
             ]);
 
             if ($validator->fails()) {
@@ -396,12 +414,14 @@ class AdminController extends Controller
             }
 
             // Validamos que los porcentajes no superen 100 en total
-            $totalPorcentaje = $request->porcentaje_bajon + $request->porcentaje_sobredosis + $request->porcentaje_atracon;
-            if ($totalPorcentaje > 100) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors' => 'La suma de los porcentajes no puede superar 100'
-                ], 400);
+            if ($request->porcentaje_bajon && $request->porcentaje_sobredosis && $request->porcentaje_atracon) {
+                $totalPorcentaje = $request->porcentaje_bajon + $request->porcentaje_sobredosis + $request->porcentaje_atracon;
+                if ($totalPorcentaje > 100) {
+                    return response()->json([
+                        'message' => 'error',
+                        'errors'  => 'La suma de los porcentajes no puede superar 100'
+                    ], 400);
+                }
             }
 
             $config = ConfigAlimentar::first();
@@ -422,6 +442,23 @@ class AdminController extends Controller
             return response()->json([
                 'message' => 'error',
                 'errors' => 'No tienes suficientes permisos para ejecutar esta función'
+            ], 400);
+        }
+    }
+
+    public function getConfigAlimentar(Request $request)
+    {
+        if ($request->user()->id === 1) {
+            $config = ConfigAlimentar::first();
+
+            return response()->json([
+                'message' => 'success',
+                'config'  => $config
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'No tienes suficientes permisos para ejecutar esta función'
             ], 400);
         }
     }
