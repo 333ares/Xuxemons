@@ -24,7 +24,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/listarUsuarios', [AdminController::class, 'listarUsuarios']);
     Route::post('/xuxes-diarias', [AdminController::class, 'xuxesDiarias']);
     Route::post('/xuxemon-diario', [AdminController::class, 'xuxemonDiario']);
-    Route::post('/reset-config', [AdminController::class, 'resetConfig']);
+    Route::post('/reset-config-xuxes', [AdminController::class, 'resetConfigXuxes']);
+    Route::post('/reset-config-xuxemons', [AdminController::class, 'resetConfigXuxemons']);
     Route::get('/config-diaria', [AdminController::class, 'getConfigDiaria']);
     Route::post('/config-alimentar', [AdminController::class, 'configAlimentar']);
     Route::get('/config-alimentar', [AdminController::class, 'getConfigAlimentar']);

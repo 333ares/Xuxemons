@@ -229,4 +229,14 @@ export class Auth {
   obtenerConfigCrecimiento(): Observable<any> {
     return this.http.get(`${this.apiUrl}/config-alimentar`, { headers: this.obtenerCabeceras() });
   }
+
+  // POST /reset-config-xuxes — resetea la ultima entrega de xuxes
+  resetConfigXuxes(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-config-xuxes`, {}, { headers: this.obtenerCabeceras() });
+  }
+
+  // POST /reset-config-xuxemons — resetea la ultima entrega de xuxemons
+  resetConfigXuxemons(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-config-xuxemons`, {}, { headers: this.obtenerCabeceras() });
+  }
 }
