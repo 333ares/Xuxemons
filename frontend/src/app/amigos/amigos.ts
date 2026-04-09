@@ -137,4 +137,17 @@ export class Amigos implements OnInit {
       error: () => {},
     });
   }
+
+  // Rechaza una solicitud: la elimina de la lista sin recargar
+  rechazar(friendshipId: number): void {
+    // TODO backend: DELETE /amigos/rechazar — pendiente de implementación
+    this.authService.rechazarSolicitud(friendshipId).subscribe({
+      next: () => {
+        this.solicitudesPendientes = this.solicitudesPendientes.filter(
+          (s) => s.id !== friendshipId,
+        );
+      },
+      error: () => {},
+    });
+  }
 }
