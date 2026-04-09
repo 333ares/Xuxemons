@@ -1,12 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Auth } from '../services/auth';
 import { Nav } from '../shared/nav/nav';
 
 @Component({
   selector: 'app-amigos',
   standalone: true,
-  imports: [RouterLink, Nav],
+  imports: [CommonModule, FormsModule, RouterLink, Nav],
   templateUrl: './amigos.html',
   styleUrls: ['./amigos.css'],
 })
-export class Amigos {}
+export class Amigos implements OnInit {
+
+  // Datos del usuario autenticado (para la cabecera)
+  usuario: any = null;
+
+  // --- BÚSQUEDA ---
+  terminoBusqueda: string = '';
+  resultadoBusqueda: any = null;
+  buscando: boolean = false;
+  errorBusqueda: string = '';
+
+  // --- LISTAS ---
+  listaAmigos: any[] = [];
+  solicitudesPendientes: any[] = [];
+  cargando: boolean = false;
+
+  // --- DIÁLOGO ELIMINAR ---
+  mostrarDialogoEliminar: boolean = false;
+  amigoAEliminar: any = null;
+
+  constructor(private authService: Auth) {}
+
+  ngOnInit(): void {
+    this.cargarUsuario();
+    this.cargarSolicitudesPendientes();
+    this.cargarListaAmigos();
+  }
+
+}
