@@ -1,13 +1,24 @@
-.mant-wrapper {
+/*  WRAPPER GENERAL  */
+
+.amigos-wrapper {
   background-color: #f4f3f3;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: 'Inter', sans-serif;
-  padding-bottom: 90px;
+  padding-bottom: 100px;
 }
 
-.mant-header {
+/*  CABECERA (idéntica a xuxedex / pagina-principal)  */
+
+.logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  display: block;
+}
+
+.dashboard-header {
   position: sticky;
   top: 0;
   z-index: 40;
@@ -20,27 +31,40 @@
   padding: 14px 40px;
 }
 
-.mant-logo {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-logo {
   display: flex;
   align-items: center;
   gap: 10px;
   text-decoration: none;
 }
 
-.mant-logo img {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-}
-
-.mant-logo-text {
+.logo-text {
+  font-family: 'Inter', sans-serif;
   font-size: 1.3rem;
   font-weight: 800;
   color: #3b2101;
   letter-spacing: -0.5px;
 }
 
-.mant-header-avatar {
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-avatar {
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -48,87 +72,603 @@
   border: 2px solid #ffaa4a;
 }
 
-.mant-contenido {
+.header-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-user-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3b2101;
+  line-height: 1.2;
+}
+
+.header-user-id {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+/*  CONTENIDO PRINCIPAL  */
+
+.amigos-main {
+  flex: 1;
+  max-width: 1900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/*  BIENVENIDA  */
+
+.bienvenida-section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bienvenida-titulo {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #3b2101;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.nombre-highlight {
+  color: #ffaa4a;
+}
+
+.bienvenida-sub {
+  font-size: 1rem;
+  color: #777;
+  margin: 0;
+}
+
+/*  CARD GENÉRICA  */
+
+.card-dash {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px 26px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card-dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/*  TÍTULO DE SECCIÓN DENTRO DE CARD  */
+
+.amigos-seccion-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3b2101;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+/*  BADGE DE CONTADOR  */
+
+.actividad-badge {
+  background: #ffaa4a;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/*  BÚSQUEDA  */
+
+.amigos-busqueda-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.amigos-busqueda-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.amigos-input-buscar {
+  flex: 1;
+  padding: 11px 16px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #3b2101;
+  background: #fafafa;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.amigos-input-buscar:focus {
+  border-color: #ffaa4a;
+  background: #fff;
+}
+
+.amigos-input-buscar::placeholder {
+  color: #bbb;
+}
+
+.btn-buscar-amigo {
+  padding: 11px 22px;
+  background: #ffaa4a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+  box-shadow: 0 3px 10px rgba(255, 140, 0, 0.2);
+}
+
+.btn-buscar-amigo:hover:not(:disabled) {
+  background: #e8962e;
+}
+
+.btn-buscar-amigo:disabled {
+  background: #e0e0e0;
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/*  RESULTADO DE BÚSQUEDA  */
+
+.amigos-error-busqueda {
+  font-size: 0.88rem;
+  color: #e74c3c;
+  margin: 0;
+}
+
+.amigos-resultado-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #fff8f0;
+  border: 1.5px solid rgba(255, 170, 74, 0.27);
+  border-radius: 14px;
+}
+
+.amigos-resultado-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 40px;
-  text-align: center;
-  gap: 12px;
+  gap: 2px;
 }
 
-.mant-icono-wrapper {
-  width: 96px;
-  height: 96px;
-  border-radius: 28px;
+/*  AVATAR GENÉRICO  */
+
+.amigo-avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.amigo-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.amigo-nombre {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.amigos-public-id {
+  font-size: 0.8rem;
+  color: #aaa;
+  font-weight: 500;
+}
+
+.btn-enviar-solicitud {
+  padding: 8px 18px;
+  background: #ffaa4a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.btn-enviar-solicitud:hover:not(:disabled) {
+  background: #e8962e;
+}
+
+.btn-enviar-solicitud:disabled {
+  background: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/*  SOLICITUDES PENDIENTES  */
+
+.amigos-solicitudes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.amigos-solicitud-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #fafafa;
+  border-radius: 12px;
+  transition: background-color 0.15s;
+}
+
+.amigos-solicitud-card:hover {
+  background: #f5f5f5;
+}
+
+.actividad-acciones {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.btn-aceptar {
+  background: #dcfce7;
+  color: #166534;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-aceptar:hover {
+  background: #bbf7d0;
+}
+
+.btn-rechazar {
+  background: #fee2e2;
+  color: #991b1b;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-rechazar:hover {
+  background: #fecaca;
+}
+
+/*  CONTADOR DE AMIGOS  */
+
+.amigos-contador {
+  font-size: 0.8rem;
+  color: #999;
+  font-weight: 600;
+}
+
+/*  ESTADO VACÍO  */
+
+.amigos-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.amigos-vacio-icono {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
   background: #fff8f0;
   border: 1.5px solid #ffd49a;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
 }
 
-.mant-titulo {
-  font-size: 1.8rem;
+.amigos-vacio-texto {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.actividad-vacia {
+  font-size: 0.9rem;
+  color: #bbb;
+  text-align: center;
+  padding: 12px 0;
+}
+
+/*  GRID DE AMIGOS  */
+
+.amigos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.amigos-card {
+  background: #fafafa;
+  border: 1.5px solid #f0f0f0;
+  border-radius: 18px;
+  padding: 20px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.amigos-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+
+.amigos-card-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.amigos-card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.amigos-card-nombre {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #3b2101;
+  line-height: 1.2;
+}
+
+.amigos-card-xuxemon {
+  font-size: 0.78rem;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+/*  BOTONES DE ACCIÓN EN CARD AMIGO  */
+
+.amigos-card-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.btn-retar-amigo {
+  width: 100%;
+  padding: 8px 0;
+  background: #dcfce7;
+  color: #166534;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-retar-amigo:hover {
+  background: #bbf7d0;
+}
+
+.btn-eliminar-amigo {
+  width: 100%;
+  padding: 8px 0;
+  background: transparent;
+  color: #e74c3c;
+  border: 1.5px solid #fecaca;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.btn-eliminar-amigo:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+/*  DIÁLOGO DE CONFIRMACIÓN  */
+
+.dialogo-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+  padding: 20px;
+}
+
+.dialogo-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: amigos-aparecer 0.18s ease;
+}
+
+@keyframes amigos-aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dialogo-titulo {
+  font-size: 1.1rem;
   font-weight: 800;
   color: #3b2101;
   margin: 0;
 }
 
-.mant-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #fff3cd;
-  color: #92610a;
-  border: 1px solid #fde68a;
-  border-radius: 99px;
-  padding: 5px 14px;
-  font-size: 0.8rem;
+.dialogo-mensaje {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.dialogo-acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-dialogo-cancelar {
+  flex: 1;
+  padding: 11px;
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
   font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.mant-mensaje {
-  font-size: 0.95rem;
-  color: #888;
-  max-width: 380px;
-  line-height: 1.65;
-  margin: 4px 0 8px;
+.btn-dialogo-cancelar:hover {
+  background: #e5e5e5;
 }
 
-.mant-btn-volver {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #ffaa4a;
+.btn-dialogo-confirmar {
+  flex: 1;
+  padding: 11px;
+  background: #e74c3c;
   color: white;
   border: none;
   border-radius: 12px;
-  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
-  font-family: 'Inter', sans-serif;
   cursor: pointer;
-  text-decoration: none;
-  box-shadow: 0 3px 10px rgba(255, 140, 0, 0.2);
+  transition: background-color 0.2s;
 }
 
-.mant-btn-volver:hover {
-  background: #e8962e;
+.btn-dialogo-confirmar:hover {
+  background: #c0392b;
+}
+
+/*  RESPONSIVE  */
+
+@media (max-width: 900px) {
+  .amigos-main {
+    padding: 20px 20px;
+  }
+
+  .dashboard-header {
+    padding: 14px 20px;
+  }
+
+  .bienvenida-titulo {
+    font-size: 1.5rem;
+  }
 }
 
 @media (max-width: 600px) {
-  .mant-header {
-    padding: 14px 20px;
+  .amigos-busqueda-row {
+    flex-direction: column;
+    align-items: stretch;
   }
-  .mant-titulo {
-    font-size: 1.4rem;
+
+  .btn-buscar-amigo {
+    width: 100%;
   }
-  .nav-inferior {
-    gap: 16px;
-    padding: 12px 18px;
+
+  .amigos-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .amigos-resultado-card {
+    flex-wrap: wrap;
+  }
+
+  .btn-enviar-solicitud {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .amigos-grid {
+    grid-template-columns: 1fr;
   }
 }
