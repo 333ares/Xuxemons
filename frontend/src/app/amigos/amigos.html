@@ -21,89 +21,150 @@
       </div>
     </div>
   </header>
-</div>
 
-<!-- CONTENIDO -->
-<main class="amigos-main">
-  <!-- Título de sección -->
-  <section class="bienvenida-section" aria-label="Encabezado amigos">
-    <div>
-      <h1 class="bienvenida-titulo">Red de <span class="nombre-highlight">jugadores</span></h1>
-      <p class="bienvenida-sub">Busca amigos por su ID, acepta solicitudes y gestiona tu lista.</p>
-    </div>
-  </section>
+  <!-- CONTENIDO -->
+  <main class="amigos-main">
+    <!-- Título de sección -->
+    <section class="bienvenida-section" aria-label="Encabezado amigos">
+      <div>
+        <h1 class="bienvenida-titulo">Red de <span class="nombre-highlight">jugadores</span></h1>
+        <p class="bienvenida-sub">
+          Busca amigos por su ID, acepta solicitudes y gestiona tu lista.
+        </p>
+      </div>
+    </section>
 
-  <!-- BÚSQUEDA -->
-  <section class="card-dash amigos-busqueda-section" aria-label="Buscar jugador">
-    <h2 class="amigos-seccion-titulo" style="margin-bottom: 16px">
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#FFAA4A"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-      </svg>
-      Buscar jugador
-    </h2>
-    <div class="amigos-busqueda-row">
-      <input
-        type="text"
-        class="amigos-input-buscar"
-        placeholder="Introduce el ID para buscar (#NombreXXXX)"
-        [(ngModel)]="terminoBusqueda"
-        (keyup.enter)="buscar()"
-        aria-label="Buscar jugador por ID"
-      />
-      <button class="btn-buscar-amigo" (click)="buscar()" [disabled]="buscando">
-        @if (buscando) {
-          Buscando...
-        } @else {
-          Buscar
-        }
-      </button>
-    </div>
-
-    <!-- Error de búsqueda -->
-    @if (errorBusqueda) {
-      <p class="amigos-error-busqueda" role="alert">{{ errorBusqueda }}</p>
-    }
-
-    <!-- Resultado -->
-    @if (resultadoBusqueda) {
-      <div class="amigos-resultado-card" role="region" aria-label="Resultado de búsqueda">
-        <div class="amigo-avatar-wrapper">
-          <div class="amigo-avatar" aria-hidden="true">
-            {{ resultadoBusqueda.name?.charAt(0) }}
-          </div>
-        </div>
-        <div class="amigos-resultado-info">
-          <span class="amigo-nombre"
-            >{{ resultadoBusqueda.name }} {{ resultadoBusqueda.surname }}</span
-          >
-          <span class="amigos-public-id">{{ resultadoBusqueda.public_id }}</span>
-        </div>
-        <button
-          class="btn-enviar-solicitud"
-          [disabled]="resultadoBusqueda.yaEsAmigo || resultadoBusqueda.solicitudPendiente"
-          (click)="enviarSolicitud(resultadoBusqueda.id)"
-          [attr.aria-label]="'Enviar solicitud a ' + resultadoBusqueda.name"
+    <!-- BÚSQUEDA -->
+    <section class="card-dash amigos-busqueda-section" aria-label="Buscar jugador">
+      <h2 class="amigos-seccion-titulo" style="margin-bottom: 16px">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#FFAA4A"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
         >
-          @if (resultadoBusqueda.yaEsAmigo) {
-            Ya sois amigos
-          } @else if (resultadoBusqueda.solicitudPendiente) {
-            Solicitud enviada
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Buscar jugador
+      </h2>
+      <div class="amigos-busqueda-row">
+        <input
+          type="text"
+          class="amigos-input-buscar"
+          placeholder="Introduce el ID para buscar (#NombreXXXX)"
+          [(ngModel)]="terminoBusqueda"
+          (keyup.enter)="buscar()"
+          aria-label="Buscar jugador por ID"
+        />
+        <button class="btn-buscar-amigo" (click)="buscar()" [disabled]="buscando">
+          @if (buscando) {
+            Buscando...
           } @else {
-            Enviar solicitud
+            Buscar
           }
         </button>
       </div>
+
+      <!-- Error de búsqueda -->
+      @if (errorBusqueda) {
+        <p class="amigos-error-busqueda" role="alert">{{ errorBusqueda }}</p>
+      }
+
+      <!-- Resultado -->
+      @if (resultadoBusqueda) {
+        <div class="amigos-resultado-card" role="region" aria-label="Resultado de búsqueda">
+          <div class="amigo-avatar-wrapper">
+            <div class="amigo-avatar" aria-hidden="true">
+              {{ resultadoBusqueda.name?.charAt(0) }}
+            </div>
+          </div>
+          <div class="amigos-resultado-info">
+            <span class="amigo-nombre"
+              >{{ resultadoBusqueda.name }} {{ resultadoBusqueda.surname }}</span
+            >
+            <span class="amigos-public-id">{{ resultadoBusqueda.public_id }}</span>
+          </div>
+          <button
+            class="btn-enviar-solicitud"
+            [disabled]="resultadoBusqueda.yaEsAmigo || resultadoBusqueda.solicitudPendiente"
+            (click)="enviarSolicitud(resultadoBusqueda.id)"
+            [attr.aria-label]="'Enviar solicitud a ' + resultadoBusqueda.name"
+          >
+            @if (resultadoBusqueda.yaEsAmigo) {
+              Ya sois amigos
+            } @else if (resultadoBusqueda.solicitudPendiente) {
+              Solicitud enviada
+            } @else {
+              Enviar solicitud
+            }
+          </button>
+        </div>
+      }
+    </section>
+
+    <!-- SOLICITUDES PENDIENTES -->
+    @if (solicitudesPendientes.length > 0) {
+      <section class="card-dash" aria-labelledby="titulo-solicitudes">
+        <div class="card-dash-header">
+          <h2 id="titulo-solicitudes" class="amigos-seccion-titulo">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#FFAA4A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+            Solicitudes de amistad
+          </h2>
+          <span class="actividad-badge">{{ solicitudesPendientes.length }}</span>
+        </div>
+        <div class="amigos-solicitudes-grid">
+          @for (solicitud of solicitudesPendientes; track solicitud.id) {
+            <div class="amigos-solicitud-card" role="listitem">
+              <div class="amigo-avatar-wrapper">
+                <div class="amigo-avatar" aria-hidden="true">
+                  {{ solicitud.name?.charAt(0) }}
+                </div>
+              </div>
+              <div class="amigos-resultado-info">
+                <span class="amigo-nombre">{{ solicitud.name }}</span>
+                <span class="amigos-public-id">{{ solicitud.public_id }}</span>
+              </div>
+              <div class="actividad-acciones">
+                <button
+                  class="btn-aceptar"
+                  (click)="aceptar(solicitud.id)"
+                  [attr.aria-label]="'Aceptar solicitud de ' + solicitud.name"
+                >
+                  Aceptar
+                </button>
+                <button
+                  class="btn-rechazar"
+                  (click)="rechazar(solicitud.id)"
+                  [attr.aria-label]="'Rechazar solicitud de ' + solicitud.name"
+                >
+                  Rechazar
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
     }
-  </section>
-</main>
+  </main>
+</div>
