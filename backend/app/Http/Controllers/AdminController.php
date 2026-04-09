@@ -338,7 +338,7 @@ class AdminController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'message' => 'error',
-                    'errors'  => $validator->errors()
+                    'errors' => $validator->errors()
                 ], 400);
             }
 
@@ -351,18 +351,18 @@ class AdminController extends Controller
             if ($config) {
                 return response()->json([
                     'message' => 'Configuración actualizada correctamente',
-                    'config'  => $config
+                    'config' => $config
                 ], 200);
             } else {
                 return response()->json([
                     'message' => 'error',
-                    'errors'  => 'No se ha podido actualizar la configuración'
+                    'errors' => 'No se ha podido actualizar la configuración'
                 ], 400);
             }
         } else {
             return response()->json([
                 'message' => 'error',
-                'errors'  => 'No tienes suficientes permisos para ejecutar esta función'
+                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
             ], 400);
         }
     }
@@ -393,12 +393,12 @@ class AdminController extends Controller
 
             return response()->json([
                 'xuxes' => [
-                    'hora'           => $configXuxes->hora,
-                    'cantidad'       => $configXuxes->cantidad,
+                    'hora' => $configXuxes->hora,
+                    'cantidad' => $configXuxes->cantidad,
                     'ultima_entrega' => $configXuxes->ultima_entrega
                 ],
                 'xuxemons' => [
-                    'hora'           => $configXuxemon->hora,
+                    'hora' => $configXuxemon->hora,
                     'ultima_entrega' => $configXuxemon->ultima_entrega
                 ]
             ], 200);
@@ -429,19 +429,19 @@ class AdminController extends Controller
                 if ($totalPorcentaje > 100) {
                     return response()->json([
                         'message' => 'error',
-                        'errors'  => 'La suma de los porcentajes no puede superar 100'
+                        'errors' => 'La suma de los porcentajes no puede superar 100'
                     ], 400);
                 }
             }
 
             $config = ConfigAlimentar::first();
             // array_filter elimina los valores null, así solo actualiza los campos que vienen en el request
-            $config->update(array_filter([
-                'porcentaje_bajon'      => $request->porcentaje_bajon,
-                'porcentaje_sobredosis' => $request->porcentaje_sobredosis,
-                'porcentaje_atracon'    => $request->porcentaje_atracon,
-                'xuxes_s_a_m'          => $request->xuxes_s_a_m,
-                'xuxes_m_a_g'          => $request->xuxes_m_a_g
+            $config->update($request->only([
+                'porcentaje_bajon',
+                'porcentaje_sobredosis',
+                'porcentaje_atracon',
+                'xuxes_s_a_m',
+                'xuxes_m_a_g'
             ]));
 
             return response()->json([
@@ -463,12 +463,12 @@ class AdminController extends Controller
 
             return response()->json([
                 'message' => 'success',
-                'config'  => $config
+                'config' => $config
             ], 200);
         } else {
             return response()->json([
                 'message' => 'error',
-                'errors'  => 'No tienes suficientes permisos para ejecutar esta función'
+                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
             ], 400);
         }
     }
