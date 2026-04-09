@@ -107,4 +107,17 @@ export class Amigos implements OnInit {
       },
     });
   }
+
+  // Envía una solicitud de amistad al usuario encontrado en la búsqueda
+  enviarSolicitud(receiverId: number): void {
+    // TODO backend: POST /amigos/solicitud — pendiente de implementación
+    this.authService.enviarSolicitud(receiverId).subscribe({
+      next: () => {
+        if (this.resultadoBusqueda) {
+          this.resultadoBusqueda = { ...this.resultadoBusqueda, solicitudPendiente: true };
+        }
+      },
+      error: () => {},
+    });
+  }
 }
