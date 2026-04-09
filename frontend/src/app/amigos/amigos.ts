@@ -120,4 +120,21 @@ export class Amigos implements OnInit {
       error: () => {},
     });
   }
+
+  // Acepta una solicitud: la saca de pendientes y la añade a la lista de amigos
+  aceptar(friendshipId: number): void {
+    // TODO backend: POST /amigos/aceptar — pendiente de implementación
+    this.authService.aceptarSolicitud(friendshipId).subscribe({
+      next: (res) => {
+        const solicitud = this.solicitudesPendientes.find((s) => s.id === friendshipId);
+        if (solicitud) {
+          this.solicitudesPendientes = this.solicitudesPendientes.filter(
+            (s) => s.id !== friendshipId,
+          );
+          this.listaAmigos = [res.amigo ?? solicitud, ...this.listaAmigos];
+        }
+      },
+      error: () => {},
+    });
+  }
 }
