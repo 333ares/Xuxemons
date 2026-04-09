@@ -1,55 +1,24 @@
-<div class="mant-wrapper">
-  <header class="mant-header">
-    <a routerLink="/paginaPrincipal" class="mant-logo">
-      <img src="logo.png" alt="Logo Xuxemons" />
-      <span class="mant-logo-text">Xuxemons</span>
-    </a>
-    <img
-      src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
-      alt="Avatar"
-      class="mant-header-avatar"
-    />
-  </header>
-
-  <div class="mant-contenido">
-    <div class="mant-icono-wrapper">
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#FFAA4A"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
+<div class="amigos-wrapper">
+  <!-- CABECERA -->
+  <header class="dashboard-header">
+    <div class="header-left">
+      <a routerLink="/paginaPrincipal" class="header-logo">
+        <img src="logo.png" alt="Logo Xuxemons" class="logo" />
+        <span class="logo-text">Xuxemons</span>
+      </a>
     </div>
-    <h1 class="mant-titulo">Amigos</h1>
-    <span class="mant-badge">🔧 En construcción</span>
-    <p class="mant-mensaje">Esta sección estará disponible próximamente.</p>
-    <a routerLink="/paginaPrincipal" class="mant-btn-volver">
-      <svg
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M19 12H5" />
-        <polyline points="12 19 5 12 12 5" />
-      </svg>
-      Volver al inicio
-    </a>
-  </div>
-
-  <!-- BARRA DE NAVEGACIÓN INFERIOR -->
-  <app-nav></app-nav>
+    <div class="header-right">
+      <div class="header-user">
+        <img
+          src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
+          alt="Avatar del usuario"
+          class="header-avatar"
+        />
+        <div class="header-user-info">
+          <span class="header-user-name">{{ usuario?.name }} {{ usuario?.surname }}</span>
+          <span class="header-user-id">{{ usuario?.public_id }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
 </div>
