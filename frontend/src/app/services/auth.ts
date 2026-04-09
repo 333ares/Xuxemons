@@ -214,12 +214,21 @@ export class Auth {
 
   // PUT /config-alimentar — actualiza las tasas de infección
   actualizarTasasInfeccion(data: { bajon: number; sobredosis: number; atracon: number }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/config-alimentar`, data, { headers: this.obtenerCabeceras() });
+    const payload = {
+      porcentaje_bajon: data.bajon,
+      porcentaje_sobredosis: data.sobredosis,
+      porcentaje_atracon: data.atracon,
+    };
+    return this.http.put(`${this.apiUrl}/config-alimentar`, payload, { headers: this.obtenerCabeceras() });
   }
 
   // PUT /config-alimentar — actualiza la configuración de crecimiento
   actualizarConfigCrecimiento(data: { pequeno_a_mediano: number; mediano_a_grande: number }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/config-alimentar`, data, { headers: this.obtenerCabeceras() });
+    const payload = {
+      xuxes_s_a_m: data.pequeno_a_mediano,
+      xuxes_m_a_g: data.mediano_a_grande,
+    };
+    return this.http.put(`${this.apiUrl}/config-alimentar`, payload, { headers: this.obtenerCabeceras() });
   }
 
   obtenerTasasInfeccion(): Observable<any> {
