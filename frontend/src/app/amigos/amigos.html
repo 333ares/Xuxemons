@@ -266,4 +266,31 @@
       }
     </section>
   </main>
+
+  <!-- DIÁLOGO CONFIRMAR ELIMINAR -->
+  @if (mostrarDialogoEliminar) {
+    <div
+      class="dialogo-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dialogo-titulo-eliminar"
+      (click)="cerrarDialogoEliminar()"
+    >
+      <div class="dialogo-box" (click)="$event.stopPropagation()">
+        <h3 id="dialogo-titulo-eliminar" class="dialogo-titulo">Eliminar amigo</h3>
+        <p class="dialogo-mensaje">
+          ¿Seguro que quieres eliminar a
+          <strong>{{ amigoAEliminar?.name }}</strong> de tu lista de amigos? Esta acción no se puede
+          deshacer.
+        </p>
+        <div class="dialogo-acciones">
+          <button class="btn-dialogo-cancelar" (click)="cerrarDialogoEliminar()">Cancelar</button>
+          <button class="btn-dialogo-confirmar" (click)="confirmarEliminar()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+  <app-nav></app-nav>
 </div>
