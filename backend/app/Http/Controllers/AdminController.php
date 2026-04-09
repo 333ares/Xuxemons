@@ -436,7 +436,7 @@ class AdminController extends Controller
 
             $config = ConfigAlimentar::first();
             // array_filter elimina los valores null, así solo actualiza los campos que vienen en el request
-            $config->update(array_filter([
+            $config->update($request->only([
                 'porcentaje_bajon'      => $request->porcentaje_bajon,
                 'porcentaje_sobredosis' => $request->porcentaje_sobredosis,
                 'porcentaje_atracon'    => $request->porcentaje_atracon,
