@@ -48,4 +48,17 @@ export class Amigos implements OnInit {
       error: () => {},
     });
   }
+
+  // Carga las solicitudes de amistad pendientes recibidas
+  private cargarSolicitudesPendientes(): void {
+    // TODO backend: GET /amigos/solicitudes — pendiente de implementación
+    this.authService.obtenerSolicitudesPendientes().subscribe({
+      next: (res) => {
+        this.solicitudesPendientes = res.solicitudes ?? [];
+      },
+      error: () => {
+        this.solicitudesPendientes = [];
+      },
+    });
+  }
 }
