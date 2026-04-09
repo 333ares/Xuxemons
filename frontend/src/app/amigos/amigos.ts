@@ -150,4 +150,29 @@ export class Amigos implements OnInit {
       error: () => {},
     });
   }
+  // Abre el diálogo de confirmación para eliminar un amigo
+  abrirDialogoEliminar(amigo: any): void {
+    this.amigoAEliminar = amigo;
+    this.mostrarDialogoEliminar = true;
+  }
+
+  cerrarDialogoEliminar(): void {
+    this.mostrarDialogoEliminar = false;
+    this.amigoAEliminar = null;
+  }
+
+  // Confirma la eliminación y actualiza la lista local
+  confirmarEliminar(): void {
+    if (!this.amigoAEliminar) return;
+    // TODO backend: DELETE /amigos/{id} — pendiente de implementación
+    this.authService.eliminarAmigo(this.amigoAEliminar.id).subscribe({
+      next: () => {
+        this.listaAmigos = this.listaAmigos.filter((a) => a.id !== this.amigoAEliminar.id);
+        this.cerrarDialogoEliminar();
+      },
+      error: () => {
+        this.cerrarDialogoEliminar();
+      },
+    });
+  }
 }
