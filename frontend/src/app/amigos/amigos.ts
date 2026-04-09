@@ -13,7 +13,6 @@ import { Nav } from '../shared/nav/nav';
   styleUrls: ['./amigos.css'],
 })
 export class Amigos implements OnInit {
-
   // Datos del usuario autenticado (para la cabecera)
   usuario: any = null;
 
@@ -40,4 +39,13 @@ export class Amigos implements OnInit {
     this.cargarListaAmigos();
   }
 
+  // Carga los datos del usuario autenticado para mostrarlos en la cabecera
+  private cargarUsuario(): void {
+    this.authService.getInfoUsuario().subscribe({
+      next: (res) => {
+        this.usuario = res.usuario ?? res;
+      },
+      error: () => {},
+    });
+  }
 }
