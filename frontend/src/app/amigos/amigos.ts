@@ -61,4 +61,20 @@ export class Amigos implements OnInit {
       },
     });
   }
+
+  // Carga la lista de amigos del usuario autenticado
+  private cargarListaAmigos(): void {
+    this.cargando = true;
+    // TODO backend: GET /amigos — pendiente de implementación
+    this.authService.obtenerAmigos().subscribe({
+      next: (res) => {
+        this.listaAmigos = res.amigos ?? [];
+        this.cargando = false;
+      },
+      error: () => {
+        this.listaAmigos = [];
+        this.cargando = false;
+      },
+    });
+  }
 }
