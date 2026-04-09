@@ -77,4 +77,34 @@ export class Amigos implements OnInit {
       },
     });
   }
+
+  // Busca un usuario por su public_id (#NombreXXXX)
+  buscar(): void {
+    const termino = this.terminoBusqueda.trim();
+    if (!termino) return;
+
+    this.buscando = true;
+    this.resultadoBusqueda = null;
+    this.errorBusqueda = '';
+
+    // TODO backend: GET /amigos/buscar?public_id= — pendiente de implementación
+    this.authService.buscarAmigo(termino).subscribe({
+      next: (res) => {
+        const usuario = res.usuario ?? null;
+        if (!usuario) {
+          this.errorBusqueda = 'No se ha encontrado ningún jugador con ese ID.';
+          this.buscando = false;
+          return;
+        }
+        const yaEsAmigo = this.listaAmigos.some((a) => a.id === usuario.id);
+        const solicitudPendiente = usuario.solicitud_enviada ?? false;
+        this.resultadoBusqueda = { ...usuario, yaEsAmigo, solicitudPendiente };
+        this.buscando = false;
+      },
+      error: () => {
+        this.errorBusqueda = 'No se ha encontrado ningún jugador con ese ID.';
+        this.buscando = false;
+      },
+    });
+  }
 }
