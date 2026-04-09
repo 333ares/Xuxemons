@@ -367,10 +367,18 @@ class AdminController extends Controller
         }
     }
 
-    public function resetConfig(Request $request)
+    public function resetConfigXuxes(Request $request)
     {
         if ($request->user()->id === 1) {
             ConfigXuxes::first()->update(['ultima_entrega' => null]);
+
+            return response()->json(['message' => 'Config reseteada correctamente'], 200);
+        }
+    }
+
+    public function resetConfigXuxemons(Request $request)
+    {
+        if ($request->user()->id === 1) {
             ConfigXuxemon::first()->update(['ultima_entrega' => null]);
 
             return response()->json(['message' => 'Config reseteada correctamente'], 200);
@@ -385,11 +393,13 @@ class AdminController extends Controller
 
             return response()->json([
                 'xuxes' => [
-                    'hora'    => $configXuxes->hora,
-                    'cantidad' => $configXuxes->cantidad
+                    'hora'           => $configXuxes->hora,
+                    'cantidad'       => $configXuxes->cantidad,
+                    'ultima_entrega' => $configXuxes->ultima_entrega
                 ],
                 'xuxemons' => [
-                    'hora' => $configXuxemon->hora
+                    'hora'           => $configXuxemon->hora,
+                    'ultima_entrega' => $configXuxemon->ultima_entrega
                 ]
             ], 200);
         }

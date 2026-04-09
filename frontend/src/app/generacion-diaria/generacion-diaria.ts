@@ -28,7 +28,7 @@ export class GeneracionDiaria implements OnInit {
   guardandoDiarioXuxes: boolean = false;
   guardandoDiarioXuxemons: boolean = false;
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth) { }
 
   ngOnInit(): void {
     this.calcularFechaHoy();
@@ -38,6 +38,9 @@ export class GeneracionDiaria implements OnInit {
   // Carga la configuración de generación diaria desde el backend
   // NOTA: la ruta GET /admin/dailyConfig está pendiente de implementación en el backend.
   // Mientras no exista, el componente usa los valores por defecto definidos arriba.
+  ultimaEntregaXuxes: string = '';
+  ultimaEntregaXuxemons: string = '';
+
   private cargarConfigDiaria(): void {
     this.auth.obtenerConfigDiaria().subscribe({
       next: (res) => {
@@ -51,6 +54,8 @@ export class GeneracionDiaria implements OnInit {
             cantidad: res.xuxemons?.cantidad ?? 1,
           },
         };
+        this.ultimaEntregaXuxes = res.xuxes?.ultima_entrega ?? 'Nunca';
+        this.ultimaEntregaXuxemons = res.xuxemons?.ultima_entrega ?? 'Nunca';
       },
       error: (err) => {
         console.error('Error al cargar la configuración diaria:', err);
@@ -74,14 +79,10 @@ export class GeneracionDiaria implements OnInit {
     this.guardandoDiarioXuxes = true;
     this.feedbackDiarioXuxes = '';
 
-    const payload = {
-      xuxes: {
-        hora: this.dailyConfig.xuxes.hora,
-        cantidad: this.dailyConfig.xuxes.cantidad,
-      },
-    };
-
-    this.auth.actualizarConfigDiaria(payload).subscribe({
+    this.auth.actualizarConfigXuxes({
+      hora: this.dailyConfig.xuxes.hora,
+      cantidad: this.dailyConfig.xuxes.cantidad
+    }).subscribe({
       next: () => {
         this.guardandoDiarioXuxes = false;
         this.feedbackDiarioXuxes = 'ok';
@@ -92,7 +93,7 @@ export class GeneracionDiaria implements OnInit {
         this.guardandoDiarioXuxes = false;
         this.feedbackDiarioXuxes = 'error';
         setTimeout(() => (this.feedbackDiarioXuxes = ''), 3500);
-      },
+      }
     });
   }
 
@@ -101,14 +102,9 @@ export class GeneracionDiaria implements OnInit {
     this.guardandoDiarioXuxemons = true;
     this.feedbackDiarioXuxemons = '';
 
-    const payload = {
-      xuxemons: {
-        hora: this.dailyConfig.xuxemons.hora,
-        cantidad: this.dailyConfig.xuxemons.cantidad,
-      },
-    };
-
-    this.auth.actualizarConfigDiaria(payload).subscribe({
+    this.auth.actualizarConfigXuxemons({
+      hora: this.dailyConfig.xuxemons.hora
+    }).subscribe({
       next: () => {
         this.guardandoDiarioXuxemons = false;
         this.feedbackDiarioXuxemons = 'ok';
@@ -119,7 +115,46 @@ export class GeneracionDiaria implements OnInit {
         this.guardandoDiarioXuxemons = false;
         this.feedbackDiarioXuxemons = 'error';
         setTimeout(() => (this.feedbackDiarioXuxemons = ''), 3500);
+      }
+    });
+  }
+
+  reseteandoXuxes: boolean = false;
+  reseteandoXuxemons: boolean = false;
+
+  resetearConfigXuxes(): void {
+    this.reseteandoXuxes = true;
+    this.auth.resetConfigXuxes().subscribe({
+      next: () => {
+        this.reseteandoXuxes = false;
+        this.ultimaEntregaXuxes = 'Nunca';
+        this.feedbackDiarioXuxes = 'ok';
+        setTimeout(() => (this.feedbackDiarioXuxes = ''), 3000);
       },
+      error: (err) => {
+        console.error('Error reseteando config xuxes:', err);
+        this.reseteandoXuxes = false;
+        this.feedbackDiarioXuxes = 'error';
+        setTimeout(() => (this.feedbackDiarioXuxes = ''), 3500);
+      }
+    });
+  }
+
+  resetearConfigXuxemons(): void {
+    this.reseteandoXuxemons = true;
+    this.auth.resetConfigXuxemons().subscribe({
+      next: () => {
+        this.reseteandoXuxemons = false;
+        this.ultimaEntregaXuxemons = 'Nunca';
+        this.feedbackDiarioXuxemons = 'ok';
+        setTimeout(() => (this.feedbackDiarioXuxemons = ''), 3000);
+      },
+      error: (err) => {
+        console.error('Error reseteando config xuxemons:', err);
+        this.reseteandoXuxemons = false;
+        this.feedbackDiarioXuxemons = 'error';
+        setTimeout(() => (this.feedbackDiarioXuxemons = ''), 3500);
+      }
     });
   }
 }

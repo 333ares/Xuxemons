@@ -41,7 +41,8 @@
   color: #999;
   margin: 0;
   line-height: 1.5;
-  padding-left: 32px; /* alineado con el título */
+  padding-left: 32px;
+  /* alineado con el título */
 }
 
 /* CONFIGURACIÓN DIARIA — ESTRUCTURA Y CARDS */
@@ -202,6 +203,34 @@
 }
 
 .config-btn-guardar:focus-visible {
+  outline: 3px solid #ffaa4a;
+  outline-offset: 2px;
+}
+
+.config-btn-reset {
+  padding: 10px 24px;
+  background: transparent;
+  color: #ffaa4a;
+  border: 1.5px solid #ffaa4a;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.config-btn-reset:hover:not(:disabled) {
+  background: #fff5e9;
+}
+
+.config-btn-reset:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.config-btn-reset:focus-visible {
   outline: 3px solid #ffaa4a;
   outline-offset: 2px;
 }
