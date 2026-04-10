@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AmigosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MochilaController;
@@ -42,4 +43,13 @@ Route::middleware('auth:api')->group(function () {
     // Mochila
     Route::get('/mochila', [MochilaController::class, 'listarObjetos']);
     Route::delete('/mochila', [MochilaController::class, 'borrarObjeto']);
+
+    // Amigos
+    Route::get('/amigos/buscar', [AmigosController::class, 'buscarUsuario']);
+    Route::post('/amigos/solicitud', [AmigosController::class, 'enviarSolicitud']);
+    Route::get('/amigos/solicitudes', [AmigosController::class, 'listarSolicitudes']);
+    Route::post('/amigos/aceptar', [AmigosController::class, 'aceptarSolicitud']);
+    Route::delete('/amigos/rechazar', [AmigosController::class, 'rechazarSolicitud']);
+    Route::get('/amigos', [AmigosController::class, 'listarAmigos']);
+    Route::delete('/amigos/{id}', [AmigosController::class, 'eliminarAmigo']);
 });
