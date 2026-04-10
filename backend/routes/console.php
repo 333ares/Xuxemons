@@ -7,42 +7,26 @@ use Illuminate\Support\Facades\Log;
 
 Schedule::call(function () {
     $config = ConfigXuxes::first();
-
-    $horaConfig = \Carbon\Carbon::createFromFormat('H:i', $config->hora);
+    $horaConfig = now()->setTimeFromTimeString($config->hora);
     $horaActual = now();
-
-    Log::info('Scheduler check', [
-        'hora_actual' => $horaActual->format('H:i'),
-        'hora_config' => $config->hora,
-        'ultima_entrega' => $config->ultima_entrega
-    ]);
 
     if (
         $horaActual->gte($horaConfig) &&
         $config->ultima_entrega !== now()->toDateString()
     ) {
-        Log::info('DISPATCH JOB');
         \App\Jobs\RepartirXuxesDiarias::dispatchSync();
     }
 })->everyMinute();
 
 Schedule::call(function () {
     $config = ConfigXuxemon::first();
-
-    $horaConfig = \Carbon\Carbon::createFromFormat('H:i', $config->hora);
+    $horaConfig = now()->setTimeFromTimeString($config->hora);
     $horaActual = now();
-
-    Log::info('Scheduler xuxemon check', [
-        'hora_actual'    => $horaActual->format('H:i'),
-        'hora_config'    => $config->hora,
-        'ultima_entrega' => $config->ultima_entrega
-    ]);
 
     if (
         $horaActual->gte($horaConfig) &&
         $config->ultima_entrega !== now()->toDateString()
     ) {
-        Log::info('DISPATCH JOB XUXEMON');
         \App\Jobs\RepartirXuxemonDiario::dispatchSync();
     }
 })->everyMinute();
