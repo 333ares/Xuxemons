@@ -21,14 +21,14 @@ class AmigosController extends Controller
             ], 404);
         }
 
-        // Devolvemos solo los campos publicos (nunca el email ni la contraseña)
+        // Devolvemos solo los campos publicos (nunca la contraseña)
         return response()->json([
             'message' => 'success',
             'usuario' => [
-                'id' => $usuario->id,
+                'public_id' => $usuario->public_id,
                 'name' => $usuario->name,
                 'surname' => $usuario->surname,
-                'public_id' => $usuario->public_id,
+                'email' => $usuario->email
             ]
         ], 200);
     }
