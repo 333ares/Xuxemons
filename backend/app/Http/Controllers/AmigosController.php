@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Amigo;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -32,5 +33,35 @@ class AmigosController extends Controller
         ], 200);
     }
 
+    public function enviarSolicitud(Request $request)
+    {
+        $senderId   = $request->user()->id;
+        $receiverId = $request->receiver_id;
 
+        // Comprobamos que no exista ya una friendship entre los dos en cualquier dirección
+        $yaExiste = Amigo::where(function ($q) use ($senderId, $receiverId) {
+            $q->where('sender_id', $senderId)->where('receiver_id', $receiverId);
+        })->orWhere(function ($q) use ($senderId, $receiverId) {
+            $q->where('sender_id', $receiverId)->where('receiver_id', $senderId);
+        })->exists();
+
+        if ($yaExiste) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'Ya existe una solicitud o amistad con este usuario'
+            ], 400);
+        }
+
+        // Creamos la solicitud con estado pendiente
+        $friendship = Amigo::create([
+            'sender_id'   => $senderId,
+            'receiver_id' => $receiverId,
+            'status'      => 'pending',
+        ]);
+
+        return response()->json([
+            'message'    => 'success',
+            'friendship' => $friendship
+        ], 201);
+    }
 }
