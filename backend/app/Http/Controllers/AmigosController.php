@@ -172,4 +172,32 @@ class AmigosController extends Controller
             'amigos' => $amigos
         ], 200);
     }
+
+    public function eliminarAmigo(Request $request, $id)
+    {
+        $userId = $request->user()->id;
+
+        // Buscamos la friendship donde el usuario autenticado sea sender o receiver
+        $friendship = Amigo::where('id', $id)
+            ->where(function ($q) use ($userId) {
+                $q->where('sender_id', $userId)->orWhere('receiver_id', $userId);
+            })
+            ->first();
+
+        // Si no la encontramos, devolvemos error
+        if (!$friendship) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'No se ha encontrado la amistad'
+            ], 404);
+        }
+
+        // Al borrar el registro desaparece de los dos lados
+        $friendship->delete();
+
+        return response()->json([
+            'message' => 'success',
+            'errors'  => 'Amigo eliminado correctamente'
+        ], 200);
+    }
 }
