@@ -87,4 +87,32 @@ class AmigosController extends Controller
             'solicitudes' => $solicitudes
         ], 200);
     }
+
+    public function aceptarSolicitud(Request $request)
+    {
+        // Buscamos la solicitud verificando que el usuario autenticado es el receptor
+        $friendship = Amigo::where('id', $request->friendship_id)
+            ->where('receiver_id', $request->user()->id)
+            ->first();
+
+        // Si no la encontramos, devolvemos error
+        if (!$friendship) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'No se ha encontrado la solicitud'
+            ], 404);
+        }
+
+        // Cambiamos el estado a aceptado
+        $friendship->update(['status' => 'accepted']);
+
+        // Devolvemos los datos del nuevo amigo para que el front actualice la lista sin recargar
+        $amigo = User::select('id', 'name', 'surname', 'public_id')
+            ->find($friendship->sender_id);
+
+        return response()->json([
+            'message' => 'success',
+            'amigo'   => $amigo
+        ], 200);
+    }
 }
