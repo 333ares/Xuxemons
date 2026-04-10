@@ -115,4 +115,28 @@ class AmigosController extends Controller
             'amigo'   => $amigo
         ], 200);
     }
+
+    public function rechazarSolicitud(Request $request)
+    {
+        // Buscamos la solicitud verificando que el usuario autenticado es el receptor
+        $friendship = Amigo::where('id', $request->friendship_id)
+            ->where('receiver_id', $request->user()->id)
+            ->first();
+
+        // Si no la encontramos, devolvemos error
+        if (!$friendship) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'No se ha encontrado la solicitud'
+            ], 404);
+        }
+
+        // Eliminamos el registro directamente
+        $friendship->delete();
+
+        return response()->json([
+            'message' => 'success',
+            'errors'  => 'Solicitud rechazada correctamente'
+        ], 200);
+    }
 }
