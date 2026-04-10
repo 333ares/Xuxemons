@@ -99,7 +99,7 @@ class AmigosController extends Controller
         if (!$friendship) {
             return response()->json([
                 'message' => 'error',
-                'errors'  => 'No se ha encontrado la solicitud'
+                'errors' => 'No se ha encontrado la solicitud'
             ], 404);
         }
 
@@ -112,7 +112,7 @@ class AmigosController extends Controller
 
         return response()->json([
             'message' => 'success',
-            'amigo'   => $amigo
+            'amigo' => $amigo
         ], 200);
     }
 
@@ -127,7 +127,7 @@ class AmigosController extends Controller
         if (!$friendship) {
             return response()->json([
                 'message' => 'error',
-                'errors'  => 'No se ha encontrado la solicitud'
+                'errors' => 'No se ha encontrado la solicitud'
             ], 404);
         }
 
@@ -136,7 +136,40 @@ class AmigosController extends Controller
 
         return response()->json([
             'message' => 'success',
-            'errors'  => 'Solicitud rechazada correctamente'
+            'errors' => 'Solicitud rechazada correctamente'
+        ], 200);
+    }
+
+    public function listarAmigos(Request $request)
+    {
+        $userId = $request->user()->id;
+
+        // Cogemos todas las friendships aceptadas donde el usuario sea sender o receiver
+        $friendships = Amigo::where('status', 'accepted')
+            ->where(function ($q) use ($userId) {
+                $q->where('sender_id', $userId)->orWhere('receiver_id', $userId);
+            })
+            ->with([
+                'sender:id,name,surname,public_id',
+                'receiver:id,name,surname,public_id',
+            ])
+            ->get();
+
+        // Mapeamos para devolver siempre los datos del otro usuario, no del propio
+        $amigos = $friendships->map(function ($f) use ($userId) {
+            $amigo = $f->sender_id === $userId ? $f->receiver : $f->sender;
+
+            return [
+                'id' => $f->id, // id de la friendship (para eliminar)
+                'name' => $amigo->name,
+                'surname' => $amigo->surname,
+                'public_id' => $amigo->public_id,
+            ];
+        });
+
+        return response()->json([
+            'message' => 'success',
+            'amigos' => $amigos
         ], 200);
     }
 }
