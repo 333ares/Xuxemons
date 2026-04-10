@@ -1,54 +1,295 @@
-<div class="mant-wrapper">
-  <header class="mant-header">
-    <a routerLink="/paginaPrincipal" class="mant-logo">
-      <img src="logo.png" alt="Logo Xuxemons" />
-      <span class="mant-logo-text">Xuxemons</span>
-    </a>
-    <img
-      src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
-      alt="Avatar"
-      class="mant-header-avatar"
-    />
+<div class="amigos-wrapper">
+  <!-- CABECERA -->
+  <header class="dashboard-header">
+    <div class="header-left">
+      <a routerLink="/paginaPrincipal" class="header-logo">
+        <img src="logo.png" alt="Logo Xuxemons" class="logo" />
+        <span class="logo-text">Xuxemons</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <div class="header-user">
+        <img
+          src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
+          alt="Avatar del usuario"
+          class="header-avatar"
+        />
+        <div class="header-user-info">
+          <span class="header-user-name">{{ usuario?.name }} {{ usuario?.surname }}</span>
+          <span class="header-user-id">{{ usuario?.public_id }}</span>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <div class="mant-contenido">
-    <div class="mant-icono-wrapper">
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#FFAA4A"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
+  <!-- CONTENIDO -->
+  <main class="amigos-main">
+    <!-- Título de sección -->
+    <section class="bienvenida-section" aria-label="Encabezado amigos">
+      <div>
+        <h1 class="bienvenida-titulo">Red de <span class="nombre-highlight">jugadores</span></h1>
+        <p class="bienvenida-sub">
+          Busca amigos por su ID, acepta solicitudes y gestiona tu lista.
+        </p>
+      </div>
+    </section>
+
+    <!-- BÚSQUEDA -->
+    <section class="card-dash amigos-busqueda-section" aria-label="Buscar jugador">
+      <h2 class="amigos-seccion-titulo" style="margin-bottom: 16px">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#FFAA4A"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Buscar jugador
+      </h2>
+      <div class="amigos-busqueda-row">
+        <input
+          type="text"
+          class="amigos-input-buscar"
+          placeholder="Introduce el ID para buscar (#NombreXXXX)"
+          [(ngModel)]="terminoBusqueda"
+          (keyup.enter)="buscar()"
+          aria-label="Buscar jugador por ID"
+        />
+        <button class="btn-buscar-amigo" (click)="buscar()" [disabled]="buscando">
+          @if (buscando) {
+            Buscando...
+          } @else {
+            Buscar
+          }
+        </button>
+      </div>
+
+      <!-- Error de búsqueda -->
+      @if (errorBusqueda) {
+        <p class="amigos-error-busqueda" role="alert">{{ errorBusqueda }}</p>
+      }
+
+      <!-- Resultado -->
+      @if (resultadoBusqueda) {
+        <div class="amigos-resultado-card" role="region" aria-label="Resultado de búsqueda">
+          <div class="amigo-avatar-wrapper">
+            <div class="amigo-avatar" aria-hidden="true">
+              {{ resultadoBusqueda.name?.charAt(0) }}
+            </div>
+          </div>
+          <div class="amigos-resultado-info">
+            <span class="amigo-nombre"
+              >{{ resultadoBusqueda.name }} {{ resultadoBusqueda.surname }}</span
+            >
+            <span class="amigos-public-id">{{ resultadoBusqueda.public_id }}</span>
+          </div>
+          <button
+            class="btn-enviar-solicitud"
+            [disabled]="resultadoBusqueda.yaEsAmigo || resultadoBusqueda.solicitudPendiente"
+            (click)="enviarSolicitud(resultadoBusqueda.id)"
+            [attr.aria-label]="'Enviar solicitud a ' + resultadoBusqueda.name"
+          >
+            @if (resultadoBusqueda.yaEsAmigo) {
+              Ya sois amigos
+            } @else if (resultadoBusqueda.solicitudPendiente) {
+              Solicitud enviada
+            } @else {
+              Enviar solicitud
+            }
+          </button>
+        </div>
+      }
+    </section>
+
+    <!-- SOLICITUDES PENDIENTES -->
+    @if (solicitudesPendientes.length > 0) {
+      <section class="card-dash" aria-labelledby="titulo-solicitudes">
+        <div class="card-dash-header">
+          <h2 id="titulo-solicitudes" class="amigos-seccion-titulo">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#FFAA4A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+            Solicitudes de amistad
+          </h2>
+          <span class="actividad-badge">{{ solicitudesPendientes.length }}</span>
+        </div>
+        <div class="amigos-solicitudes-grid">
+          @for (solicitud of solicitudesPendientes; track solicitud.id) {
+            <div class="amigos-solicitud-card" role="listitem">
+              <div class="amigo-avatar-wrapper">
+                <div class="amigo-avatar" aria-hidden="true">
+                  {{ solicitud.name?.charAt(0) }}
+                </div>
+              </div>
+              <div class="amigos-resultado-info">
+                <span class="amigo-nombre">{{ solicitud.name }}</span>
+                <span class="amigos-public-id">{{ solicitud.public_id }}</span>
+              </div>
+              <div class="actividad-acciones">
+                <button
+                  class="btn-aceptar"
+                  (click)="aceptar(solicitud.id)"
+                  [attr.aria-label]="'Aceptar solicitud de ' + solicitud.name"
+                >
+                  Aceptar
+                </button>
+                <button
+                  class="btn-rechazar"
+                  (click)="rechazar(solicitud.id)"
+                  [attr.aria-label]="'Rechazar solicitud de ' + solicitud.name"
+                >
+                  Rechazar
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- MIS AMIGOS -->
+    <section class="card-dash" aria-labelledby="titulo-amigos">
+      <div class="card-dash-header">
+        <h2 id="titulo-amigos" class="amigos-seccion-titulo">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#FFAA4A"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Tus amigos
+        </h2>
+        @if (listaAmigos.length > 0) {
+          <span class="amigos-contador">{{ listaAmigos.length }} amigos</span>
+        }
+      </div>
+
+      @if (cargando) {
+        <p class="actividad-vacia">Cargando amigos...</p>
+      }
+
+      @if (!cargando && listaAmigos.length === 0) {
+        <div class="amigos-vacio">
+          <div class="amigos-vacio-icono">
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#FFAA4A"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <p class="amigos-vacio-texto">Aún no tienes amigos. ¡Busca a alguien por su ID!</p>
+        </div>
+      }
+
+      @if (!cargando && listaAmigos.length > 0) {
+        <div class="amigos-grid" role="list">
+          @for (amigo of listaAmigos; track amigo.id) {
+            <article class="amigos-card" role="listitem" [attr.aria-label]="'Amigo: ' + amigo.name">
+              <div class="amigos-card-avatar" aria-hidden="true">
+                {{ amigo.name?.charAt(0) }}
+              </div>
+              <div class="amigos-card-info">
+                <span class="amigos-card-nombre">{{ amigo.name }} {{ amigo.surname }}</span>
+                <span class="amigos-public-id">{{ amigo.public_id }}</span>
+                <span class="amigos-card-xuxemon">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="#FFAA4A"
+                    stroke="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                    />
+                  </svg>
+                  Xuxemon Favorito
+                </span>
+              </div>
+              <div class="amigos-card-acciones">
+                <button class="btn-retar-amigo" [attr.aria-label]="'Retar a ' + amigo.name">
+                  Retar amigo
+                </button>
+                <button
+                  class="btn-eliminar-amigo"
+                  (click)="abrirDialogoEliminar(amigo)"
+                  [attr.aria-label]="'Eliminar a ' + amigo.name + ' de amigos'"
+                >
+                  Eliminar amigo
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  </main>
+
+  <!-- DIÁLOGO CONFIRMAR ELIMINAR -->
+  @if (mostrarDialogoEliminar) {
+    <div
+      class="dialogo-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dialogo-titulo-eliminar"
+      (click)="cerrarDialogoEliminar()"
+    >
+      <div class="dialogo-box" (click)="$event.stopPropagation()">
+        <h3 id="dialogo-titulo-eliminar" class="dialogo-titulo">Eliminar amigo</h3>
+        <p class="dialogo-mensaje">
+          ¿Seguro que quieres eliminar a
+          <strong>{{ amigoAEliminar?.name }}</strong> de tu lista de amigos? Esta acción no se puede
+          deshacer.
+        </p>
+        <div class="dialogo-acciones">
+          <button class="btn-dialogo-cancelar" (click)="cerrarDialogoEliminar()">Cancelar</button>
+          <button class="btn-dialogo-confirmar" (click)="confirmarEliminar()">Eliminar</button>
+        </div>
+      </div>
     </div>
-    <h1 class="mant-titulo">Amigos</h1>
-    <span class="mant-badge">🔧 En construcción</span>
-    <p class="mant-mensaje">Esta sección estará disponible próximamente.</p>
-    <a routerLink="/paginaPrincipal" class="mant-btn-volver">
-      <svg
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M19 12H5" />
-        <polyline points="12 19 5 12 12 5" />
-      </svg>
-      Volver al inicio
-    </a>
-  </div>
+  }
 
   <!-- BARRA DE NAVEGACIÓN INFERIOR -->
   <app-nav></app-nav>

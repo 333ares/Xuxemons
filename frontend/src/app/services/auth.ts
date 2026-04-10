@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class Auth {
   private apiUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Construye las cabeceras con el token JWT para rutas protegidas
   private obtenerCabeceras() {
@@ -204,31 +204,26 @@ export class Auth {
 
   // Actualiza config xuxes diarias
   actualizarConfigXuxes(data: { hora: string; cantidad: number }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/xuxes-diarias`, data, { headers: this.obtenerCabeceras() });
+    return this.http.post(`${this.apiUrl}/xuxes-diarias`, data, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // Actualiza config xuxemons diarios
   actualizarConfigXuxemons(data: { hora: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/xuxemon-diario`, data, { headers: this.obtenerCabeceras() });
+    return this.http.post(`${this.apiUrl}/xuxemon-diario`, data, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   // PUT /config-alimentar — actualiza las tasas de infección
   actualizarTasasInfeccion(data: { bajon: number; sobredosis: number; atracon: number }): Observable<any> {
-    const payload = {
-      porcentaje_bajon: data.bajon,
-      porcentaje_sobredosis: data.sobredosis,
-      porcentaje_atracon: data.atracon,
-    };
-    return this.http.put(`${this.apiUrl}/config-alimentar`, payload, { headers: this.obtenerCabeceras() });
+    return this.http.put(`${this.apiUrl}/config-alimentar`, data, { headers: this.obtenerCabeceras() });
   }
 
   // PUT /config-alimentar — actualiza la configuración de crecimiento
   actualizarConfigCrecimiento(data: { pequeno_a_mediano: number; mediano_a_grande: number }): Observable<any> {
-    const payload = {
-      xuxes_s_a_m: data.pequeno_a_mediano,
-      xuxes_m_a_g: data.mediano_a_grande,
-    };
-    return this.http.put(`${this.apiUrl}/config-alimentar`, payload, { headers: this.obtenerCabeceras() });
+    return this.http.put(`${this.apiUrl}/config-alimentar`, data, { headers: this.obtenerCabeceras() });
   }
 
   obtenerTasasInfeccion(): Observable<any> {
@@ -241,11 +236,75 @@ export class Auth {
 
   // POST /reset-config-xuxes — resetea la ultima entrega de xuxes
   resetConfigXuxes(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reset-config-xuxes`, {}, { headers: this.obtenerCabeceras() });
+    return this.http.post(
+      `${this.apiUrl}/reset-config-xuxes`,
+      {},
+      { headers: this.obtenerCabeceras() },
+    );
   }
 
   // POST /reset-config-xuxemons — resetea la ultima entrega de xuxemons
   resetConfigXuxemons(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reset-config-xuxemons`, {}, { headers: this.obtenerCabeceras() });
+    return this.http.post(
+      `${this.apiUrl}/reset-config-xuxemons`,
+      {},
+      { headers: this.obtenerCabeceras() },
+    );
+  }
+
+  // --- AMIGOS ---
+
+  // GET /amigos/buscar?public_id=XXX — busca un usuario por su public_id
+  buscarAmigo(publicId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/amigos/buscar?public_id=${publicId}`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
+  // POST /amigos/solicitud — envía una solicitud de amistad al usuario indicado
+  enviarSolicitud(receiverId: number): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/amigos/solicitud`,
+      { receiver_id: receiverId },
+      { headers: this.obtenerCabeceras() },
+    );
+  }
+
+  // GET /amigos/solicitudes — lista las solicitudes de amistad recibidas y pendientes
+  obtenerSolicitudesPendientes(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/amigos/solicitudes`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
+  // POST /amigos/aceptar — acepta una solicitud de amistad por su id
+  aceptarSolicitud(friendshipId: number): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/amigos/aceptar`,
+      { friendship_id: friendshipId },
+      { headers: this.obtenerCabeceras() },
+    );
+  }
+
+  // DELETE /amigos/rechazar — rechaza una solicitud de amistad por su id
+  rechazarSolicitud(friendshipId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/amigos/rechazar`, {
+      headers: this.obtenerCabeceras(),
+      body: { friendship_id: friendshipId },
+    });
+  }
+
+  // GET /amigos — lista los amigos aceptados del usuario autenticado
+  obtenerAmigos(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/amigos`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
+  // DELETE /amigos/{id} — elimina un amigo por su id de relación
+  eliminarAmigo(friendshipId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/amigos/${friendshipId}`, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 }
