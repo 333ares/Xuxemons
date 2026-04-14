@@ -12,13 +12,13 @@ import { Nav } from '../shared/nav/nav';
   styleUrls: ['./pagina-principal.css'],
 })
 export class PaginaPrincipal implements OnInit {
-  // ── Datos del usuario autenticado ──────────────────────────────────────────
+  //  Datos del usuario autenticado
   usuario: any = null;
 
-  // ── Fecha formateada en castellano ─────────────────────────────────────────
+  //  Fecha formateada en castellano
   fechaHoy: string = '';
 
-  // ── KPIs de colección (se calculan a partir de GET /xuxemons) ─────────────
+  //  KPIs de colección (se calculan a partir de GET /xuxemons)
   coleccion = {
     total: 0,
     enfermos: 0,
@@ -29,14 +29,14 @@ export class PaginaPrincipal implements OnInit {
     progresoPct: 0,
   };
 
-  // ── Estadísticas de batalla (pendiente de endpoint; se inicializan a 0) ───
+  //  Estadísticas de batalla (pendiente de endpoint; se inicializan a 0)
   estadisticas = {
     ganadas: 0,
     jugadas: 0,
     racha: 0,
   };
 
-  // ── Recompensas diarias (configuración procedente del backend) ─────────────
+  //  Recompensas diarias (configuración procedente del backend)
   recompensasDiarias = {
     xuxes: {
       cantidad: 0,
@@ -47,17 +47,17 @@ export class PaginaPrincipal implements OnInit {
     },
   };
 
-  // ── Solicitudes de amistad pendientes ─────────────────────────────────────
+  //  Solicitudes de amistad pendientes
   solicitudesAmistad: { id: number; nombre: string; public_id: string }[] = [];
 
   // Peticiones de batalla (pendiente de endpoint; array vacío por defecto)
   solicitudesBatalla: { nombre: string }[] = [];
 
-  // ── Xuxemon destacado para la sección "Listo para luchar" ─────────────────
+  //  Xuxemon destacado para la sección "Listo para luchar"
   // Se usa el primero de la colección que no esté enfermo
   xuxemon: { nombre: string; tipo: string; tamano: string } | null = null;
 
-  // ── Mochila ────────────────────────────────────────────────────────────────
+  //  Mochila
   mochila = {
     ocupados: 0,
     total: 20, // El backend fija el límite en 20
@@ -66,11 +66,11 @@ export class PaginaPrincipal implements OnInit {
   // Slots visuales para la cuadrícula de la mochila
   mochilaSlots: { ocupado: boolean; tipo: string; emoji: string }[] = [];
 
-  // ── Lista de amigos ────────────────────────────────────────────────────────
+  //  Lista de amigos
   // El campo "online" no viene del backend actual; se muestra siempre como false
   amigos: { nombre: string; online: boolean }[] = [];
 
-  // ── Estado de carga ────────────────────────────────────────────────────────
+  //  Estado de carga
   cargando = true;
 
   constructor(private authService: Auth) {}
@@ -86,7 +86,7 @@ export class PaginaPrincipal implements OnInit {
     this.cargarConfigDiaria();
   }
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  //  Helpers
 
   private calcularFechaHoy(): void {
     const hoy = new Date();
@@ -111,7 +111,7 @@ export class PaginaPrincipal implements OnInit {
     return mapaXuxe[nombre] ?? '🍬';
   }
 
-  // ── Carga de datos desde el backend ───────────────────────────────────────
+  //  Carga de datos desde el backend
 
   private cargarUsuario(): void {
     this.authService.getInfoUsuario().subscribe({
@@ -273,7 +273,7 @@ export class PaginaPrincipal implements OnInit {
     });
   }
 
-  // ── Acciones de solicitudes de amistad ────────────────────────────────────
+  //  Acciones de solicitudes de amistad
 
   aceptarSolicitud(solicitud: { id: number; nombre: string }): void {
     this.authService.aceptarSolicitud(solicitud.id).subscribe({
@@ -301,7 +301,7 @@ export class PaginaPrincipal implements OnInit {
     });
   }
 
-  // ── Utilidades de formato ──────────────────────────────────────────────────
+  //  Utilidades de formato
 
   private capitalizarPrimeraLetra(texto: string): string {
     if (!texto) return '';
