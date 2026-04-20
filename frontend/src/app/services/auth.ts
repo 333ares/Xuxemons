@@ -92,6 +92,12 @@ export class Auth {
     });
   }
 
+  obtenerTodosUsuarios(): Observable<any> {
+  return this.http.get(`${this.apiUrl}/usuarios`, {
+    headers: this.obtenerCabeceras(),
+  });
+}
+
   // --- XUXEDEX ---
 
   // GET /xuxemons — lista paginada de Xuxemons del usuario

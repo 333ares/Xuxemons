@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 use App\Models\Xuxemons;
 
 class UserController extends Controller
@@ -140,5 +141,15 @@ class UserController extends Controller
                 'xuxemons' => $xuxemons
             ], 201);
         }
+    }
+
+    public function listarTodosUsuarios(Request $request)
+    {
+        $usuarios = User::select('id', 'name', 'surname', 'public_id')->get();
+
+        return response()->json([
+            'message'  => 'success',
+            'usuarios' => $usuarios
+        ], 200);
     }
 }

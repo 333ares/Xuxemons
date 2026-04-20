@@ -2,10 +2,10 @@
   <!-- CABECERA -->
   <header class="dashboard-header">
     <div class="header-left">
-      <div class="header-logo">
+      <a routerLink="/paginaPrincipal" class="header-logo">
         <img src="logo.png" alt="Logo Xuxemons" class="logo" />
         <span class="logo-text">Xuxemons</span>
-      </div>
+      </a>
     </div>
     <div class="header-right">
       <!-- Botón de notificaciones con panel desplegable -->
@@ -409,10 +409,6 @@
               </div>
             </div>
 
-            <!-- Badges de características -->
-            <!-- FIX: el badge de enfermedad solo aparece si estaEnfermo() devuelve true.
-                 Con sickness === null, estaEnfermo() ahora devuelve false correctamente,
-                 así que el badge no se renderiza y no aparece el texto "null". -->
             <div class="xdex-detalle__badges" role="list" aria-label="Características del Xuxemon">
               <span
                 class="xdex-badge xdex-badge--tipo xdex-badge--{{ xuxemonSeleccionado.type }}"
@@ -474,9 +470,7 @@
               </div>
             }
 
-            <!--  BOTÓN DAR XUXE  -->
-
-            <!-- Feedback visual — encima del botón para que sea lo primero que se vea -->
+            <!-- Feedback visual -->
             @if (feedbackMensaje) {
               <div
                 class="xdex-feedback"
@@ -506,7 +500,6 @@
               }
             </button>
 
-            <!-- Botón vacuna: siempre visible, activo solo si el Xuxemon está enfermo -->
             <button
               class="xdex-btn-vacuna"
               type="button"
@@ -529,10 +522,6 @@
       </div>
 
       <!-- MODAL CONFIRMACIÓN ALIMENTAR -->
-      <!-- FIX: preview completa del Xuxemon antes de confirmar la alimentación.
-           Muestra imagen, nombre, badges de tipo/tamaño/enfermedad y barra de progreso.
-           El badge de enfermedad en el modal también usa estaEnfermo(), así que
-           tampoco mostrará "null" con el fix aplicado. -->
       @if (mostrarConfirmacionAlimentar && xuxemonSeleccionado) {
         <div
           class="modal-overlay"
@@ -570,7 +559,6 @@
             </div>
 
             <div class="modal-box__body">
-              <!-- Preview del xuxemon -->
               <div class="modal-feed-preview">
                 <div class="modal-feed-imagen">
                   <img
@@ -595,7 +583,6 @@
                       </span>
                     }
                   </div>
-                  <!-- Barra de progreso de nivel en miniatura -->
                   @if (xuxemonSeleccionado.size !== 'g') {
                     <div class="modal-feed-nivel">
                       <span class="modal-feed-nivel__label">
@@ -612,7 +599,6 @@
                 </div>
               </div>
 
-              <!-- Aviso de riesgo de enfermedad -->
               <div class="modal-feed-aviso" role="note">
                 <svg
                   width="16"
@@ -635,7 +621,6 @@
               </div>
             </div>
 
-            <!-- Botones -->
             <div class="modal-acciones">
               <button class="btn-cancelar" type="button" (click)="cerrarConfirmacionAlimentar()">
                 Cancelar
