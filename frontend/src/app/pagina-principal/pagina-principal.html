@@ -8,7 +8,6 @@
       </div>
     </div>
     <div class="header-right">
-      <!-- Icono notificación: button para ser accesible con teclado -->
       <button class="header-badge" type="button" aria-label="Notificaciones">
         <svg
           width="20"
@@ -47,7 +46,8 @@
     <section class="bienvenida-section" aria-label="Bienvenida">
       <div class="bienvenida-texto">
         <h1 class="bienvenida-titulo">
-          ¡Bienvenido/a, entrenador/a <span class="nombre-highlight">{{ usuario?.name }}</span
+          ¡Bienvenido/a, entrenador/a
+          <span class="nombre-highlight">{{ usuario?.name ?? '...' }}</span
           >!
         </h1>
         <p class="bienvenida-sub">
@@ -61,9 +61,9 @@
 
     <!-- FILA 1: KPIs rápidos -->
     <section class="kpi-row" aria-label="Resumen de estadísticas">
+      <!-- Total Xuxemons (backend: GET /xuxemons → paginacion.total) -->
       <div class="kpi-card kpi-naranja">
         <div class="kpi-icono" aria-hidden="true">
-          <!-- Pingüino mini -->
           <svg
             width="28"
             height="30"
@@ -83,6 +83,7 @@
         </div>
       </div>
 
+      <!-- Enfermos (calculado a partir de xuxemons con sickness !== null) -->
       <div class="kpi-card">
         <div class="kpi-icono kpi-icono-rojo" aria-hidden="true">
           <svg
@@ -94,8 +95,6 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            aria-hidden="true"
-            focusable="false"
           >
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
@@ -106,6 +105,7 @@
         </div>
       </div>
 
+      <!-- Evoluciones (xuxemons de tamaño 'g') -->
       <div class="kpi-card">
         <div class="kpi-icono kpi-icono-verde" aria-hidden="true">
           <svg
@@ -117,8 +117,6 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            aria-hidden="true"
-            focusable="false"
           >
             <polygon
               points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
@@ -131,9 +129,9 @@
         </div>
       </div>
 
+      <!-- Batallas ganadas (pendiente de endpoint; muestra 0 hasta que exista) -->
       <div class="kpi-card">
         <div class="kpi-icono kpi-icono-azul" aria-hidden="true">
-          <!-- Trofeo -->
           <svg
             width="24"
             height="24"
@@ -143,8 +141,6 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            aria-hidden="true"
-            focusable="false"
           >
             <polyline points="8 21 12 17 16 21" />
             <line x1="12" y1="17" x2="12" y2="11" />
@@ -158,6 +154,7 @@
         </div>
       </div>
 
+      <!-- Racha (pendiente de endpoint; muestra 0 hasta que exista) -->
       <div class="kpi-card">
         <div class="kpi-icono kpi-icono-morado" aria-hidden="true">
           <svg
@@ -169,8 +166,6 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            aria-hidden="true"
-            focusable="false"
           >
             <path
               d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
@@ -188,7 +183,7 @@
     <section class="grid-principal" aria-label="Panel principal">
       <!-- COLUMNA IZQUIERDA -->
       <div class="col-izq">
-        <!-- Recompensas diarias -->
+        <!-- Recompensas diarias (hora y cantidad vienen de GET /config-diaria) -->
         <article class="card-dash" aria-labelledby="titulo-recompensas">
           <div class="card-dash-header">
             <h2 id="titulo-recompensas" class="card-dash-titulo">
@@ -216,118 +211,68 @@
 
           <!-- Xuxes del día -->
           <div
-            class="recompensa-diaria-row"
-            [class.recompensa-diaria--recibida]="recompensasdiarias.xuxes.recibidas"
-            [class.recompensa-diaria--pendiente]="!recompensasdiarias.xuxes.recibidas"
+            class="recompensa-diaria-row recompensa-diaria--pendiente"
             role="status"
-            [attr.aria-label]="
-              recompensasdiarias.xuxes.recibidas
-                ? 'Xuxes diarias ya recibidas'
-                : 'Xuxes diarias pendientes de recibir a las ' + recompensasdiarias.xuxes.hora
-            "
+            aria-label="Xuxes diarias pendientes"
           >
             <div class="recompensa-diaria__icono" aria-hidden="true">🍬</div>
             <div class="recompensa-diaria__info">
               <span class="recompensa-diaria__titulo">Xuxes del día</span>
               <span class="recompensa-diaria__sub">
-                @if (recompensasdiarias.xuxes.recibidas) {
-                  Ya has recibido tus +{{ recompensasdiarias.xuxes.cantidad }} xuxes de hoy
-                } @else {
-                  +{{ recompensasdiarias.xuxes.cantidad }} xuxes disponibles a las
-                  {{ recompensasdiarias.xuxes.hora }}
-                }
+                +{{ recompensasDiarias.xuxes.cantidad }} xuxes disponibles a las
+                {{ recompensasDiarias.xuxes.hora }}
               </span>
             </div>
             <div class="recompensa-diaria__estado" aria-hidden="true">
-              @if (recompensasdiarias.xuxes.recibidas) {
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#4ade80"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              } @else {
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#FFAA4A"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-              }
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FFAA4A"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
             </div>
           </div>
 
           <!-- Xuxemon del día -->
           <div
-            class="recompensa-diaria-row"
-            [class.recompensa-diaria--recibida]="recompensasdiarias.xuxemon.recibido"
-            [class.recompensa-diaria--pendiente]="!recompensasdiarias.xuxemon.recibido"
+            class="recompensa-diaria-row recompensa-diaria--pendiente"
             role="status"
-            [attr.aria-label]="
-              recompensasdiarias.xuxemon.recibido
-                ? 'Xuxemon diario ya recibido'
-                : 'Xuxemon diario pendiente a las ' + recompensasdiarias.xuxemon.hora
-            "
+            aria-label="Xuxemon diario pendiente"
           >
             <div class="recompensa-diaria__icono" aria-hidden="true">🐾</div>
             <div class="recompensa-diaria__info">
               <span class="recompensa-diaria__titulo">Xuxemon del día</span>
               <span class="recompensa-diaria__sub">
-                @if (recompensasdiarias.xuxemon.recibido) {
-                  Ya has recibido tu Xuxemon de hoy
-                } @else {
-                  Nuevo Xuxemon disponible a las {{ recompensasdiarias.xuxemon.hora }}
-                }
+                Nuevo Xuxemon disponible a las {{ recompensasDiarias.xuxemon.hora }}
               </span>
             </div>
             <div class="recompensa-diaria__estado" aria-hidden="true">
-              @if (recompensasdiarias.xuxemon.recibido) {
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#4ade80"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              } @else {
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#FFAA4A"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-              }
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FFAA4A"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
             </div>
           </div>
         </article>
 
-        <!-- Actividad -->
-        <article class="card-dash" aria-labelledby="titulo-actividad">
+        <!-- Actividad: solicitudes de amistad y de batalla -->
+        <article class="card-dash card-actividad" aria-labelledby="titulo-actividad">
           <div class="card-dash-header">
             <h2 id="titulo-actividad" class="card-dash-titulo">
               <svg
@@ -342,36 +287,38 @@
                 aria-hidden="true"
                 focusable="false"
               >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
               </svg>
               Actividad
             </h2>
           </div>
 
-          <!-- Solicitudes de amistad -->
-          <div class="actividad-seccion">
-            <div class="actividad-seccion-header">
-              <span class="actividad-tipo">Solicitudes de amistad</span>
-              <span
-                class="actividad-badge"
-                aria-label="{{ solicitudesAmistad.length }} solicitudes de amistad pendientes"
-                >{{ solicitudesAmistad.length }}</span
-              >
-            </div>
-            @for (s of solicitudesAmistad; track s.nombre) {
+          <!-- Solicitudes de amistad (GET /amigos/solicitudes) -->
+          <div class="actividad-grupo" aria-label="Solicitudes de amistad">
+            <h3 class="actividad-subtitulo">
+              Solicitudes de amistad
+              @if (solicitudesAmistad.length > 0) {
+                <span class="actividad-badge">{{ solicitudesAmistad.length }}</span>
+              }
+            </h3>
+            @for (s of solicitudesAmistad; track s.id) {
               <div class="actividad-row">
-                <div class="actividad-avatar" aria-hidden="true">{{ s.nombre.charAt(0) }}</div>
+                <div class="actividad-avatar actividad-avatar-naranja" aria-hidden="true">
+                  {{ s.nombre.charAt(0) }}
+                </div>
                 <span class="actividad-nombre">{{ s.nombre }}</span>
                 <div class="actividad-acciones">
                   <button
                     class="btn-aceptar"
-                    [attr.aria-label]="'Aceptar solicitud de ' + s.nombre"
+                    (click)="aceptarSolicitud(s)"
+                    [attr.aria-label]="'Aceptar solicitud de amistad de ' + s.nombre"
                   >
                     Aceptar
                   </button>
                   <button
                     class="btn-rechazar"
-                    [attr.aria-label]="'Rechazar solicitud de ' + s.nombre"
+                    (click)="rechazarSolicitud(s)"
+                    [attr.aria-label]="'Rechazar solicitud de amistad de ' + s.nombre"
                   >
                     Rechazar
                   </button>
@@ -383,16 +330,14 @@
             }
           </div>
 
-          <!-- Peticiones de batalla -->
-          <div class="actividad-seccion">
-            <div class="actividad-seccion-header">
-              <span class="actividad-tipo">Peticiones de batalla</span>
-              <span
-                class="actividad-badge actividad-badge-rojo"
-                aria-label="{{ solicitudesBatalla.length }} peticiones de batalla pendientes"
-                >{{ solicitudesBatalla.length }}</span
-              >
-            </div>
+          <!-- Peticiones de batalla (endpoint pendiente; muestra vacío) -->
+          <div class="actividad-grupo" aria-label="Peticiones de batalla">
+            <h3 class="actividad-subtitulo">
+              Peticiones de batalla
+              @if (solicitudesBatalla.length > 0) {
+                <span class="actividad-badge">{{ solicitudesBatalla.length }}</span>
+              }
+            </h3>
             @for (s of solicitudesBatalla; track s.nombre) {
               <div class="actividad-row">
                 <div class="actividad-avatar actividad-avatar-rojo" aria-hidden="true">
@@ -424,7 +369,7 @@
 
       <!-- COLUMNA CENTRAL -->
       <div class="col-centro">
-        <!-- Tu colección resumen -->
+        <!-- Tu colección resumen (datos de GET /xuxemons) -->
         <article class="card-dash card-coleccion" aria-labelledby="titulo-coleccion">
           <div class="card-dash-header">
             <h2 id="titulo-coleccion" class="card-dash-titulo">
@@ -465,7 +410,7 @@
               <span class="tipo-cantidad">{{ coleccion.aire }}</span>
             </div>
           </div>
-          <!-- Barra de progreso de la colección -->
+          <!-- Barra de progreso sobre 48 xuxemons posibles -->
           <div class="progreso-coleccion">
             <div class="progreso-label">
               <span>Progreso de colección</span>
@@ -484,7 +429,7 @@
           </div>
         </article>
 
-        <!-- Estadísticas de hoy -->
+        <!-- Estadísticas (endpoint de batallas pendiente; valores a 0) -->
         <article class="card-dash" aria-labelledby="titulo-estadisticas">
           <div class="card-dash-header">
             <h2 id="titulo-estadisticas" class="card-dash-titulo">
@@ -523,7 +468,6 @@
               <span class="stat-lbl">Racha</span>
             </div>
           </div>
-          <!-- Ratio de victorias visual -->
           <div class="ratio-wrapper">
             <div class="ratio-label-row">
               <span class="ratio-label-izq">Victorias {{ estadisticas.ganadas }}</span>
@@ -534,7 +478,9 @@
             <div
               class="ratio-barra"
               role="progressbar"
-              [attr.aria-valuenow]="(estadisticas.ganadas / estadisticas.jugadas) * 100"
+              [attr.aria-valuenow]="
+                estadisticas.jugadas > 0 ? (estadisticas.ganadas / estadisticas.jugadas) * 100 : 0
+              "
               aria-valuemin="0"
               aria-valuemax="100"
               [attr.aria-label]="
@@ -543,13 +489,17 @@
             >
               <div
                 class="ratio-fill-win"
-                [style.width]="(estadisticas.ganadas / estadisticas.jugadas) * 100 + '%'"
+                [style.width]="
+                  estadisticas.jugadas > 0
+                    ? (estadisticas.ganadas / estadisticas.jugadas) * 100 + '%'
+                    : '0%'
+                "
               ></div>
             </div>
           </div>
         </article>
 
-        <!-- Mochila rápida -->
+        <!-- Mochila rápida (GET /mochila → res.total + slots calculados) -->
         <article class="card-dash card-mochila" aria-labelledby="titulo-mochila">
           <div class="card-dash-header">
             <h2 id="titulo-mochila" class="card-dash-titulo">
@@ -599,46 +549,52 @@
 
       <!-- COLUMNA DERECHA -->
       <div class="col-der">
-        <!-- Xuxemon listo para la batalla -->
+        <!-- Xuxemon listo para la batalla (primer xuxemon sano del usuario) -->
         <article class="card-dash card-batalla" aria-labelledby="titulo-batalla">
           <h2 id="titulo-batalla" class="card-dash-titulo card-dash-titulo-centro">
             <span aria-hidden="true">⚔️</span> Listo para luchar
           </h2>
-          <div class="batalla-avatar-wrapper">
-            <div class="batalla-avatar-bg">
-              <img src="animales/boohoot.png" alt="boohoot" class="boohoot" />
+          @if (xuxemon) {
+            <div class="batalla-avatar-wrapper">
+              <div class="batalla-avatar-bg">
+                <img src="animales/boohoot.png" alt="{{ xuxemon.nombre }}" class="boohoot" />
+              </div>
             </div>
-          </div>
-          <div class="batalla-info">
-            <h3 class="batalla-nombre">{{ xuxemon.nombre }}</h3>
-            <div class="batalla-tags">
-              <span class="tag-tipo">{{ xuxemon.tipo }}</span>
-              <span class="tag-tamano">{{ xuxemon.tamano }}</span>
+            <div class="batalla-info">
+              <h3 class="batalla-nombre">{{ xuxemon.nombre }}</h3>
+              <div class="batalla-tags">
+                <span class="tag-tipo">{{ xuxemon.tipo }}</span>
+                <span class="tag-tamano">{{ xuxemon.tamano }}</span>
+              </div>
+              <p class="batalla-sub">¿Listo para una batalla rápida?</p>
             </div>
-            <p class="batalla-sub">¿Listo para una batalla rápida?</p>
-          </div>
-          <button class="btn-luchar">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
-              <line x1="13" y1="19" x2="19" y2="13" />
-              <line x1="16" y1="16" x2="20" y2="20" />
-            </svg>
-            ¡A luchar!
-          </button>
+            <button class="btn-luchar">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
+                <line x1="13" y1="19" x2="19" y2="13" />
+                <line x1="16" y1="16" x2="20" y2="20" />
+              </svg>
+              ¡A luchar!
+            </button>
+          } @else {
+            <p class="actividad-vacia" style="text-align: center; padding: 24px 0">
+              Todos tus Xuxemons están enfermos o aún no tienes ninguno.
+            </p>
+          }
         </article>
 
-        <!-- Amigos online -->
+        <!-- Amigos (GET /amigos) -->
         <article class="card-dash" aria-labelledby="titulo-amigos">
           <div class="card-dash-header">
             <h2 id="titulo-amigos" class="card-dash-titulo">
@@ -674,7 +630,8 @@
                     [attr.aria-label]="
                       a.nombre + (a.online ? ' está en línea' : ' está desconectado')
                     "
-                  ></span>
+                  >
+                  </span>
                 </div>
                 <div class="amigo-info">
                   <span class="amigo-nombre">{{ a.nombre }}</span>
@@ -689,6 +646,9 @@
                   Retar
                 </button>
               </div>
+            }
+            @if (amigos.length === 0) {
+              <p class="actividad-vacia">Aún no tienes amigos añadidos</p>
             }
           </div>
         </article>

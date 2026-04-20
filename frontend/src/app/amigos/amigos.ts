@@ -13,8 +13,10 @@ import { Nav } from '../shared/nav/nav';
   styleUrls: ['./amigos.css'],
 })
 export class Amigos implements OnInit {
-  // Datos del usuario autenticado (para la cabecera)
   usuario: any = null;
+
+  // Lista de todos los usuarios cargada una sola vez
+  todosLosUsuarios: any[] = [];
 
   // --- BÚSQUEDA ---
   terminoBusqueda: string = '';
@@ -35,8 +37,48 @@ export class Amigos implements OnInit {
 
   ngOnInit(): void {
     this.cargarUsuario();
+    this.cargarTodosLosUsuarios();  // ← carga única al entrar
     this.cargarSolicitudesPendientes();
     this.cargarListaAmigos();
+  }
+
+  // Carga todos los usuarios una sola vez para buscar localmente
+  private cargarTodosLosUsuarios(): void {
+    this.authService.obtenerTodosUsuarios().subscribe({
+      next: (res) => {
+        this.todosLosUsuarios = res.usuarios ?? [];
+      },
+      error: () => {
+        this.todosLosUsuarios = [];
+      },
+    });
+  }
+
+  // Búsqueda 100% en el front, sin llamada al backend
+  buscar(): void {
+    const termino = this.terminoBusqueda.trim().toLowerCase();
+    this.resultadoBusqueda = null;
+    this.errorBusqueda = '';
+
+    if (!termino) return;
+
+    const usuarioActual = this.authService.obtenerUsuario();
+
+    const encontrado = this.todosLosUsuarios.find(
+      (u) =>
+        u.public_id?.toLowerCase() === termino &&
+        u.id !== usuarioActual?.id  // que no te encuentres a ti mismo
+    );
+
+    if (!encontrado) {
+      this.errorBusqueda = 'No se ha encontrado ningún jugador con ese ID.';
+      return;
+    }
+
+    const yaEsAmigo = this.listaAmigos.some((a) => a.user_id === encontrado.id);
+    const solicitudPendiente = encontrado.solicitud_enviada ?? false;
+
+    this.resultadoBusqueda = { ...encontrado, yaEsAmigo, solicitudPendiente };
   }
 
   // Carga los datos del usuario autenticado para mostrarlos en la cabecera
@@ -74,36 +116,6 @@ export class Amigos implements OnInit {
       error: () => {
         this.listaAmigos = [];
         this.cargando = false;
-      },
-    });
-  }
-
-  // Busca un usuario por su public_id (#NombreXXXX)
-  buscar(): void {
-    const termino = this.terminoBusqueda.trim();
-    if (!termino) return;
-
-    this.buscando = true;
-    this.resultadoBusqueda = null;
-    this.errorBusqueda = '';
-
-    // TODO backend: GET /amigos/buscar?public_id= — pendiente de implementación
-    this.authService.buscarAmigo(termino).subscribe({
-      next: (res) => {
-        const usuario = res.usuario ?? null;
-        if (!usuario) {
-          this.errorBusqueda = 'No se ha encontrado ningún jugador con ese ID.';
-          this.buscando = false;
-          return;
-        }
-        const yaEsAmigo = this.listaAmigos.some((a) => a.id === usuario.id);
-        const solicitudPendiente = usuario.solicitud_enviada ?? false;
-        this.resultadoBusqueda = { ...usuario, yaEsAmigo, solicitudPendiente };
-        this.buscando = false;
-      },
-      error: () => {
-        this.errorBusqueda = 'No se ha encontrado ningún jugador con ese ID.';
-        this.buscando = false;
       },
     });
   }

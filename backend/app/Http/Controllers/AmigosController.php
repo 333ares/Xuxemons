@@ -8,12 +8,11 @@ use Illuminate\Http\Request;
 
 class AmigosController extends Controller
 {
+
     public function buscarUsuario(Request $request)
     {
-        // Buscamos el usuario por su public_id
         $usuario = User::where('public_id', $request->public_id)->first();
 
-        // Si no existe, devolvemos error
         if (!$usuario) {
             return response()->json([
                 'message' => 'error',
@@ -21,14 +20,23 @@ class AmigosController extends Controller
             ], 404);
         }
 
-        // Devolvemos solo los campos publicos (nunca la contraseña)
+        // Comprobamos si ya hay una solicitud pendiente o amistad existente
+        $solicitudEnviada = \App\Models\Amigo::where(function ($q) use ($request, $usuario) {
+            $q->where('sender_id', $request->user()->id)
+                ->where('receiver_id', $usuario->id);
+        })->orWhere(function ($q) use ($request, $usuario) {
+            $q->where('sender_id', $usuario->id)
+                ->where('receiver_id', $request->user()->id);
+        })->exists();
+
         return response()->json([
             'message' => 'success',
             'usuario' => [
-                'public_id' => $usuario->public_id,
-                'name' => $usuario->name,
-                'surname' => $usuario->surname,
-                'email' => $usuario->email
+                'id'               => $usuario->id,
+                'public_id'        => $usuario->public_id,
+                'name'             => $usuario->name,
+                'surname'          => $usuario->surname,
+                'solicitud_enviada' => $solicitudEnviada
             ]
         ], 200);
     }
@@ -160,8 +168,9 @@ class AmigosController extends Controller
             $amigo = $f->sender_id === $userId ? $f->receiver : $f->sender;
 
             return [
-                'id' => $f->id, // id de la friendship (para eliminar)
-                'name' => $amigo->name,
+                'id'      => $f->id,       // id de la friendship (para eliminar)
+                'user_id' => $amigo->id,
+                'name'    => $amigo->name,
                 'surname' => $amigo->surname,
                 'public_id' => $amigo->public_id,
             ];
