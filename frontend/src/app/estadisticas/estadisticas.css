@@ -1,0 +1,595 @@
+/*  Wrapper general  */
+
+.page-wrapper {
+  min-height: 100vh;
+  background-color: #f4f3f3;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+}
+
+/*  Cabecera (idéntica a parametros.html)  */
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ebebeb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo-img {
+  height: 36px;
+  width: auto;
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #3b2101;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background-color: transparent;
+  border: 1.5px solid #d1d1d1;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #444;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-volver:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.admin-chip {
+  background-color: #ede9fe;
+  color: #5b21b6;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+}
+
+/*  Main  */
+
+.stats-main {
+  flex: 1;
+  padding: 36px 40px 120px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/*  Estado de carga  */
+
+.cargando-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 0;
+  color: #888;
+  font-size: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ebebeb;
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+/*  Título de sección  */
+
+.stats-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.seccion-titulo-wrapper {
+  margin-bottom: 4px;
+}
+
+.seccion-titulo {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin: 0 0 4px;
+}
+
+.seccion-subtitulo {
+  font-size: 1rem;
+  color: #888;
+  margin: 0;
+}
+
+/*  Grid de KPIs  */
+
+.kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Variante alerta: borde sutil rojo cuando hay enfermos */
+.kpi-card--alerta {
+  border-left: 4px solid #fca5a5;
+}
+
+.kpi-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: #fff7ed;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.kpi-icon--enfermos {
+  background-color: #fef2f2;
+}
+
+.kpi-valor {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #3b2101;
+  line-height: 1;
+}
+
+.kpi-valor--alerta {
+  color: #ef4444;
+}
+
+.kpi-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.kpi-sub {
+  font-size: 0.82rem;
+  color: #aaa;
+}
+
+/*  Fila doble: donut + barras  */
+
+.stats-fila-doble {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 20px;
+}
+
+/*  Tarjeta genérica  */
+
+.stat-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px 36px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: #fff7ed;
+  flex-shrink: 0;
+}
+
+.stat-card-titulo {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin: 0;
+}
+
+.stat-card-desc {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/*  Donut  */
+
+.stat-card--donut {
+  align-items: center;
+  text-align: center;
+}
+
+.stat-card--donut .stat-card-header {
+  width: 100%;
+}
+
+.donut-wrapper {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.donut-svg {
+  width: 100%;
+  height: 100%;
+  /* La animación al entrar es un plus visual */
+  animation: fadeIn 0.4s ease;
+}
+
+/* El arco sanos arranca desde las 12h (rotate -90 en el SVG) y avanza en sentido horario */
+.donut-sanos {
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.donut-enfermos {
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.donut-centro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donut-porcentaje {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: #3b2101;
+  line-height: 1;
+}
+
+.donut-texto {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+.donut-leyenda {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.leyenda-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.leyenda-dot--sanos   { background-color: #FFAA4A; }
+.leyenda-dot--enfermos { background-color: #fca5a5; }
+
+/*  Barras de infección  */
+
+.barras-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.barra-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.barra-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.barra-nombre {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.barra-porcentaje {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #3b2101;
+}
+
+.barra-track {
+  height: 10px;
+  background-color: #f0eeee;
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.barra-fill {
+  height: 100%;
+  border-radius: 50px;
+  transition: width 0.5s ease;
+  min-width: 4px; /* Para que sea visible cuando el % es 0 */
+}
+
+.barra-fill--verde    { background-color: #4ade80; }
+.barra-fill--amarillo { background-color: #facc15; }
+.barra-fill--naranja  { background-color: #FFAA4A; }
+.barra-fill--rojo     { background-color: #f87171; }
+
+.infeccion-nota {
+  font-size: 0.82rem;
+  color: #aaa;
+  line-height: 1.5;
+  margin: 0;
+  border-top: 1px solid #f0eeee;
+  padding-top: 12px;
+}
+
+/*  Ranking  */
+
+.ranking-card {
+  gap: 12px;
+}
+
+.ranking-vacio {
+  font-size: 0.95rem;
+  color: #aaa;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.ranking-tabla-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #f0eeee;
+}
+
+.ranking-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.ranking-tabla thead tr {
+  background-color: #fafafa;
+  border-bottom: 2px solid #f0eeee;
+}
+
+.ranking-tabla th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #777;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.ranking-tabla td {
+  padding: 14px 16px;
+  color: #444;
+  border-bottom: 1px solid #f5f5f5;
+  vertical-align: middle;
+}
+
+.ranking-tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Los tres primeros tienen un fondo levemente más cálido */
+.ranking-top3 td {
+  background-color: #fffbf5;
+}
+
+.ranking-tabla tbody tr:hover td {
+  background-color: #fff7ed;
+  transition: background-color 0.15s ease;
+}
+
+.col-pos {
+  width: 56px;
+  text-align: center !important;
+}
+
+.col-num {
+  text-align: right !important;
+}
+
+.col-nombre {
+  font-weight: 500;
+  color: #3b2101;
+}
+
+.col-xuxemons {
+  text-align: right;
+}
+
+/* Medallas de posición */
+.medalla {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.medalla--oro    { background-color: #fef08a; color: #78350f; }
+.medalla--plata  { background-color: #e2e8f0; color: #475569; }
+.medalla--bronce { background-color: #fed7aa; color: #92400e; }
+.medalla--resto  { background-color: #f4f4f4; color: #888; }
+
+/* Badge de número de xuxemons */
+.num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff7ed;
+  color: #c2760a;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* ID público en monospace */
+.public-id {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  background-color: #f4f4f4;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #555;
+}
+
+/*  Animación de entrada  */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.stats-contenido {
+  animation: fadeIn 0.3s ease;
+}
+
+/*  RESPONSIVE  */
+
+/* Tablet grande */
+@media (max-width: 1200px) {
+  .kpis-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .stats-fila-doble {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card--donut {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* Tablet pequeña */
+@media (max-width: 700px) {
+  .stats-main {
+    padding: 24px 20px 100px;
+  }
+
+  .stats-header {
+    padding: 12px 20px;
+  }
+}
+
+/* Móvil */
+@media (max-width: 480px) {
+  .kpis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seccion-titulo {
+    font-size: 1.4rem;
+  }
+
+  .kpi-valor {
+    font-size: 2rem;
+  }
+}
