@@ -338,7 +338,7 @@
                 <span class="actividad-badge">{{ solicitudesBatalla.length }}</span>
               }
             </h3>
-            @for (s of solicitudesBatalla; track s.nombre) {
+            @for (s of solicitudesBatalla; track s.id) {
               <div class="actividad-row">
                 <div class="actividad-avatar actividad-avatar-rojo" aria-hidden="true">
                   {{ s.nombre.charAt(0) }}
@@ -347,12 +347,14 @@
                 <div class="actividad-acciones">
                   <button
                     class="btn-aceptar"
+                    (click)="aceptarBatalla(s)"
                     [attr.aria-label]="'Aceptar petición de batalla de ' + s.nombre"
                   >
                     Aceptar
                   </button>
                   <button
                     class="btn-rechazar"
+                    (click)="rechazarBatalla(s)"
                     [attr.aria-label]="'Rechazar petición de batalla de ' + s.nombre"
                   >
                     Rechazar
@@ -639,7 +641,6 @@
                 </div>
                 <button
                   class="btn-retar"
-                  [disabled]="!a.online"
                   [attr.aria-label]="'Retar a ' + a.nombre"
                   [attr.aria-disabled]="!a.online"
                 >

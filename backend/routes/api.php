@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AmigosController;
+use App\Http\Controllers\BatallaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MochilaController;
@@ -53,4 +54,10 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/amigos/rechazar', [AmigosController::class, 'rechazarSolicitud']);
     Route::get('/amigos', [AmigosController::class, 'listarAmigos']);
     Route::delete('/amigos/{id}', [AmigosController::class, 'eliminarAmigo']);
+
+    // Batallas
+    Route::post('/batallas/solicitud', [BatallaController::class, 'enviarSolicitud']);
+    Route::get('/batallas/solicitudes', [BatallaController::class, 'listarSolicitudes']);
+    Route::post('/batallas/aceptar', [BatallaController::class, 'aceptarSolicitud']);
+    Route::delete('/batallas/rechazar', [BatallaController::class, 'rechazarSolicitud']);
 });
