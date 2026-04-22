@@ -1,51 +1,239 @@
-<div class="mant-wrapper">
-  <header class="mant-header">
-    <a routerLink="/paginaPrincipal" class="mant-logo">
-      <img src="logo.png" alt="Logo Xuxemons" />
-      <span class="mant-logo-text">Xuxemons</span>
-    </a>
-    <img
-      src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
-      alt="Avatar"
-      class="mant-header-avatar"
-    />
-  </header>
+<div class="chat-root">
 
-  <div class="mant-contenido">
-    <div class="mant-icono-wrapper">
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#FFAA4A"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-      </svg>
+  <!-- ══════════════════════════════════════════
+       PANEL IZQUIERDO — lista de conversaciones
+  ══════════════════════════════════════════════ -->
+  <aside class="chat-sidebar" [class.chat-sidebar--oculto]="panelVisible === 'chat'">
+
+    <!-- Cabecera del sidebar -->
+    <div class="chat-sidebar-header">
+      <div class="chat-sidebar-titulo-row">
+        <a routerLink="/paginaPrincipal" class="chat-logo">
+          <img src="logo.png" alt="Logo Xuxemons" class="chat-logo-img" />
+          <span class="chat-logo-texto">Xuxemons</span>
+        </a>
+        @if (totalNoLeidos > 0) {
+          <span class="chat-badge-global" aria-label="{{ totalNoLeidos }} mensajes sin leer">
+            {{ totalNoLeidos }}
+          </span>
+        }
+      </div>
+
+      <div class="chat-sidebar-usuario">
+        <div class="chat-avatar chat-avatar--sm" aria-hidden="true">
+          {{ inicialAvatar(usuario?.name) }}
+        </div>
+        <div class="chat-sidebar-usuario-info">
+          <span class="chat-sidebar-nombre">{{ usuario?.name }} {{ usuario?.surname }}</span>
+          <span class="chat-sidebar-pubid">{{ usuario?.public_id }}</span>
+        </div>
+      </div>
     </div>
-    <h1 class="mant-titulo">Chat</h1>
-    <span class="mant-badge">&#128295; En construcción</span>
-    <p class="mant-mensaje">Esta sección estará disponible próximamente.</p>
-    <a routerLink="/paginaPrincipal" class="mant-btn-volver">
-      <svg
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M19 12H5" />
-        <polyline points="12 19 5 12 12 5" />
+
+    <!-- Cabecera sección mensajes -->
+    <div class="chat-sidebar-seccion-header">
+      <h1 class="chat-sidebar-titulo">Mensajes</h1>
+    </div>
+
+    <!-- Búsqueda de conversaciones -->
+    <div class="chat-busqueda-wrapper">
+      <svg class="chat-busqueda-icono" width="15" height="15" viewBox="0 0 24 24" fill="none"
+           stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-      Volver al inicio
-    </a>
-  </div>
-  <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+      <input
+        type="text"
+        class="chat-busqueda-input"
+        placeholder="Busca amigos..."
+        [(ngModel)]="terminoBusqueda"
+        (input)="filtrarConversaciones()"
+        aria-label="Buscar conversación"
+      />
+    </div>
+
+    <!-- Lista de conversaciones -->
+    <div class="chat-conversaciones" role="list" aria-label="Conversaciones">
+
+      @if (cargandoConversaciones && conversaciones.length === 0) {
+        <div class="chat-estado-vacio">
+          <p class="chat-estado-texto">Cargando...</p>
+        </div>
+      }
+
+      @if (!cargandoConversaciones && conversacionesFiltradas.length === 0) {
+        <div class="chat-estado-vacio">
+          <div class="chat-estado-icono">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFAA4A"
+                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          @if (terminoBusqueda) {
+            <p class="chat-estado-texto">Sin resultados para "{{ terminoBusqueda }}"</p>
+          } @else {
+            <p class="chat-estado-texto">Aún no tienes conversaciones.<br/>¡Añade amigos para empezar!</p>
+          }
+        </div>
+      }
+
+      @for (conv of conversacionesFiltradas; track conv.user_id) {
+        <button
+          class="chat-conv-item"
+          [class.chat-conv-item--activo]="conversacionActiva?.user_id === conv.user_id"
+          (click)="seleccionarConversacion(conv)"
+          role="listitem"
+          [attr.aria-label]="'Conversación con ' + conv.name + (conv.unread > 0 ? ', ' + conv.unread + ' sin leer' : '')"
+        >
+          <div class="chat-avatar" aria-hidden="true">{{ inicialAvatar(conv.name) }}</div>
+          <div class="chat-conv-info">
+            <div class="chat-conv-fila-sup">
+              <span class="chat-conv-nombre">{{ conv.name }}</span>
+              <span class="chat-conv-hora">{{ formatearFechaConversacion(conv.ultimo_mensaje_at) }}</span>
+            </div>
+            <div class="chat-conv-fila-inf">
+              <span class="chat-conv-preview" [class.chat-conv-preview--bold]="conv.unread > 0">
+                {{ conv.ultimo_mensaje || 'Sin mensajes aún' }}
+              </span>
+              @if (conv.unread > 0) {
+                <span class="chat-badge-conv" aria-hidden="true">{{ conv.unread }}</span>
+              }
+            </div>
+          </div>
+        </button>
+      }
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════
+       PANEL DERECHO — conversación activa
+  ══════════════════════════════════════════════ -->
+  <main class="chat-panel" [class.chat-panel--visible]="panelVisible === 'chat'">
+
+    <!-- Estado vacío: ninguna conversación seleccionada -->
+    @if (!conversacionActiva) {
+      <div class="chat-placeholder">
+        <div class="chat-placeholder-icono">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#FFAA4A"
+               stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <p class="chat-placeholder-texto">Selecciona una conversación para empezar a chatear</p>
+      </div>
+    }
+
+    <!-- Conversación activa -->
+    @if (conversacionActiva) {
+
+      <!-- Cabecera del panel de chat -->
+      <div class="chat-panel-header">
+        <!-- Botón volver (solo visible en móvil) -->
+        <button class="chat-btn-volver" (click)="volverALista()" aria-label="Volver a la lista">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+        </button>
+
+        <div class="chat-avatar chat-avatar--md" aria-hidden="true">
+          {{ inicialAvatar(conversacionActiva.name) }}
+        </div>
+
+        <div class="chat-panel-header-info">
+          <span class="chat-panel-nombre">{{ conversacionActiva.name }} {{ conversacionActiva.surname }}</span>
+          <span class="chat-panel-pubid">{{ conversacionActiva.public_id }}</span>
+        </div>
+      </div>
+
+      <!-- Área de mensajes -->
+      <div class="chat-mensajes" #mensajesRef role="log" aria-label="Mensajes" aria-live="polite">
+
+        @if (cargandoMensajes) {
+          <div class="chat-estado-vacio">
+            <p class="chat-estado-texto">Cargando mensajes...</p>
+          </div>
+        }
+
+        @if (!cargandoMensajes && mensajes.length === 0) {
+          <div class="chat-estado-vacio chat-estado-vacio--centrado">
+            <div class="chat-placeholder-icono chat-placeholder-icono--sm">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFAA4A"
+                   stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <p class="chat-estado-texto">Aún no hay mensajes. ¡Di algo!</p>
+          </div>
+        }
+
+        <!-- Mensajes agrupados por fecha -->
+        @for (grupo of mensajesAgrupados; track grupo.fecha) {
+          <!-- Separador de fecha -->
+          <div class="chat-separador-fecha" role="separator" aria-label="{{ grupo.fecha }}">
+            <span class="chat-separador-etiqueta">{{ grupo.fecha }}</span>
+          </div>
+
+          @for (msg of grupo.mensajes; track msg.id) {
+            <div
+              class="chat-mensaje-fila"
+              [class.chat-mensaje-fila--mia]="esMio(msg)"
+              [class.chat-mensaje-fila--suya]="!esMio(msg)"
+            >
+              <!-- Avatar del interlocutor (solo en mensajes recibidos) -->
+              @if (!esMio(msg)) {
+                <div class="chat-avatar chat-avatar--msg" aria-hidden="true">
+                  {{ inicialAvatar(conversacionActiva.name) }}
+                </div>
+              }
+
+              <div class="chat-burbuja" [class.chat-burbuja--mia]="esMio(msg)" [class.chat-burbuja--suya]="!esMio(msg)">
+                <span class="chat-burbuja-contenido">{{ msg.content }}</span>
+                <span class="chat-burbuja-hora">
+                  {{ formatearHora(msg.created_at) }}
+                  @if (esMio(msg)) {
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                         [attr.stroke]="msg.read_at ? '#fff' : 'rgba(255,255,255,0.6)'"
+                         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                         style="margin-left:2px" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  }
+                </span>
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Input de envío -->
+      <div class="chat-input-wrapper">
+        <input
+          type="text"
+          class="chat-input-texto"
+          placeholder="Mensaje"
+          [(ngModel)]="nuevoMensaje"
+          (keydown)="onKeydown($event)"
+          [disabled]="enviando"
+          maxlength="1000"
+          aria-label="Escribe un mensaje"
+        />
+        <button
+          class="chat-btn-enviar"
+          (click)="enviarMensaje()"
+          [disabled]="enviando || !nuevoMensaje.trim()"
+          aria-label="Enviar mensaje"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    }
+  </main>
+
+  <!-- Barra de navegación inferior -->
   <app-nav></app-nav>
 </div>
