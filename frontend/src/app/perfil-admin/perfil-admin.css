@@ -107,6 +107,13 @@
   flex-shrink: 0;
 }
 
+.dato-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
 .fecha-registro {
   font-size: 1rem;
   color: #888;
