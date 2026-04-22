@@ -28,7 +28,6 @@ export class CrecimientoXuxemons implements OnInit {
   }
 
   // Carga la configuración actual desde el backend
-  // NOTA: la ruta GET /admin/growthConfig está pendiente de implementación en el backend.
   // Mientras no exista, el componente usa los valores por defecto definidos arriba.
   private cargarGrowthConfig(): void {
     this.auth.obtenerConfigCrecimiento().subscribe({

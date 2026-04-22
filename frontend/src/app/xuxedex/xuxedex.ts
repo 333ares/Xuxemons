@@ -57,6 +57,12 @@ export class Xuxedex implements OnInit {
   mostrarNotificaciones = false;
   notificacionesNuevas = false;
 
+  // Configuración de crecimiento cargada desde el backend.
+  // Los valores por defecto (s=3, m=5) se usan mientras llega la respuesta
+  // o si el backend falla. Una vez cargados, la barra de progreso y el botón
+  // "Subir nivel" reflejan automáticamente lo que el admin haya configurado.
+  growthConfig: { s: number; m: number } = { s: 3, m: 5 };
+
   // Barra de level-up
   get xuxesActuales(): number {
     return this.xuxemonSeleccionado?.xuxes_count ?? 0;
@@ -89,8 +95,9 @@ export class Xuxedex implements OnInit {
 
   ngOnInit(): void {
     this.cargarUsuario();
+    this.cargarConfigCrecimiento(); // Carga los umbrales de nivel desde el backend
     this.listarXuxemons();
-    this.cargarTodosLosXuxemons(); // carga única para el buscador local
+    this.cargarTodosLosXuxemons();
     this.comprobarNotificacionesDiarias();
   }
 
@@ -102,6 +109,27 @@ export class Xuxedex implements OnInit {
         this.usuario = res.usuario ?? res;
       },
       error: (err) => console.error('Error al cargar los datos del usuario:', err),
+    });
+  }
+
+  // Carga desde el backend las xuxes necesarias para subir de nivel.
+  // Si la petición falla se mantienen los valores por defecto (s=3, m=5)
+  // para que la UI nunca quede rota.
+  private cargarConfigCrecimiento(): void {
+    this.auth.obtenerConfigCrecimiento().subscribe({
+      next: (res) => {
+        const cfg = res.config;
+        if (cfg) {
+          this.growthConfig = {
+            s: cfg.xuxes_s_a_m ?? 3,
+            m: cfg.xuxes_m_a_g ?? 5,
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar la configuración de crecimiento:', err);
+        // Se mantienen los valores por defecto definidos en la propiedad
+      },
     });
   }
 
@@ -266,7 +294,7 @@ export class Xuxedex implements OnInit {
 
   toggleNotificaciones(): void {
     this.mostrarNotificaciones = !this.mostrarNotificaciones;
-    if (this.mostrarNotificaciones && this.notificacionesNuevas) {
+    if (this.mostrarNotificaciones) {
       const hoy = new Date().toISOString().split('T')[0];
       localStorage.setItem('xuxemons_notif_vista', hoy);
       this.notificacionesNuevas = false;
@@ -278,11 +306,8 @@ export class Xuxedex implements OnInit {
   }
 
   @HostListener('document:keydown.escape')
-  onEscapeKey(): void {
+  onEscape(): void {
     this.mostrarNotificaciones = false;
-    this.mostrarConfirmacionAlimentar = false;
-    this.mostrarModalVacuna = false;
-    this.mostrarDialogoBorrar = false;
   }
 
   // --- ALIMENTAR ---
@@ -290,8 +315,9 @@ export class Xuxedex implements OnInit {
   mostrarConfirmacionAlimentar = false;
 
   abrirConfirmacionAlimentar(): void {
-    if (this.cargandoFeed) return;
-    this.mostrarConfirmacionAlimentar = true;
+    if (this.xuxemonSeleccionado) {
+      this.mostrarConfirmacionAlimentar = true;
+    }
   }
 
   cerrarConfirmacionAlimentar(): void {
@@ -299,7 +325,7 @@ export class Xuxedex implements OnInit {
   }
 
   confirmarAlimentar(): void {
-    this.mostrarConfirmacionAlimentar = false;
+    this.cerrarConfirmacionAlimentar();
     if (this.xuxemonSeleccionado) {
       this.alimentarXuxemon(this.xuxemonSeleccionado);
     }
@@ -396,7 +422,6 @@ export class Xuxedex implements OnInit {
       next: () => {
         const idBorrado = this.xuxemonSeleccionado!.id;
         this.xuxemons = this.xuxemons.filter((x) => x.id !== idBorrado);
-        // También lo quitamos de la lista completa para que no salga en búsquedas
         this.todosLosXuxemons = this.todosLosXuxemons.filter((x) => x.id !== idBorrado);
         this.xuxemonSeleccionado = this.xuxemons[0] ?? null;
         this.cerrarDialogoBorrar();
@@ -468,7 +493,6 @@ export class Xuxedex implements OnInit {
     const idx = this.xuxemons.findIndex((x) => x.id === actualizado.id);
     if (idx !== -1) this.xuxemons[idx] = { ...this.xuxemons[idx], ...actualizado };
 
-    // Sincronizamos también en la lista completa
     const idx2 = this.todosLosXuxemons.findIndex((x) => x.id === actualizado.id);
     if (idx2 !== -1)
       this.todosLosXuxemons[idx2] = { ...this.todosLosXuxemons[idx2], ...actualizado };
@@ -478,10 +502,12 @@ export class Xuxedex implements OnInit {
     }
   }
 
+  // Calcula las xuxes necesarias para subir de nivel usando la config
+  // cargada desde el backend. Si el xuxemon tiene bajón de azúcar se añaden
+  // 2 xuxes extra, igual que en el backend (XuxemonsController.php).
   calcularXuxesNecesarias(xuxemon: Xuxemon | null): number {
-    if (!xuxemon) return 3;
-    const base: Record<string, number> = { s: 3, m: 5 };
-    const xuxesBase = base[xuxemon.size] ?? 0;
+    if (!xuxemon) return this.growthConfig.s;
+    const xuxesBase = this.growthConfig[xuxemon.size as 's' | 'm'] ?? 0;
     const sickness = xuxemon.sickness ? String(xuxemon.sickness).toLowerCase().trim() : '';
     const extra =
       sickness === 'bajon de azucar' || sickness === 'bajón de azúcar' || sickness === 'bajon'
