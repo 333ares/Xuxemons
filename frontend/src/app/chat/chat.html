@@ -1,8 +1,6 @@
 <div class="chat-root">
 
-  <!-- ══════════════════════════════════════════
-       PANEL IZQUIERDO — lista de conversaciones
-  ══════════════════════════════════════════════ -->
+  <!-- PANEL IZQUIERDO — lista de conversaciones -->
   <aside class="chat-sidebar" [class.chat-sidebar--oculto]="panelVisible === 'chat'">
 
     <!-- Cabecera del sidebar -->
@@ -104,9 +102,7 @@
     </div>
   </aside>
 
-  <!-- ══════════════════════════════════════════
-       PANEL DERECHO — conversación activa
-  ══════════════════════════════════════════════ -->
+  <!-- PANEL DERECHO — conversación activa -->
   <main class="chat-panel" [class.chat-panel--visible]="panelVisible === 'chat'">
 
     <!-- Estado vacío: ninguna conversación seleccionada -->
