@@ -1,2 +1,307 @@
+<div class="page-wrapper">
+
+  <!-- CABECERA -->
+  <header class="stats-header">
+    <div class="header-left">
+      <a routerLink="perfilAdmin" class="header-logo" aria-label="Volver al panel de administración">
+        <img src="logo.png" alt="Logo Xuxemons" class="logo-img" />
+        <span class="logo-text">Xuxemons</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <a routerLink="/admin" class="btn-volver" aria-label="Volver al panel">← Panel</a>
+      <span class="admin-chip" aria-label="Modo administrador activo">🤖 Admin</span>
+    </div>
+  </header>
+
+  <main class="stats-main" id="main-content">
+
+    <!-- ESTADO DE CARGA -->
+    <div *ngIf="cargando" class="cargando-wrapper" aria-live="polite" aria-label="Cargando estadísticas">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Cargando estadísticas...</p>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div *ngIf="!cargando" class="stats-contenido">
+
+      <!-- TÍTULO DE SECCIÓN -->
+      <div class="seccion-titulo-wrapper">
+        <h1 class="seccion-titulo">Estadísticas globales</h1>
+        <p class="seccion-subtitulo">Vista general del estado de la plataforma Xuxemons</p>
+      </div>
+
+      <!-- FILA 1: KPI CARDS -->
+      <div class="kpis-grid" role="list" aria-label="Indicadores clave">
+
+        <!-- Jugadores -->
+        <article class="kpi-card" role="listitem">
+          <div class="kpi-icon kpi-icon--usuarios" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+              fill="none" stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <span class="kpi-valor">{{ totalUsuarios }}</span>
+          <span class="kpi-label">Jugadores registrados</span>
+          <span class="kpi-sub">Media {{ mediaXuxemonsPorUsuario }} Xuxemons/jugador</span>
+        </article>
+
+        <!-- Xuxemons -->
+        <article class="kpi-card" role="listitem">
+          <div class="kpi-icon kpi-icon--xuxemons" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+              fill="none" stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+              <line x1="9" y1="9" x2="9.01" y2="9" />
+              <line x1="15" y1="9" x2="15.01" y2="9" />
+            </svg>
+          </div>
+          <span class="kpi-valor">{{ totalXuxemons }}</span>
+          <span class="kpi-label">Xuxemons en total</span>
+          <span class="kpi-sub">{{ porcentajeSanos }}% en buen estado</span>
+        </article>
+
+        <!-- Enfermos -->
+        <article class="kpi-card kpi-card--alerta" role="listitem">
+          <div class="kpi-icon kpi-icon--enfermos" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+              fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
+          <span class="kpi-valor kpi-valor--alerta">{{ totalXuxemonsEnfermos }}</span>
+          <span class="kpi-label">Xuxemons enfermos</span>
+          <span class="kpi-sub">{{ porcentajeEnfermos }}% del total</span>
+        </article>
+
+        <!-- Objetos -->
+        <article class="kpi-card" role="listitem">
+          <div class="kpi-icon kpi-icon--objetos" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+              fill="none" stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+          </div>
+          <span class="kpi-valor">{{ totalObjetos }}</span>
+          <span class="kpi-label">Objetos en mochilas</span>
+          <span class="kpi-sub">Media {{ mediaObjetosPorUsuario }} objetos/jugador</span>
+        </article>
+
+      </div>
+
+      <!-- FILA 2: SALUD GLOBAL + TASAS DE INFECCIÓN -->
+      <div class="stats-fila-doble">
+
+        <!-- Salud global (donut SVG) -->
+        <section class="stat-card stat-card--donut" aria-labelledby="titulo-salud">
+          <div class="stat-card-header">
+            <div class="stat-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                fill="none" stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            </div>
+            <h2 id="titulo-salud" class="stat-card-titulo">Salud global</h2>
+          </div>
+
+          <div class="donut-wrapper" role="img" [attr.aria-label]="porcentajeSanos + '% de Xuxemons sanos'">
+            <svg class="donut-svg" viewBox="0 0 120 120" aria-hidden="true">
+              <!-- Anillo base (gris) -->
+              <circle
+                class="donut-base"
+                cx="60" cy="60" r="52"
+                fill="none"
+                stroke="#f0eeee"
+                stroke-width="12"
+              />
+              <!-- Arco enfermos (rojo, encima del gris) -->
+              <circle
+                class="donut-enfermos"
+                cx="60" cy="60" r="52"
+                fill="none"
+                stroke="#fca5a5"
+                stroke-width="12"
+                stroke-linecap="round"
+                [attr.stroke-dasharray]="2 * 3.14159 * 52"
+                [attr.stroke-dashoffset]="donutOffset(porcentajeEnfermos)"
+                transform="rotate(-90 60 60)"
+              />
+              <!-- Arco sanos (naranja) -->
+              <circle
+                class="donut-sanos"
+                cx="60" cy="60" r="52"
+                fill="none"
+                stroke="#FFAA4A"
+                stroke-width="12"
+                stroke-linecap="round"
+                [attr.stroke-dasharray]="2 * 3.14159 * 52"
+                [attr.stroke-dashoffset]="donutOffset(porcentajeSanos)"
+                transform="rotate(-90 60 60)"
+              />
+            </svg>
+            <div class="donut-centro" aria-hidden="true">
+              <span class="donut-porcentaje">{{ porcentajeSanos }}%</span>
+              <span class="donut-texto">sanos</span>
+            </div>
+          </div>
+
+          <div class="donut-leyenda" aria-hidden="true">
+            <div class="leyenda-item">
+              <span class="leyenda-dot leyenda-dot--sanos"></span>
+              <span>Sanos ({{ porcentajeSanos }}%)</span>
+            </div>
+            <div class="leyenda-item">
+              <span class="leyenda-dot leyenda-dot--enfermos"></span>
+              <span>Enfermos ({{ porcentajeEnfermos }}%)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tasas de infección (barras) -->
+        <section class="stat-card" aria-labelledby="titulo-infeccion">
+          <div class="stat-card-header">
+            <div class="stat-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                fill="none" stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="2" />
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+              </svg>
+            </div>
+            <h2 id="titulo-infeccion" class="stat-card-titulo">Probabilidad de infección</h2>
+          </div>
+          <p class="stat-card-desc">Configuración activa al alimentar un Xuxemon sano.</p>
+
+          <div class="barras-wrapper" role="list">
+
+            <!-- Sin enfermedad -->
+            <div class="barra-item" role="listitem">
+              <div class="barra-meta">
+                <span class="barra-nombre">Sin enfermedad</span>
+                <span class="barra-porcentaje">{{ porcentajeSinEnfermedad }}%</span>
+              </div>
+              <div class="barra-track" role="progressbar"
+                [attr.aria-valuenow]="porcentajeSinEnfermedad" aria-valuemin="0" aria-valuemax="100">
+                <div class="barra-fill barra-fill--verde"
+                  [style.width.%]="porcentajeSinEnfermedad"></div>
+              </div>
+            </div>
+
+            <!-- Bajón de azúcar -->
+            <div class="barra-item" role="listitem">
+              <div class="barra-meta">
+                <span class="barra-nombre">Bajón de azúcar</span>
+                <span class="barra-porcentaje">{{ porcentajeBajon }}%</span>
+              </div>
+              <div class="barra-track" role="progressbar"
+                [attr.aria-valuenow]="porcentajeBajon" aria-valuemin="0" aria-valuemax="100">
+                <div class="barra-fill barra-fill--amarillo"
+                  [style.width.%]="porcentajeBajon"></div>
+              </div>
+            </div>
+
+            <!-- Sobredosis -->
+            <div class="barra-item" role="listitem">
+              <div class="barra-meta">
+                <span class="barra-nombre">Sobredosis de azúcar</span>
+                <span class="barra-porcentaje">{{ porcentajeSobredosis }}%</span>
+              </div>
+              <div class="barra-track" role="progressbar"
+                [attr.aria-valuenow]="porcentajeSobredosis" aria-valuemin="0" aria-valuemax="100">
+                <div class="barra-fill barra-fill--naranja"
+                  [style.width.%]="porcentajeSobredosis"></div>
+              </div>
+            </div>
+
+            <!-- Atracón -->
+            <div class="barra-item" role="listitem">
+              <div class="barra-meta">
+                <span class="barra-nombre">Atracón</span>
+                <span class="barra-porcentaje">{{ porcentajeAtracon }}%</span>
+              </div>
+              <div class="barra-track" role="progressbar"
+                [attr.aria-valuenow]="porcentajeAtracon" aria-valuemin="0" aria-valuemax="100">
+                <div class="barra-fill barra-fill--rojo"
+                  [style.width.%]="porcentajeAtracon"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <p class="infeccion-nota">
+            Estos porcentajes se aplican cada vez que un Xuxemon sano recibe una xuxe.
+            La probabilidad de no enfermar es siempre
+            <strong>{{ porcentajeSinEnfermedad }}%</strong>.
+          </p>
+        </section>
+
+      </div>
+
+      <!-- FILA 3: RANKING DE JUGADORES -->
+      <section class="stat-card ranking-card" aria-labelledby="titulo-ranking">
+        <div class="stat-card-header">
+          <div class="stat-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+              fill="none" stroke="#FFAA4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+              <polyline points="17 6 23 6 23 12" />
+            </svg>
+          </div>
+          <h2 id="titulo-ranking" class="stat-card-titulo">Top jugadores por Xuxemons</h2>
+        </div>
+        <p class="stat-card-desc">Los cinco jugadores con más Xuxemons en su colección.</p>
+
+        <!-- Sin datos -->
+        <p *ngIf="topUsuarios.length === 0" class="ranking-vacio">No hay datos de jugadores disponibles.</p>
+
+        <div *ngIf="topUsuarios.length > 0" class="ranking-tabla-wrapper">
+          <table class="ranking-tabla" aria-label="Ranking de los 5 jugadores con más Xuxemons">
+            <thead>
+              <tr>
+                <th scope="col" class="col-pos">#</th>
+                <th scope="col">Jugador</th>
+                <th scope="col">ID público</th>
+                <th scope="col" class="col-num">Xuxemons</th>
+                <th scope="col" class="col-num">Objetos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let usuario of topUsuarios; let i = index"
+                [class.ranking-top3]="i < 3">
+                <td class="col-pos">
+                  <span class="medalla" [class.medalla--oro]="i === 0"
+                    [class.medalla--plata]="i === 1" [class.medalla--bronce]="i === 2"
+                    [class.medalla--resto]="i >= 3">
+                    {{ i + 1 }}
+                  </span>
+                </td>
+                <td class="col-nombre">{{ usuario.name }} {{ usuario.surname }}</td>
+                <td class="col-id">
+                  <code class="public-id">{{ usuario.public_id }}</code>
+                </td>
+                <td class="col-num col-xuxemons">
+                  <span class="num-badge">{{ usuario.xuxemons }}</span>
+                </td>
+                <td class="col-num">{{ usuario.objetos }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+    <!-- /stats-contenido -->
+
+  </main>
+
   <!-- BARRA DE NAVEGACIÓN INFERIOR -->
   <app-adminav></app-adminav>
+</div>

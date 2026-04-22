@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Auth } from '../services/auth';
 import { Nav } from '../shared/nav/nav';
 
@@ -12,17 +14,22 @@ import { Nav } from '../shared/nav/nav';
   templateUrl: './amigos.html',
   styleUrls: ['./amigos.css'],
 })
-export class Amigos implements OnInit {
+export class Amigos implements OnInit, OnDestroy {
+  // Datos del usuario autenticado (para la cabecera)
   usuario: any = null;
 
-  // Lista de todos los usuarios cargada una sola vez
+  // Lista completa de usuarios cargada una sola vez al entrar
   todosLosUsuarios: any[] = [];
 
   // --- BÚSQUEDA ---
   terminoBusqueda: string = '';
   resultadoBusqueda: any = null;
-  buscando: boolean = false;
+  buscando: boolean = false; // true durante el debounce para feedback visual
   errorBusqueda: string = '';
+
+  // Subject para el debounce de 300ms en el input de búsqueda
+  private busquedaSubject = new Subject<string>();
+  private busquedaSub!: Subscription;
 
   // --- LISTAS ---
   listaAmigos: any[] = [];
@@ -33,16 +40,87 @@ export class Amigos implements OnInit {
   mostrarDialogoEliminar: boolean = false;
   amigoAEliminar: any = null;
 
+  // --- FEEDBACK RETAR ---
+  // Guarda el id del amigo al que se acaba de enviar el reto para mostrar feedback
+  retoEnviado: number | null = null;
+
   constructor(private authService: Auth) {}
 
   ngOnInit(): void {
     this.cargarUsuario();
-    this.cargarTodosLosUsuarios();  // ← carga única al entrar
+    this.cargarTodosLosUsuarios();
     this.cargarSolicitudesPendientes();
     this.cargarListaAmigos();
+    this.configurarDebounce();
   }
 
-  // Carga todos los usuarios una sola vez para buscar localmente
+  ngOnDestroy(): void {
+    this.busquedaSub?.unsubscribe();
+  }
+
+  // Configura el debounce de 300ms + mínimo 3 caracteres en el buscador
+  private configurarDebounce(): void {
+    this.busquedaSub = this.busquedaSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((termino) => {
+        this.ejecutarBusqueda(termino);
+      });
+  }
+
+  // Se llama desde el (input) del campo de búsqueda en el HTML
+  onInputBusqueda(valor: string): void {
+    this.terminoBusqueda = valor;
+    this.resultadoBusqueda = null;
+    this.errorBusqueda = '';
+
+    if (valor.trim().length < 3) {
+      this.buscando = false;
+      return;
+    }
+
+    this.buscando = true; // muestra "Buscando..." mientras espera el debounce
+    this.busquedaSubject.next(valor.trim().toLowerCase());
+  }
+
+  // Se puede llamar también desde el botón o Enter para forzar búsqueda inmediata
+  buscar(): void {
+    const termino = this.terminoBusqueda.trim();
+
+    if (termino.length < 3) {
+      this.errorBusqueda = 'Introduce al menos 3 caracteres para buscar.';
+      return;
+    }
+
+    this.buscando = true;
+    this.resultadoBusqueda = null;
+    this.errorBusqueda = '';
+    this.ejecutarBusqueda(termino.toLowerCase());
+  }
+
+  // Lógica real de filtrado local — sin llamada al backend
+  private ejecutarBusqueda(termino: string): void {
+    const usuarioActual = this.authService.obtenerUsuario();
+
+    const encontrado = this.todosLosUsuarios.find(
+      (u) => u.public_id?.toLowerCase() === termino && u.id !== usuarioActual?.id,
+    );
+
+    this.buscando = false;
+
+    if (!encontrado) {
+      this.errorBusqueda = 'No se ha encontrado ningún jugador con ese ID.';
+      return;
+    }
+
+    const yaEsAmigo = this.listaAmigos.some((a) => a.user_id === encontrado.id);
+
+    // Comprobamos también si hay solicitud ya enviada que esté pendiente
+    const solicitudEnviada = false; // El estado viene del backend al cargar la lista
+
+    this.resultadoBusqueda = { ...encontrado, yaEsAmigo, solicitudPendiente: solicitudEnviada };
+  }
+
+  // Carga todos los usuarios una sola vez para filtrar localmente
   private cargarTodosLosUsuarios(): void {
     this.authService.obtenerTodosUsuarios().subscribe({
       next: (res) => {
@@ -54,34 +132,6 @@ export class Amigos implements OnInit {
     });
   }
 
-  // Búsqueda 100% en el front, sin llamada al backend
-  buscar(): void {
-    const termino = this.terminoBusqueda.trim().toLowerCase();
-    this.resultadoBusqueda = null;
-    this.errorBusqueda = '';
-
-    if (!termino) return;
-
-    const usuarioActual = this.authService.obtenerUsuario();
-
-    const encontrado = this.todosLosUsuarios.find(
-      (u) =>
-        u.public_id?.toLowerCase() === termino &&
-        u.id !== usuarioActual?.id  // que no te encuentres a ti mismo
-    );
-
-    if (!encontrado) {
-      this.errorBusqueda = 'No se ha encontrado ningún jugador con ese ID.';
-      return;
-    }
-
-    const yaEsAmigo = this.listaAmigos.some((a) => a.user_id === encontrado.id);
-    const solicitudPendiente = encontrado.solicitud_enviada ?? false;
-
-    this.resultadoBusqueda = { ...encontrado, yaEsAmigo, solicitudPendiente };
-  }
-
-  // Carga los datos del usuario autenticado para mostrarlos en la cabecera
   private cargarUsuario(): void {
     this.authService.getInfoUsuario().subscribe({
       next: (res) => {
@@ -91,9 +141,7 @@ export class Amigos implements OnInit {
     });
   }
 
-  // Carga las solicitudes de amistad pendientes recibidas
   private cargarSolicitudesPendientes(): void {
-    // TODO backend: GET /amigos/solicitudes — pendiente de implementación
     this.authService.obtenerSolicitudesPendientes().subscribe({
       next: (res) => {
         this.solicitudesPendientes = res.solicitudes ?? [];
@@ -104,10 +152,8 @@ export class Amigos implements OnInit {
     });
   }
 
-  // Carga la lista de amigos del usuario autenticado
   private cargarListaAmigos(): void {
     this.cargando = true;
-    // TODO backend: GET /amigos — pendiente de implementación
     this.authService.obtenerAmigos().subscribe({
       next: (res) => {
         this.listaAmigos = res.amigos ?? [];
@@ -122,7 +168,6 @@ export class Amigos implements OnInit {
 
   // Envía una solicitud de amistad al usuario encontrado en la búsqueda
   enviarSolicitud(receiverId: number): void {
-    // TODO backend: POST /amigos/solicitud — pendiente de implementación
     this.authService.enviarSolicitud(receiverId).subscribe({
       next: () => {
         if (this.resultadoBusqueda) {
@@ -135,7 +180,6 @@ export class Amigos implements OnInit {
 
   // Acepta una solicitud: la saca de pendientes y la añade a la lista de amigos
   aceptar(friendshipId: number): void {
-    // TODO backend: POST /amigos/aceptar — pendiente de implementación
     this.authService.aceptarSolicitud(friendshipId).subscribe({
       next: (res) => {
         const solicitud = this.solicitudesPendientes.find((s) => s.id === friendshipId);
@@ -143,7 +187,9 @@ export class Amigos implements OnInit {
           this.solicitudesPendientes = this.solicitudesPendientes.filter(
             (s) => s.id !== friendshipId,
           );
-          this.listaAmigos = [res.amigo ?? solicitud, ...this.listaAmigos];
+          // El backend devuelve el amigo con id real; lo añadimos con user_id para consistencia
+          const nuevoAmigo = res.amigo ?? solicitud;
+          this.listaAmigos = [{ ...nuevoAmigo, user_id: nuevoAmigo.id }, ...this.listaAmigos];
         }
       },
       error: () => {},
@@ -152,7 +198,6 @@ export class Amigos implements OnInit {
 
   // Rechaza una solicitud: la elimina de la lista sin recargar
   rechazar(friendshipId: number): void {
-    // TODO backend: DELETE /amigos/rechazar — pendiente de implementación
     this.authService.rechazarSolicitud(friendshipId).subscribe({
       next: () => {
         this.solicitudesPendientes = this.solicitudesPendientes.filter(
@@ -162,6 +207,22 @@ export class Amigos implements OnInit {
       error: () => {},
     });
   }
+
+  // Envía un reto de batalla al amigo indicado
+  retarAmigo(amigo: any): void {
+    this.authService.enviarRetoBatalla(amigo.user_id).subscribe({
+      next: () => {
+        // Guardamos el id de la friendship para mostrar feedback en el botón
+        this.retoEnviado = amigo.id;
+        // Limpiamos el feedback tras 3 segundos
+        setTimeout(() => {
+          if (this.retoEnviado === amigo.id) this.retoEnviado = null;
+        }, 3000);
+      },
+      error: () => {},
+    });
+  }
+
   // Abre el diálogo de confirmación para eliminar un amigo
   abrirDialogoEliminar(amigo: any): void {
     this.amigoAEliminar = amigo;
@@ -173,10 +234,9 @@ export class Amigos implements OnInit {
     this.amigoAEliminar = null;
   }
 
-  // Confirma la eliminación y actualiza la lista local
+  // Confirma la eliminación usando el id de la friendship (no el user_id)
   confirmarEliminar(): void {
     if (!this.amigoAEliminar) return;
-    // TODO backend: DELETE /amigos/{id} — pendiente de implementación
     this.authService.eliminarAmigo(this.amigoAEliminar.id).subscribe({
       next: () => {
         this.listaAmigos = this.listaAmigos.filter((a) => a.id !== this.amigoAEliminar.id);

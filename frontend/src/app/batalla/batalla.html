@@ -1,24 +1,31 @@
 <div class="mant-wrapper">
   <header class="mant-header">
-    <a routerLink="/paginaPrincipal" class="mant-logo">
-      <img src="logo.png" alt="Logo Xuxemons" />
-      <span class="mant-logo-text">Xuxemons</span>
+    <a
+      routerLink="/paginaPrincipal"
+      class="mant-logo"
+      aria-label="Volver a la página principal de Xuxemons"
+    >
+      <img src="logo.png" alt="Xuxemons" />
+      <span class="mant-logo-text" aria-hidden="true">Xuxemons</span>
     </a>
     <img
       src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
-      alt="Avatar"
+      alt=""
+      role="presentation"
       class="mant-header-avatar"
     />
   </header>
 
-  <div class="mant-contenido">
-    <div class="mant-icono-wrapper">
+  <main class="mant-contenido" id="main-content">
+    <div class="mant-icono-wrapper" aria-hidden="true">
       <svg
         width="48"
         height="48"
         viewBox="0 0 40 40"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        focusable="false"
+        aria-hidden="true"
       >
         <path
           d="M20 36.6666C29.2048 36.6666 36.6667 29.2047 36.6667 20C36.6667 10.7952 29.2048 3.33331 20 3.33331C10.7953 3.33331 3.33337 10.7952 3.33337 20C3.33337 29.2047 10.7953 36.6666 20 36.6666Z"
@@ -36,10 +43,16 @@
         />
       </svg>
     </div>
+
     <h1 class="mant-titulo">Batalla</h1>
-    <span class="mant-badge">&#128295; En construcción</span>
+    <span class="mant-badge" aria-label="Sección en construcción">&#128295; En construcción</span>
     <p class="mant-mensaje">Esta sección estará disponible próximamente.</p>
-    <a routerLink="/paginaPrincipal" class="mant-btn-volver">
+
+    <a
+      routerLink="/paginaPrincipal"
+      class="mant-btn-volver"
+      aria-label="Volver a la página principal"
+    >
       <svg
         width="15"
         height="15"
@@ -49,13 +62,15 @@
         stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
       >
         <path d="M19 12H5" />
         <polyline points="12 19 5 12 12 5" />
       </svg>
       Volver al inicio
     </a>
-  </div>
+  </main>
 
   <!-- BARRA DE NAVEGACIÓN INFERIOR -->
   <app-nav></app-nav>

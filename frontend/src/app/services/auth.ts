@@ -20,12 +20,10 @@ export class Auth {
 
   // --- AUTENTICACIÓN ---
 
-  // Envía las credenciales al backend y recibe el token JWT
   login(public_id: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { public_id, password });
   }
 
-  // Registra un nuevo usuario en el backend
   registro(datos: {
     name: string;
     surname: string;
@@ -35,7 +33,6 @@ export class Auth {
     return this.http.post(`${this.apiUrl}/registro`, datos);
   }
 
-  // Invalida el token en el backend cerrando la sesión
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/logout`, {}, { headers: this.obtenerCabeceras() });
   }
@@ -54,7 +51,6 @@ export class Auth {
     localStorage.removeItem('token');
   }
 
-  // Guarda el usuario en localStorage (AdminGuard)
   guardarUsuario(usuario: any): void {
     localStorage.setItem('usuario', JSON.stringify(usuario));
   }
@@ -85,18 +81,17 @@ export class Auth {
     return this.http.put(`${this.apiUrl}/usuario`, datos, { headers: this.obtenerCabeceras() });
   }
 
+  // GET /usuarios — lista pública de todos los usuarios (id, name, surname, public_id)
+  obtenerTodosUsuarios(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/usuarios`, { headers: this.obtenerCabeceras() });
+  }
+
   // GET /xuxemonsNav — búsqueda de Xuxemons por nombre (buscador)
   navXuxemons(nav: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/xuxemonsNav?nav=${nav}`, {
       headers: this.obtenerCabeceras(),
     });
   }
-
-  obtenerTodosUsuarios(): Observable<any> {
-  return this.http.get(`${this.apiUrl}/usuarios`, {
-    headers: this.obtenerCabeceras(),
-  });
-}
 
   // --- XUXEDEX ---
 
@@ -139,7 +134,6 @@ export class Auth {
   }
 
   // POST /xuxemon/curar — aplica una vacuna de la mochila a un Xuxemon enfermo
-  // NOTA: ruta existente en backend. El front anterior la llamaba /mochila/aplicarVacuna (incorrecto).
   curarXuxemon(mochilaId: number, xuxemonId: number): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/xuxemon/curar`,
@@ -149,7 +143,6 @@ export class Auth {
   }
 
   // POST /xuxemon/subirNivel — sube de nivel al Xuxemon (s→m o m→g)
-  // NOTA: pendiente de implementación en backend. La ruta aún no existe en api.php.
   subirNivel(id: number): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/xuxemon/subirNivel`,
@@ -203,33 +196,43 @@ export class Auth {
     });
   }
 
-  // GET config diaria (xuxes + xuxemons)
+  // GET /config-diaria — configuración de recompensas diarias (solo admin)
   obtenerConfigDiaria(): Observable<any> {
     return this.http.get(`${this.apiUrl}/config-diaria`, { headers: this.obtenerCabeceras() });
   }
 
-  // Actualiza config xuxes diarias
+  // POST /xuxes-diarias — actualiza config xuxes diarias
   actualizarConfigXuxes(data: { hora: string; cantidad: number }): Observable<any> {
     return this.http.post(`${this.apiUrl}/xuxes-diarias`, data, {
       headers: this.obtenerCabeceras(),
     });
   }
 
-  // Actualiza config xuxemons diarios
+  // POST /xuxemon-diario — actualiza config xuxemons diarios
   actualizarConfigXuxemons(data: { hora: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/xuxemon-diario`, data, {
       headers: this.obtenerCabeceras(),
     });
   }
 
-  // PUT /config-alimentar — actualiza las tasas de infección
-  actualizarTasasInfeccion(data: { bajon: number; sobredosis: number; atracon: number }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/config-alimentar`, data, { headers: this.obtenerCabeceras() });
+  // PUT /config-alimentar — actualiza las tasas de infección / crecimiento
+  actualizarTasasInfeccion(data: {
+    bajon: number;
+    sobredosis: number;
+    atracon: number;
+  }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/config-alimentar`, data, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
-  // PUT /config-alimentar — actualiza la configuración de crecimiento
-  actualizarConfigCrecimiento(data: { pequeno_a_mediano: number; mediano_a_grande: number }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/config-alimentar`, data, { headers: this.obtenerCabeceras() });
+  actualizarConfigCrecimiento(data: {
+    pequeno_a_mediano: number;
+    mediano_a_grande: number;
+  }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/config-alimentar`, data, {
+      headers: this.obtenerCabeceras(),
+    });
   }
 
   obtenerTasasInfeccion(): Observable<any> {
@@ -240,7 +243,7 @@ export class Auth {
     return this.http.get(`${this.apiUrl}/config-alimentar`, { headers: this.obtenerCabeceras() });
   }
 
-  // POST /reset-config-xuxes — resetea la ultima entrega de xuxes
+  // POST /reset-config-xuxes — resetea la última entrega de xuxes
   resetConfigXuxes(): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/reset-config-xuxes`,
@@ -249,7 +252,7 @@ export class Auth {
     );
   }
 
-  // POST /reset-config-xuxemons — resetea la ultima entrega de xuxemons
+  // POST /reset-config-xuxemons — resetea la última entrega de xuxemons
   resetConfigXuxemons(): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/reset-config-xuxemons`,
@@ -259,13 +262,6 @@ export class Auth {
   }
 
   // --- AMIGOS ---
-
-  // GET /amigos/buscar?public_id=XXX — busca un usuario por su public_id
-  buscarAmigo(publicId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/amigos/buscar?public_id=${publicId}`, {
-      headers: this.obtenerCabeceras(),
-    });
-  }
 
   // POST /amigos/solicitud — envía una solicitud de amistad al usuario indicado
   enviarSolicitud(receiverId: number): Observable<any> {
@@ -312,5 +308,74 @@ export class Auth {
     return this.http.delete(`${this.apiUrl}/amigos/${friendshipId}`, {
       headers: this.obtenerCabeceras(),
     });
+  }
+
+  // --- BATALLAS ---
+
+  // POST /batallas/solicitud — envía un reto de batalla al usuario indicado
+  enviarRetoBatalla(receiverId: number): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/batallas/solicitud`,
+      { receiver_id: receiverId },
+      { headers: this.obtenerCabeceras() },
+    );
+  }
+
+  // GET /batallas/solicitudes — lista los retos de batalla recibidos y pendientes
+  obtenerRetosBatalla(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/batallas/solicitudes`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
+  // POST /batallas/aceptar — acepta un reto de batalla por su id
+  aceptarRetoBatalla(retoId: number): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/batallas/aceptar`,
+      { reto_id: retoId },
+      { headers: this.obtenerCabeceras() },
+    );
+  }
+
+  // DELETE /batallas/rechazar — rechaza un reto de batalla por su id
+  rechazarRetoBatalla(retoId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/batallas/rechazar`, {
+      headers: this.obtenerCabeceras(),
+      body: { reto_id: retoId },
+    });
+  }
+
+  // --- CHAT ---
+
+  // GET /chat/conversaciones — lista de amigos con último mensaje y no leídos
+  listarConversaciones(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/chat/conversaciones`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
+  // GET /chat/mensajes/{userId} — historial de mensajes con un usuario
+  listarMensajes(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/chat/mensajes/${userId}`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
+  // POST /chat/mensaje — envía un mensaje a un usuario
+  enviarMensaje(receiverId: number, content: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/chat/mensaje`,
+      { receiver_id: receiverId, content },
+      { headers: this.obtenerCabeceras() },
+    );
+  }
+
+  // PUT /chat/leidos/{userId} — marca como leídos los mensajes de userId
+  marcarLeidos(userId: number): Observable<any> {
+    return this.http.put(
+      `${this.apiUrl}/chat/leidos/${userId}`,
+      {},
+      { headers: this.obtenerCabeceras() },
+    );
   }
 }

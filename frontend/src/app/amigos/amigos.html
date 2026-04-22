@@ -32,7 +32,6 @@
           Busca amigos por su ID, acepta solicitudes y gestiona tu lista.
         </p>
       </div>
-      <!-- Contador resumen rápido -->
       <div class="amigos-stats-row" aria-label="Resumen de tu red">
         <div class="amigos-stat-pill">
           <svg
@@ -104,7 +103,8 @@
           type="text"
           class="amigos-input-buscar"
           placeholder="Introduce el ID para buscar (#NombreXXXX)"
-          [(ngModel)]="terminoBusqueda"
+          [value]="terminoBusqueda"
+          (input)="onInputBusqueda($any($event.target).value)"
           (keyup.enter)="buscar()"
           aria-label="Buscar jugador por ID"
         />
@@ -116,6 +116,13 @@
           }
         </button>
       </div>
+
+      <!-- Aviso mínimo de caracteres -->
+      @if (terminoBusqueda.length > 0 && terminoBusqueda.length < 3) {
+        <p class="amigos-error-busqueda" role="status">
+          Introduce al menos 3 caracteres para buscar.
+        </p>
+      }
 
       <!-- Error de búsqueda -->
       @if (errorBusqueda) {
@@ -131,9 +138,9 @@
             </div>
           </div>
           <div class="amigos-resultado-info">
-            <span class="amigo-nombre"
-              >{{ resultadoBusqueda.name }} {{ resultadoBusqueda.surname }}</span
-            >
+            <span class="amigo-nombre">
+              {{ resultadoBusqueda.name }} {{ resultadoBusqueda.surname }}
+            </span>
             <span class="amigos-public-id">{{ resultadoBusqueda.public_id }}</span>
           </div>
           <button
@@ -154,7 +161,7 @@
       }
     </section>
 
-    <!-- SOLICITUDES PENDIENTES — siempre visible -->
+    <!-- SOLICITUDES PENDIENTES -->
     <section class="card-dash" aria-labelledby="titulo-solicitudes">
       <div class="card-dash-header">
         <h2 id="titulo-solicitudes" class="amigos-seccion-titulo">
@@ -186,7 +193,6 @@
         }
       </div>
 
-      <!-- Con solicitudes -->
       @if (solicitudesPendientes.length > 0) {
         <div class="amigos-solicitudes-grid" role="list" aria-label="Solicitudes pendientes">
           @for (solicitud of solicitudesPendientes; track solicitud.id) {
@@ -221,7 +227,6 @@
         </div>
       }
 
-      <!-- Sin solicitudes — estado vacío visible -->
       @if (solicitudesPendientes.length === 0) {
         <div class="amigos-solicitudes-vacio" role="status">
           <svg
@@ -312,8 +317,18 @@
                 <span class="amigos-public-id">{{ amigo.public_id }}</span>
               </div>
               <div class="amigos-card-acciones">
-                <button class="btn-retar-amigo" [attr.aria-label]="'Retar a ' + amigo.name">
-                  Retar amigo
+                <!-- Botón retar: muestra feedback si el reto ya fue enviado -->
+                <button
+                  class="btn-retar-amigo"
+                  (click)="retarAmigo(amigo)"
+                  [disabled]="retoEnviado === amigo.id"
+                  [attr.aria-label]="'Retar a ' + amigo.name"
+                >
+                  @if (retoEnviado === amigo.id) {
+                    ¡Reto enviado!
+                  } @else {
+                    Retar amigo
+                  }
                 </button>
                 <button
                   class="btn-eliminar-amigo"

@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AmigosController;
+use App\Http\Controllers\BatallaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MochilaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XuxemonsController;
+use App\Http\Controllers\ChatController;
 
 Route::post('/registro', [AuthController::class, 'registroUsuario']);
 Route::post('/login', [AuthController::class, 'loginUsuario']);
@@ -53,4 +55,16 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/amigos/rechazar', [AmigosController::class, 'rechazarSolicitud']);
     Route::get('/amigos', [AmigosController::class, 'listarAmigos']);
     Route::delete('/amigos/{id}', [AmigosController::class, 'eliminarAmigo']);
+
+    // Batallas
+    Route::post('/batallas/solicitud', [BatallaController::class, 'enviarSolicitud']);
+    Route::get('/batallas/solicitudes', [BatallaController::class, 'listarSolicitudes']);
+    Route::post('/batallas/aceptar', [BatallaController::class, 'aceptarSolicitud']);
+    Route::delete('/batallas/rechazar', [BatallaController::class, 'rechazarSolicitud']);
+
+    // Chat (solo entre amigos)
+    Route::get('/chat/conversaciones', [ChatController::class, 'listarConversaciones']);
+    Route::get('/chat/mensajes/{userId}', [ChatController::class, 'listarMensajes']);
+    Route::post('/chat/mensaje', [ChatController::class, 'enviarMensaje']);
+    Route::put('/chat/leidos/{userId}', [ChatController::class, 'marcarLeidos']);
 });
