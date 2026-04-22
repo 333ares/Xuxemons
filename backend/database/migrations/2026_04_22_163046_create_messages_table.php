@@ -13,7 +13,19 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sender_id')
+                  ->constrained('users')
+                  ->onDelete('cascade');
+            $table->foreignId('receiver_id')
+                  ->constrained('users')
+                  ->onDelete('cascade');
+            $table->text('content');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
+
+            // Índice compuesto para acelerar la consulta de conversación entre dos usuarios
+            $table->index(['sender_id', 'receiver_id']);
+            $table->index(['receiver_id', 'read_at']);
         });
     }
 
