@@ -344,4 +344,38 @@ export class Auth {
       body: { reto_id: retoId },
     });
   }
+
+  // --- CHAT ---
+
+  // GET /chat/conversaciones — lista de amigos con último mensaje y no leídos
+  listarConversaciones(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/chat/conversaciones`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
+  // GET /chat/mensajes/{userId} — historial de mensajes con un usuario
+  listarMensajes(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/chat/mensajes/${userId}`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
+  // POST /chat/mensaje — envía un mensaje a un usuario
+  enviarMensaje(receiverId: number, content: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/chat/mensaje`,
+      { receiver_id: receiverId, content },
+      { headers: this.obtenerCabeceras() },
+    );
+  }
+
+  // PUT /chat/leidos/{userId} — marca como leídos los mensajes de userId
+  marcarLeidos(userId: number): Observable<any> {
+    return this.http.put(
+      `${this.apiUrl}/chat/leidos/${userId}`,
+      {},
+      { headers: this.obtenerCabeceras() },
+    );
+  }
 }
