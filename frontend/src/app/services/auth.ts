@@ -116,6 +116,13 @@ export class Auth {
     });
   }
 
+  // GET /xuxemons/todos — lista completa sin paginación (para buscador local)
+  obtenerTodosXuxemons(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/xuxemons/todos`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
   // DELETE /xuxemon — elimina un Xuxemon por id
   borrarXuxemon(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/xuxemon`, {

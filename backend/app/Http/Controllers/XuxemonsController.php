@@ -33,7 +33,7 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsPorTipo(Request $request)
     {
-        // Cogemos todos los xuxemons del usuario 
+        // Cogemos todos los xuxemons del usuario
         $xuxemon = Xuxemons::where('user_id', $request->user()->id);
 
         // Del tipo que el usuario indique
@@ -53,7 +53,7 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsPorTamano(Request $request)
     {
-        // Cogemos todos los xuxemons del usuario 
+        // Cogemos todos los xuxemons del usuario
         $xuxemon = Xuxemons::where('user_id', $request->user()->id);
 
         // Del tipo que el usuario indique
@@ -247,6 +247,20 @@ class XuxemonsController extends Controller
         return response()->json([
             'message' => 'success',
             'xuxemon' => $xuxemon
+        ], 200);
+    }
+
+    public function listarTodosLosXuxemons(Request $request)
+    {
+        // Devuelve todos los xuxemons del usuario sin paginación.
+        // Lo usa el buscador del frontend para filtrar localmente.
+        $xuxemons = Xuxemons::where('user_id', $request->user()->id)
+            ->orderBy('name')
+            ->get();
+
+        return response()->json([
+            'message'  => 'success',
+            'xuxemons' => $xuxemons
         ], 200);
     }
 }

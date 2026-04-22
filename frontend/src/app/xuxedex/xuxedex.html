@@ -219,7 +219,8 @@
               class="xdex-filtros__input"
               placeholder="Buscar Xuxemon..."
               aria-label="Buscar por nombre"
-              [formControl]="buscador"
+              [value]="terminoBusqueda"
+              (input)="onBuscar($any($event.target).value)"
             />
 
             <select
@@ -247,14 +248,10 @@
 
           @if (sinResultados) {
             <div class="xdex-sin-resultados">
-              <span>Sin resultados para "{{ buscador.value }}", prueba con otro nombre.</span>
+              <span>Sin resultados para "{{ terminoBusqueda }}", prueba con otro nombre.</span>
               <button
                 class="xdex-sin-resultados__cerrar"
-                (click)="
-                  sinResultados = false;
-                  buscador.setValue('', { emitEvent: false });
-                  listarXuxemons()
-                "
+                (click)="limpiarBusqueda()"
                 aria-label="Cerrar"
               >
                 ✕
