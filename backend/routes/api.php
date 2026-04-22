@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MochilaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XuxemonsController;
+use App\Http\Controllers\ChatController;
 
 Route::post('/registro', [AuthController::class, 'registroUsuario']);
 Route::post('/login', [AuthController::class, 'loginUsuario']);
@@ -60,4 +61,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/batallas/solicitudes', [BatallaController::class, 'listarSolicitudes']);
     Route::post('/batallas/aceptar', [BatallaController::class, 'aceptarSolicitud']);
     Route::delete('/batallas/rechazar', [BatallaController::class, 'rechazarSolicitud']);
+
+    // Chat (solo entre amigos)
+    Route::get('/chat/conversaciones', [ChatController::class, 'listarConversaciones']);
+    Route::get('/chat/mensajes/{userId}', [ChatController::class, 'listarMensajes']);
+    Route::post('/chat/mensaje', [ChatController::class, 'enviarMensaje']);
+    Route::put('/chat/leidos/{userId}', [ChatController::class, 'marcarLeidos']);
 });
