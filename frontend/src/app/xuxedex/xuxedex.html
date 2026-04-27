@@ -485,13 +485,25 @@
               class="xdex-btn-feed"
               type="button"
               (click)="abrirConfirmacionAlimentar()"
-              [disabled]="cargandoFeed"
-              [attr.aria-label]="'Dar una xuxe a ' + xuxemonSeleccionado.name"
+              [disabled]="cargandoFeed || xuxemonSeleccionado.size === 'g'"
+              [attr.aria-label]="
+                xuxemonSeleccionado.size === 'g'
+                  ? xuxemonSeleccionado.name + ' ya está en el nivel máximo'
+                  : 'Dar una xuxe a ' + xuxemonSeleccionado.name
+              "
+              [attr.title]="
+                xuxemonSeleccionado.size === 'g'
+                  ? xuxemonSeleccionado.name + ' ya está en el nivel máximo y no necesita más xuxes'
+                  : null
+              "
               [class.xdex-btn-feed--cargando]="cargandoFeed"
+              [class.xdex-btn-feed--maximo]="xuxemonSeleccionado.size === 'g'"
             >
               @if (cargandoFeed) {
                 <span class="xdex-feed-spinner" aria-hidden="true"></span>
                 Dando xuxe...
+              } @else if (xuxemonSeleccionado.size === 'g') {
+                🏆 Nivel máximo
               } @else {
                 🍬 Dar xuxe
               }

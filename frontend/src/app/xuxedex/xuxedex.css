@@ -965,6 +965,19 @@
   cursor: not-allowed;
 }
 
+/* Estado especial: nivel máximo alcanzado — gris neutro para diferenciarlo del naranja */
+.xdex-btn-feed--maximo {
+  background: #d1ccc7 !important;
+  color: #888 !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
+
+.xdex-btn-feed--maximo:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+
 .xdex-btn-feed--cargando {
   background: #e8962e;
 }
@@ -1431,7 +1444,9 @@
   border: 1.5px solid #ddd;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .btn-cancelar:hover {
