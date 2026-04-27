@@ -33,7 +33,7 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsPorTipo(Request $request)
     {
-        // Cogemos todos los xuxemons del usuario 
+        // Cogemos todos los xuxemons del usuario
         $xuxemon = Xuxemons::where('user_id', $request->user()->id);
 
         // Del tipo que el usuario indique
@@ -53,7 +53,7 @@ class XuxemonsController extends Controller
 
     public function listarXuxemonsPorTamano(Request $request)
     {
-        // Cogemos todos los xuxemons del usuario 
+        // Cogemos todos los xuxemons del usuario
         $xuxemon = Xuxemons::where('user_id', $request->user()->id);
 
         // Del tipo que el usuario indique
@@ -205,6 +205,7 @@ class XuxemonsController extends Controller
         $vacunaRequerida = match ($xuxemon->sickness) {
             'bajon de azucar' => 'xocolatina',
             'atracon' => 'macedonia',
+            'sobredosis de azucar' => 'inxulina',
             default => null
         };
 
@@ -243,6 +244,69 @@ class XuxemonsController extends Controller
         $xuxemon->save();
 
         $vacuna->delete();
+
+        return response()->json([
+            'message' => 'success',
+            'xuxemon' => $xuxemon
+        ], 200);
+    }
+
+    public function listarTodosLosXuxemons(Request $request)
+    {
+        // Devuelve todos los xuxemons del usuario sin paginación.
+        // Lo usa el buscador del frontend para filtrar localmente.
+        $xuxemons = Xuxemons::where('user_id', $request->user()->id)
+            ->orderBy('name')
+            ->get();
+
+        return response()->json([
+            'message'  => 'success',
+            'xuxemons' => $xuxemons
+        ], 200);
+    }
+
+    public function subirNivel(Request $request)
+    {
+        $xuxemon = Xuxemons::where('user_id', $request->user()->id)
+            ->where('id', $request->id)
+            ->first();
+
+        if (!$xuxemon) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'No tienes ningún xuxemon con ese ID'
+            ], 404);
+        }
+
+        if ($xuxemon->size === 'g') {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'Tu xuxemon ya está en el tamaño máximo'
+            ], 400);
+        }
+
+        $config = ConfigAlimentar::first();
+
+        $xuxesNecesarias = match ($xuxemon->size) {
+            's' => $config->xuxes_s_a_m,
+            'm' => $config->xuxes_m_a_g,
+            default => null
+        };
+
+        if ($xuxemon->xuxes_count < $xuxesNecesarias) {
+            return response()->json([
+                'message' => 'error',
+                'errors'  => 'Tu xuxemon aún no ha acumulado las xuxes necesarias para subir de nivel'
+            ], 400);
+        }
+
+        $xuxemon->size = match ($xuxemon->size) {
+            's' => 'm',
+            'm' => 'g',
+            default => $xuxemon->size
+        };
+        $xuxemon->xuxes_count = 0;
+        $xuxemon->save();
 
         return response()->json([
             'message' => 'success',

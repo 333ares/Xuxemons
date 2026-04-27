@@ -2,11 +2,10 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ICONS } from '../shared/icons';
 import { Nav } from '../shared/nav/nav';
 import { Auth } from '../services/auth';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 export interface Xuxemon {
   id: number;
@@ -14,7 +13,7 @@ export interface Xuxemon {
   type: 'agua' | 'tierra' | 'aire';
   size: 's' | 'm' | 'g';
   sickness: string | number | null;
-  xuxes_count: number; // Contador de xuxes consumidas (para la barra de nivel)
+  xuxes_count: number;
   user_id: number;
   created_at?: string;
 }
@@ -28,7 +27,7 @@ export interface Xuxemons {
 @Component({
   selector: 'app-xuxedex',
   standalone: true,
-  imports: [CommonModule, Nav, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, Nav],
   templateUrl: './xuxedex.html',
   styleUrl: './xuxedex.css',
 })
@@ -39,21 +38,32 @@ export class Xuxedex implements OnInit {
   icons: Record<string, SafeHtml> = {};
   cargando = true;
   error = '';
+
+  // Lista paginada que se muestra en la UI
   xuxemons: Xuxemon[] = [];
+
+  // Lista completa cargada una sola vez para el filtrado local
+  todosLosXuxemons: Xuxemon[] = [];
+
   xuxemonSeleccionado: Xuxemon | null = null;
   paginaActual = 1;
   ultimaPagina = 1;
 
-  // Añadimos un flag para controlar resultados de búsqueda
+  // Búsqueda local — sin llamadas extra al backend
+  terminoBusqueda: string = '';
   sinResultados = false;
 
   // Panel de notificaciones
   mostrarNotificaciones = false;
   notificacionesNuevas = false;
 
+  // Configuración de crecimiento cargada desde el backend.
+  // Los valores por defecto (s=3, m=5) se usan mientras llega la respuesta
+  // o si el backend falla. Una vez cargados, la barra de progreso y el botón
+  // "Subir nivel" reflejan automáticamente lo que el admin haya configurado.
+  growthConfig: { s: number; m: number } = { s: 3, m: 5 };
+
   // Barra de level-up
-  // Las xuxes necesarias para subir de nivel dependen del tamaño del Xuxemon:
-  // s → 3 | m → 5 | g → ya está en el nivel máximo
   get xuxesActuales(): number {
     return this.xuxemonSeleccionado?.xuxes_count ?? 0;
   }
@@ -67,7 +77,7 @@ export class Xuxedex implements OnInit {
   feedbackTipo: 'ok' | 'error' | 'infeccion' | '' = '';
   cargandoFeed = false;
 
-  // Modal de vacuna (se abre desde el panel derecho)
+  // Modal de vacuna
   mostrarModalVacuna = false;
   vacunasEnMochila: any[] = [];
   cargandoVacunas = false;
@@ -83,69 +93,96 @@ export class Xuxedex implements OnInit {
     });
   }
 
-  buscador = new FormControl<string>('');
-
   ngOnInit(): void {
     this.cargarUsuario();
+    this.cargarConfigCrecimiento(); // Carga los umbrales de nivel desde el backend
     this.listarXuxemons();
+    this.cargarTodosLosXuxemons();
     this.comprobarNotificacionesDiarias();
-
-    // Mejora en el buscador con tipado y manejo de vacíos
-    this.buscador.valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged())
-      .subscribe((termino) => {
-        const valor = termino?.trim() || '';
-        if (valor === '') {
-          this.listarXuxemons();
-        } else {
-          this.buscarXuxemons(valor);
-        }
-      });
   }
 
-  // Carga los datos del usuario autenticado desde el backend
+  // --- CARGA DE DATOS ---
+
   private cargarUsuario(): void {
     this.auth.getInfoUsuario().subscribe({
       next: (res) => {
         this.usuario = res.usuario ?? res;
       },
+      error: (err) => console.error('Error al cargar los datos del usuario:', err),
+    });
+  }
+
+  // Carga desde el backend las xuxes necesarias para subir de nivel.
+  // Si la petición falla se mantienen los valores por defecto (s=3, m=5)
+  // para que la UI nunca quede rota.
+  private cargarConfigCrecimiento(): void {
+    this.auth.obtenerConfigCrecimiento().subscribe({
+      next: (res) => {
+        const cfg = res.config;
+        if (cfg) {
+          this.growthConfig = {
+            s: cfg.xuxes_s_a_m ?? 3,
+            m: cfg.xuxes_m_a_g ?? 5,
+          };
+        }
+      },
       error: (err) => {
-        console.error('Error al cargar los datos del usuario:', err);
+        console.error('Error al cargar la configuración de crecimiento:', err);
+        // Se mantienen los valores por defecto definidos en la propiedad
       },
     });
   }
 
-  // Comprueba si las recompensas diarias son nuevas (no vistas hoy)
-  private comprobarNotificacionesDiarias(): void {
-    const hoy = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const ultimaVista = localStorage.getItem('xuxemons_notif_vista');
-    this.notificacionesNuevas = ultimaVista !== hoy;
+  // Carga todos los xuxemons del usuario sin paginación para el buscador local
+  private cargarTodosLosXuxemons(): void {
+    this.auth.obtenerTodosXuxemons().subscribe({
+      next: (res) => {
+        this.todosLosXuxemons = res.xuxemons ?? [];
+      },
+      error: () => {
+        this.todosLosXuxemons = [];
+      },
+    });
   }
 
-  // Abre o cierra el panel de notificaciones y marca como vistas
-  toggleNotificaciones(): void {
-    this.mostrarNotificaciones = !this.mostrarNotificaciones;
-    if (this.mostrarNotificaciones && this.notificacionesNuevas) {
-      const hoy = new Date().toISOString().split('T')[0];
-      localStorage.setItem('xuxemons_notif_vista', hoy);
-      this.notificacionesNuevas = false;
+  // --- BÚSQUEDA LOCAL ---
+
+  // Se llama desde (input) en el HTML — filtra sin ninguna llamada al backend
+  onBuscar(valor: string): void {
+    this.terminoBusqueda = valor;
+    const termino = valor.trim().toLowerCase();
+
+    if (termino === '') {
+      // Al borrar la búsqueda, volvemos a la lista paginada normal
+      this.sinResultados = false;
+      this.listarXuxemons();
+      return;
+    }
+
+    const filtrados = this.todosLosXuxemons.filter((x) => x.name.toLowerCase().includes(termino));
+
+    if (filtrados.length === 0) {
+      this.sinResultados = true;
+      this.xuxemons = [];
+      this.xuxemonSeleccionado = null;
+    } else {
+      this.sinResultados = false;
+      this.xuxemons = filtrados;
+      this.ultimaPagina = 1;
+      this.paginaActual = 1;
+      this.xuxemonSeleccionado = filtrados[0];
     }
   }
 
-  cerrarNotificaciones(): void {
-    this.mostrarNotificaciones = false;
+  // Limpia la búsqueda y vuelve al listado normal
+  limpiarBusqueda(): void {
+    this.terminoBusqueda = '';
+    this.sinResultados = false;
+    this.listarXuxemons();
   }
 
-  // Cierra el panel si el usuario hace clic fuera de él
-  @HostListener('document:keydown.escape')
-  onEscapeKey(): void {
-    this.mostrarNotificaciones = false;
-    this.mostrarConfirmacionAlimentar = false;
-    this.mostrarModalVacuna = false;
-    this.mostrarDialogoBorrar = false;
-  }
+  // --- LISTADO Y PAGINACIÓN ---
 
-  // Mostrar lista de xuxemons
   listarXuxemons(pagina: number = 1): void {
     this.cargando = true;
     this.auth.obtenerXuxemons(pagina).subscribe({
@@ -163,151 +200,24 @@ export class Xuxedex implements OnInit {
     });
   }
 
-  // Modal de confirmación antes de alimentar
-  mostrarConfirmacionAlimentar = false;
-
-  abrirConfirmacionAlimentar(): void {
-    if (this.cargandoFeed) return;
-    this.mostrarConfirmacionAlimentar = true;
+  irAPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.ultimaPagina) return;
+    this.listarXuxemons(pagina);
   }
 
-  cerrarConfirmacionAlimentar(): void {
-    this.mostrarConfirmacionAlimentar = false;
+  get paginas(): number[] {
+    return Array.from({ length: this.ultimaPagina }, (_, i) => i + 1);
   }
 
-  confirmarAlimentar(): void {
-    this.mostrarConfirmacionAlimentar = false;
-    if (this.xuxemonSeleccionado) {
-      this.alimentarXuxemon(this.xuxemonSeleccionado);
-    }
-  }
+  // --- FILTROS POR TIPO Y TAMAÑO (siguen llamando al backend) ---
 
-  // Alimentar Xuxemon
-  // Llama al endpoint de alimentación y actualiza el estado local del Xuxemon.
-  // Si el servidor devuelve una enfermedad nueva, activa el feedback de infección.
-  alimentarXuxemon(xuxemon: Xuxemon): void {
-    if (this.cargandoFeed) return;
-    this.cargandoFeed = true;
-    this.feedbackMensaje = '';
-    this.feedbackTipo = '';
-
-    const sicknessAntes = xuxemon.sickness;
-
-    this.auth.alimentarXuxemon(xuxemon.id).subscribe({
-      next: (res) => {
-        const actualizado: Xuxemon = res.xuxemon;
-
-        // Actualizamos el Xuxemon tanto en la lista como en la selección
-        this.aplicarActualizacion(actualizado);
-
-        // Detectamos si ha aparecido una enfermedad nueva tras alimentarle
-        const seInfecto =
-          !this.estaEnfermo({ ...xuxemon, sickness: sicknessAntes } as Xuxemon) &&
-          this.estaEnfermo(actualizado);
-
-        if (seInfecto) {
-          this.feedbackTipo = 'infeccion';
-          this.feedbackMensaje = `¡${actualizado.name} ha caído enfermo: ${this.getNombreEnfermedad(actualizado.sickness)}!`;
-        } else {
-          this.feedbackTipo = 'ok';
-          this.feedbackMensaje = `¡${actualizado.name} ha comido una xuxe!`;
-        }
-
-        this.cargandoFeed = false;
-        setTimeout(() => {
-          this.feedbackMensaje = '';
-          this.feedbackTipo = '';
-        }, 3000);
-      },
-      error: (err) => {
-        this.feedbackTipo = 'error';
-        // Intentamos extraer el mensaje real del backend en cualquier formato que lo mande
-        this.feedbackMensaje =
-          err.error?.errors ??
-          err.error?.message ??
-          (typeof err.error === 'string' ? err.error : null) ??
-          'No se ha podido alimentar al Xuxemon.';
-        this.cargandoFeed = false;
-        setTimeout(() => {
-          this.feedbackMensaje = '';
-          this.feedbackTipo = '';
-        }, 3500);
-      },
-    });
-  }
-
-  // Subir de nivel
-  // Solicita al backend que suba de nivel al Xuxemon y actualiza el size localmente.
-  // NOTA: la ruta /xuxemon/subirNivel está pendiente de implementación en el backend.
-  subirNivel(xuxemon: Xuxemon): void {
-    this.auth.subirNivel(xuxemon.id).subscribe({
-      next: (res) => {
-        const actualizado: Xuxemon = res.xuxemon;
-        this.aplicarActualizacion(actualizado);
-        this.feedbackTipo = 'ok';
-        this.feedbackMensaje = `¡${actualizado.name} ha subido de nivel!`;
-        setTimeout(() => {
-          this.feedbackMensaje = '';
-          this.feedbackTipo = '';
-        }, 3000);
-      },
-      error: (err) => {
-        this.feedbackTipo = 'error';
-        this.feedbackMensaje = err.error?.errors ?? 'No se ha podido subir de nivel.';
-        setTimeout(() => {
-          this.feedbackMensaje = '';
-          this.feedbackTipo = '';
-        }, 3500);
-      },
-    });
-  }
-
-  // Aplica los datos del Xuxemon actualizado tanto en la lista como en la selección
-  private aplicarActualizacion(actualizado: Xuxemon): void {
-    const idx = this.xuxemons.findIndex((x) => x.id === actualizado.id);
-    if (idx !== -1) {
-      this.xuxemons[idx] = { ...this.xuxemons[idx], ...actualizado };
-    }
-    if (this.xuxemonSeleccionado?.id === actualizado.id) {
-      this.xuxemonSeleccionado = { ...this.xuxemonSeleccionado, ...actualizado };
-    }
-  }
-
-  // Devuelve el número de xuxes necesarias para subir de nivel según el tamaño.
-  // Si el Xuxemon tiene bajón de azúcar, se necesitan 2 xuxes extra (lógica del backend).
-  calcularXuxesNecesarias(xuxemon: Xuxemon | null): number {
-    if (!xuxemon) return 3;
-    const base: Record<string, number> = { s: 3, m: 5 };
-    const xuxesBase = base[xuxemon.size] ?? 0; // 0 → nivel máximo (g)
-    const sickness = xuxemon.sickness ? String(xuxemon.sickness).toLowerCase().trim() : '';
-    const extra =
-      sickness === 'bajon de azucar' || sickness === 'bajón de azúcar' || sickness === 'bajon'
-        ? 2
-        : 0;
-    return xuxesBase + extra;
-  }
-
-  get porcentajeNivel(): number {
-    const necesarias = this.xuxesNecesarias;
-    if (necesarias === 0) return 100;
-    return Math.min(100, Math.round((this.xuxesActuales / necesarias) * 100));
-  }
-
-  get puedeSubirNivel(): boolean {
-    return (
-      !!this.xuxemonSeleccionado &&
-      this.xuxemonSeleccionado.size !== 'g' &&
-      this.xuxesActuales >= this.xuxesNecesarias
-    );
-  }
-
-  // Filtrado de xuxemons por tipo
   sinResultadosFiltroTipo = false;
   tipoActivo = '';
   cargandoFiltro = false;
 
   filtrarPorTipo(type: string): void {
     if (type === '') {
+      this.tipoActivo = '';
       this.listarXuxemons();
       return;
     }
@@ -328,17 +238,16 @@ export class Xuxedex implements OnInit {
         } else {
           this.xuxemonSeleccionado = this.xuxemons[0];
         }
-        this.cargando = false;
+        this.cargandoFiltro = false;
       },
       error: () => {
         this.sinResultadosFiltroTipo = true;
         this.xuxemons = [];
-        this.cargando = false;
+        this.cargandoFiltro = false;
       },
     });
   }
 
-  // Filtrado de xuxemons por tamaño
   sinResultadosFiltroTamano = false;
   tamanoActivo = '';
 
@@ -375,47 +284,251 @@ export class Xuxedex implements OnInit {
     });
   }
 
-  // Paginación
-  irAPagina(pagina: number): void {
-    if (pagina < 1 || pagina > this.ultimaPagina) return;
-    this.listarXuxemons(pagina);
+  // --- NOTIFICACIONES ---
+
+  private comprobarNotificacionesDiarias(): void {
+    const hoy = new Date().toISOString().split('T')[0];
+    const ultimaVista = localStorage.getItem('xuxemons_notif_vista');
+    this.notificacionesNuevas = ultimaVista !== hoy;
   }
 
-  get paginas(): number[] {
-    return Array.from({ length: this.ultimaPagina }, (_, i) => i + 1);
-  }
-
-  // Búsqueda
-  busqueda = '';
-
-  buscarXuxemons(termino: string): void {
-    this.sinResultados = false;
-    this.busqueda = termino;
-
-    if (termino.trim() === '') {
-      this.xuxemons = [];
-      this.listarXuxemons();
-      return;
+  toggleNotificaciones(): void {
+    this.mostrarNotificaciones = !this.mostrarNotificaciones;
+    if (this.mostrarNotificaciones) {
+      const hoy = new Date().toISOString().split('T')[0];
+      localStorage.setItem('xuxemons_notif_vista', hoy);
+      this.notificacionesNuevas = false;
     }
+  }
 
-    this.cargando = true;
-    this.auth.navXuxemons(termino).subscribe({
+  cerrarNotificaciones(): void {
+    this.mostrarNotificaciones = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.mostrarNotificaciones = false;
+  }
+
+  // --- ALIMENTAR ---
+
+  mostrarConfirmacionAlimentar = false;
+
+  abrirConfirmacionAlimentar(): void {
+    if (this.xuxemonSeleccionado) {
+      this.mostrarConfirmacionAlimentar = true;
+    }
+  }
+
+  cerrarConfirmacionAlimentar(): void {
+    this.mostrarConfirmacionAlimentar = false;
+  }
+
+  confirmarAlimentar(): void {
+    this.cerrarConfirmacionAlimentar();
+    if (this.xuxemonSeleccionado) {
+      this.alimentarXuxemon(this.xuxemonSeleccionado);
+    }
+  }
+
+  alimentarXuxemon(xuxemon: Xuxemon): void {
+    if (this.cargandoFeed) return;
+    this.cargandoFeed = true;
+    this.feedbackMensaje = '';
+    this.feedbackTipo = '';
+
+    const sicknessAntes = xuxemon.sickness;
+
+    this.auth.alimentarXuxemon(xuxemon.id).subscribe({
       next: (res) => {
-        this.xuxemons = res.xuxemons;
-        this.ultimaPagina = 1;
-        this.paginaActual = 1;
-        if (this.xuxemons.length > 0) this.xuxemonSeleccionado = this.xuxemons[0];
-        this.cargando = false;
+        const actualizado: Xuxemon = res.xuxemon;
+        this.aplicarActualizacion(actualizado);
+
+        const seInfecto =
+          !this.estaEnfermo({ ...xuxemon, sickness: sicknessAntes } as Xuxemon) &&
+          this.estaEnfermo(actualizado);
+
+        if (seInfecto) {
+          this.feedbackTipo = 'infeccion';
+          this.feedbackMensaje = `¡${actualizado.name} ha caído enfermo: ${this.getNombreEnfermedad(actualizado.sickness)}!`;
+        } else {
+          this.feedbackTipo = 'ok';
+          this.feedbackMensaje = `¡${actualizado.name} ha comido una xuxe!`;
+        }
+
+        this.cargandoFeed = false;
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3000);
       },
-      error: () => {
-        this.sinResultados = true;
-        this.xuxemons = [];
-        this.cargando = false;
+      error: (err) => {
+        this.feedbackTipo = 'error';
+        this.feedbackMensaje =
+          err.error?.errors ??
+          err.error?.message ??
+          (typeof err.error === 'string' ? err.error : null) ??
+          'No se ha podido alimentar al Xuxemon.';
+        this.cargandoFeed = false;
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3500);
       },
     });
   }
 
-  // Helpers de visualización
+  // --- SUBIR NIVEL ---
+
+  subirNivel(xuxemon: Xuxemon): void {
+    this.auth.subirNivel(xuxemon.id).subscribe({
+      next: (res) => {
+        const actualizado: Xuxemon = res.xuxemon;
+        this.aplicarActualizacion(actualizado);
+        this.feedbackTipo = 'ok';
+        this.feedbackMensaje = `¡${actualizado.name} ha subido de nivel!`;
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.feedbackTipo = 'error';
+        this.feedbackMensaje = err.error?.errors ?? 'No se ha podido subir de nivel.';
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3500);
+      },
+    });
+  }
+
+  // --- BORRAR ---
+
+  mostrarDialogoBorrar = false;
+
+  abrirDialogoBorrar(): void {
+    this.mostrarDialogoBorrar = true;
+  }
+
+  cerrarDialogoBorrar(): void {
+    this.mostrarDialogoBorrar = false;
+  }
+
+  confirmarBorrar(): void {
+    if (!this.xuxemonSeleccionado) return;
+
+    this.auth.borrarXuxemon(this.xuxemonSeleccionado.id).subscribe({
+      next: () => {
+        const idBorrado = this.xuxemonSeleccionado!.id;
+        this.xuxemons = this.xuxemons.filter((x) => x.id !== idBorrado);
+        this.todosLosXuxemons = this.todosLosXuxemons.filter((x) => x.id !== idBorrado);
+        this.xuxemonSeleccionado = this.xuxemons[0] ?? null;
+        this.cerrarDialogoBorrar();
+      },
+      error: (err) => console.error('Error al borrar xuxemon', err),
+    });
+  }
+
+  // --- VACUNAS ---
+
+  abrirModalVacuna(): void {
+    if (!this.xuxemonSeleccionado || !this.estaEnfermo(this.xuxemonSeleccionado)) return;
+    this.mostrarModalVacuna = true;
+    this.cargandoVacunas = true;
+    this.errorVacunas = '';
+    this.vacunasEnMochila = [];
+
+    this.auth.obtenerMochila(1).subscribe({
+      next: (res) => {
+        const todos = res.objetos?.data ?? res.objetos ?? [];
+        this.vacunasEnMochila = todos.filter((item: any) => item.type === 'vacuna');
+        this.cargandoVacunas = false;
+      },
+      error: (err) => {
+        this.errorVacunas = err.error?.errors ?? 'No se pudieron cargar las vacunas.';
+        this.cargandoVacunas = false;
+      },
+    });
+  }
+
+  cerrarModalVacuna(): void {
+    this.mostrarModalVacuna = false;
+    this.vacunasEnMochila = [];
+    this.errorVacunas = '';
+  }
+
+  confirmarAplicarVacuna(vacunaId: number): void {
+    if (!this.xuxemonSeleccionado) return;
+
+    this.auth.curarXuxemon(vacunaId, this.xuxemonSeleccionado.id).subscribe({
+      next: (res) => {
+        const actualizado = res.xuxemon;
+        if (actualizado) {
+          this.aplicarActualizacion(actualizado);
+        } else {
+          if (this.xuxemonSeleccionado) {
+            const idx = this.xuxemons.findIndex((x) => x.id === this.xuxemonSeleccionado!.id);
+            if (idx !== -1) this.xuxemons[idx] = { ...this.xuxemons[idx], sickness: null };
+            this.xuxemonSeleccionado = { ...this.xuxemonSeleccionado, sickness: null };
+          }
+        }
+        this.cerrarModalVacuna();
+        this.feedbackTipo = 'ok';
+        this.feedbackMensaje = `¡${this.xuxemonSeleccionado?.name ?? 'El Xuxemon'} se ha curado!`;
+        setTimeout(() => {
+          this.feedbackMensaje = '';
+          this.feedbackTipo = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.errorVacunas = err.error?.errors ?? 'No se pudo aplicar la vacuna.';
+      },
+    });
+  }
+
+  // --- HELPERS ---
+
+  private aplicarActualizacion(actualizado: Xuxemon): void {
+    const idx = this.xuxemons.findIndex((x) => x.id === actualizado.id);
+    if (idx !== -1) this.xuxemons[idx] = { ...this.xuxemons[idx], ...actualizado };
+
+    const idx2 = this.todosLosXuxemons.findIndex((x) => x.id === actualizado.id);
+    if (idx2 !== -1)
+      this.todosLosXuxemons[idx2] = { ...this.todosLosXuxemons[idx2], ...actualizado };
+
+    if (this.xuxemonSeleccionado?.id === actualizado.id) {
+      this.xuxemonSeleccionado = { ...this.xuxemonSeleccionado, ...actualizado };
+    }
+  }
+
+  // Calcula las xuxes necesarias para subir de nivel usando la config
+  // cargada desde el backend. Si el xuxemon tiene bajón de azúcar se añaden
+  // 2 xuxes extra, igual que en el backend (XuxemonsController.php).
+  calcularXuxesNecesarias(xuxemon: Xuxemon | null): number {
+    if (!xuxemon) return this.growthConfig.s;
+    const xuxesBase = this.growthConfig[xuxemon.size as 's' | 'm'] ?? 0;
+    const sickness = xuxemon.sickness ? String(xuxemon.sickness).toLowerCase().trim() : '';
+    const extra =
+      sickness === 'bajon de azucar' || sickness === 'bajón de azúcar' || sickness === 'bajon'
+        ? 2
+        : 0;
+    return xuxesBase + extra;
+  }
+
+  get porcentajeNivel(): number {
+    const necesarias = this.xuxesNecesarias;
+    if (necesarias === 0) return 100;
+    return Math.min(100, Math.round((this.xuxesActuales / necesarias) * 100));
+  }
+
+  get puedeSubirNivel(): boolean {
+    return (
+      !!this.xuxemonSeleccionado &&
+      this.xuxemonSeleccionado.size !== 'g' &&
+      this.xuxesActuales >= this.xuxesNecesarias
+    );
+  }
 
   getImagenXuxemon(nombre: string): string {
     const slug = nombre.toLowerCase().replace(/[\s\-_]+/g, '');
@@ -432,16 +545,11 @@ export class Xuxedex implements OnInit {
     return mapa[size] ?? size;
   }
 
-  // FIX: sickness puede llegar como null, '0', 0 o '' cuando el Xuxemon está sano.
-  // Antes solo se filtraban '0', 0 y '', pero no null, lo que hacía que
-  // el badge apareciera mostrando el texto "null".
   estaEnfermo(xuxemon: Xuxemon): boolean {
     const s = xuxemon.sickness;
     return s !== null && s !== undefined && s !== '0' && s !== 0 && s !== '';
   }
 
-  // FIX: getNombreEnfermedad ahora acepta null además de string|number,
-  // aunque con estaEnfermo corregido nunca debería llamarse con null.
   getNombreEnfermedad(sickness: string | number | null | undefined): string {
     if (
       sickness === null ||
@@ -480,94 +588,5 @@ export class Xuxedex implements OnInit {
 
   estaSeleccionado(grupo: Xuxemons): boolean {
     return this.xuxemonSeleccionado?.name === grupo.name;
-  }
-
-  // Diálogo de borrado
-  mostrarDialogoBorrar = false;
-
-  abrirDialogoBorrar(): void {
-    this.mostrarDialogoBorrar = true;
-  }
-
-  cerrarDialogoBorrar(): void {
-    this.mostrarDialogoBorrar = false;
-  }
-
-  confirmarBorrar(): void {
-    if (!this.xuxemonSeleccionado) return;
-
-    this.auth.borrarXuxemon(this.xuxemonSeleccionado.id).subscribe({
-      next: () => {
-        this.xuxemons = this.xuxemons.filter((x) => x.id !== this.xuxemonSeleccionado?.id);
-        this.xuxemonSeleccionado = this.xuxemons[0] ?? null;
-        this.cerrarDialogoBorrar();
-      },
-      error: (err) => {
-        console.error('Error al borrar xuxemon', err);
-      },
-    });
-  }
-
-  // Modal de vacuna
-
-  // Abre el modal y carga las vacunas disponibles en la mochila del usuario.
-  abrirModalVacuna(): void {
-    if (!this.xuxemonSeleccionado || !this.estaEnfermo(this.xuxemonSeleccionado)) return;
-    this.mostrarModalVacuna = true;
-    this.cargandoVacunas = true;
-    this.errorVacunas = '';
-    this.vacunasEnMochila = [];
-
-    // Cargamos todos los objetos de la mochila y filtramos los de tipo vacuna
-    this.auth.obtenerMochila(1).subscribe({
-      next: (res) => {
-        const todos = res.objetos?.data ?? res.objetos ?? [];
-        this.vacunasEnMochila = todos.filter((item: any) => item.type === 'vacuna');
-        this.cargandoVacunas = false;
-      },
-      error: (err) => {
-        this.errorVacunas = err.error?.errors ?? 'No se pudieron cargar las vacunas.';
-        this.cargandoVacunas = false;
-      },
-    });
-  }
-
-  cerrarModalVacuna(): void {
-    this.mostrarModalVacuna = false;
-    this.vacunasEnMochila = [];
-    this.errorVacunas = '';
-  }
-
-  // Aplica la vacuna seleccionada al Xuxemon actual.
-  // Llama a POST /xuxemon/curar (ruta existente en backend).
-  confirmarAplicarVacuna(vacunaId: number): void {
-    if (!this.xuxemonSeleccionado) return;
-
-    this.auth.curarXuxemon(vacunaId, this.xuxemonSeleccionado.id).subscribe({
-      next: (res) => {
-        // El backend devuelve el Xuxemon actualizado o simplemente éxito
-        const actualizado = res.xuxemon;
-        if (actualizado) {
-          this.aplicarActualizacion(actualizado);
-        } else {
-          // Si el backend no devuelve el xuxemon, limpiamos el sickness localmente
-          if (this.xuxemonSeleccionado) {
-            const idx = this.xuxemons.findIndex((x) => x.id === this.xuxemonSeleccionado!.id);
-            if (idx !== -1) this.xuxemons[idx] = { ...this.xuxemons[idx], sickness: null };
-            this.xuxemonSeleccionado = { ...this.xuxemonSeleccionado, sickness: null };
-          }
-        }
-        this.cerrarModalVacuna();
-        this.feedbackTipo = 'ok';
-        this.feedbackMensaje = `¡${this.xuxemonSeleccionado?.name ?? 'El Xuxemon'} se ha curado!`;
-        setTimeout(() => {
-          this.feedbackMensaje = '';
-          this.feedbackTipo = '';
-        }, 3000);
-      },
-      error: (err) => {
-        this.errorVacunas = err.error?.errors ?? 'No se pudo aplicar la vacuna.';
-      },
-    });
   }
 }

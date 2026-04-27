@@ -116,6 +116,13 @@ export class Auth {
     });
   }
 
+  // GET /xuxemons/todos — lista completa sin paginación (para buscador local)
+  obtenerTodosXuxemons(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/xuxemons/todos`, {
+      headers: this.obtenerCabeceras(),
+    });
+  }
+
   // DELETE /xuxemon — elimina un Xuxemon por id
   borrarXuxemon(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/xuxemon`, {
@@ -221,18 +228,29 @@ export class Auth {
     sobredosis: number;
     atracon: number;
   }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/config-alimentar`, data, {
-      headers: this.obtenerCabeceras(),
-    });
+    return this.http.put(
+      `${this.apiUrl}/config-alimentar`,
+      {
+        porcentaje_bajon: data.bajon,
+        porcentaje_sobredosis: data.sobredosis,
+        porcentaje_atracon: data.atracon,
+      },
+      { headers: this.obtenerCabeceras() },
+    );
   }
 
   actualizarConfigCrecimiento(data: {
     pequeno_a_mediano: number;
     mediano_a_grande: number;
   }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/config-alimentar`, data, {
-      headers: this.obtenerCabeceras(),
-    });
+    return this.http.put(
+      `${this.apiUrl}/config-alimentar`,
+      {
+        xuxes_s_a_m: data.pequeno_a_mediano,
+        xuxes_m_a_g: data.mediano_a_grande,
+      },
+      { headers: this.obtenerCabeceras() },
+    );
   }
 
   obtenerTasasInfeccion(): Observable<any> {

@@ -2,10 +2,8 @@
   width: 50px;
   height: 50px;
   object-fit: contain;
-  /* Mantiene las proporciones de la imagen */
   display: block;
   margin: 0 auto 16px auto;
-  /* Centrado horizontal con margen inferior */
 }
 
 /* CABECERA */
@@ -48,7 +46,6 @@
   gap: 20px;
 }
 
-/* Icono de notificación con punto rojo */
 .header-badge {
   position: relative;
   color: #888;
@@ -102,7 +99,7 @@
   color: #999;
 }
 
-/* MOCHILA — LAYOUT Y COMPONENTES */
+/* ─── MOCHILA — LAYOUT Y COMPONENTES ─── */
 
 .mo-wrapper {
   background-color: #f4f3f3;
@@ -122,7 +119,7 @@
   padding: 32px 24px;
 }
 
-/*  Estados de carga y error  */
+/* Estados de carga y error */
 
 .mo-estado {
   display: flex;
@@ -165,7 +162,7 @@
   background: #e8962e;
 }
 
-/*  Panel dos columnas  */
+/* Panel dos columnas */
 
 .mo-panel {
   display: grid;
@@ -176,7 +173,7 @@
   max-width: 2000px;
 }
 
-/*  Panel izquierdo  */
+/* ─── PANEL IZQUIERDO ─── */
 
 .mo-panel__izq {
   background: white;
@@ -201,9 +198,11 @@
   gap: 8px;
 }
 
+/* Igual que .xdex-panel__izq-icono */
 .mo-panel__izq-icono {
-  font-size: 1.6rem;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .mo-panel__izq-titulo {
@@ -214,7 +213,7 @@
   letter-spacing: -0.4px;
 }
 
-/*  Grid de slots  */
+/* Grid de slots */
 
 .mo-grid {
   list-style: none;
@@ -225,7 +224,7 @@
   gap: 10px;
 }
 
-/*  Cards  */
+/* Cards */
 
 .mo-card {
   background: white;
@@ -240,6 +239,7 @@
     box-shadow 0.18s ease,
     border-color 0.18s ease;
   user-select: none;
+  animation: mo-aparecer 0.3s ease both;
 }
 
 .mo-card--ocupado {
@@ -269,7 +269,6 @@
   min-height: 110px;
 }
 
-/* Badge de cantidad */
 .mo-card__cantidad {
   position: absolute;
   top: 7px;
@@ -285,7 +284,6 @@
   line-height: 1.5;
 }
 
-/* Área de imagen */
 .mo-card__imagen {
   display: flex;
   align-items: center;
@@ -295,6 +293,14 @@
   min-height: 150px;
 }
 
+.mo-card--xuxe .mo-card__imagen {
+  background: #fff8e1;
+}
+
+.mo-card--vacuna .mo-card__imagen {
+  background: #ebf8ff;
+}
+
 .mo-card__img {
   width: 64px;
   height: 64px;
@@ -302,7 +308,6 @@
   display: block;
 }
 
-/* Franja inferior con el nombre — naranja para xuxes, azul para vacunas */
 .mo-card__nombre-bar {
   padding: 7px 6px;
   display: flex;
@@ -313,7 +318,7 @@
 }
 
 .mo-card--xuxe .mo-card__nombre-bar {
-  background: pink;
+  background: #ffaa4a;
 }
 
 .mo-card--vacuna .mo-card__nombre-bar {
@@ -337,84 +342,34 @@
   flex: 1;
 }
 
-/* Overlay que bloquea toda la pantalla mientras el diálogo está abierto */
-.dialogo-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
+/* Animaciones escalonadas de las cards */
 
-.dialogo-box {
-  background: #fff;
-  border-radius: 20px;
-  padding: 40px 44px;
-  max-width: 440px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+.mo-grid .mo-card:nth-child(1) {
+  animation-delay: 0s;
 }
-
-.dialogo-box h3 {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #3b2101;
-  margin-bottom: 12px;
+.mo-grid .mo-card:nth-child(2) {
+  animation-delay: 0.04s;
 }
-
-.dialogo-box p {
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 28px;
-  line-height: 1.6;
+.mo-grid .mo-card:nth-child(3) {
+  animation-delay: 0.08s;
 }
-
-.dialogo-botones {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
+.mo-grid .mo-card:nth-child(4) {
+  animation-delay: 0.12s;
 }
-
-.btn-borrar {
-  width: 100%;
-  padding: 13px;
-  background-color: #e74c3c;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
-  font-family: var(--font-body);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.1s ease;
+.mo-grid .mo-card:nth-child(5) {
+  animation-delay: 0.16s;
 }
-
-.btn-borrar:hover {
-  background-color: #c0392b;
-  transform: translateY(-1px);
+.mo-grid .mo-card:nth-child(6) {
+  animation-delay: 0.2s;
 }
-
-.btn-descartar {
-  padding: 13px 28px;
-  background-color: transparent;
-  color: #555;
-  font-size: 1rem;
-  font-weight: 600;
-  font-family: var(--font-body);
-  border: 1.5px solid #ddd;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.mo-grid .mo-card:nth-child(7) {
+  animation-delay: 0.24s;
 }
-
-.btn-descartar:hover {
-  background-color: #f5f5f5;
+.mo-grid .mo-card:nth-child(8) {
+  animation-delay: 0.28s;
+}
+.mo-grid .mo-card:nth-child(9) {
+  animation-delay: 0.32s;
 }
 
 /* Paginación */
@@ -497,8 +452,9 @@
   color: white;
 }
 
-/* Panel derecho */
+/* ─── PANEL DERECHO ─── */
 
+/* Igual que .xdex-panel__der */
 .mo-panel__der {
   background: white;
   border-radius: 20px;
@@ -550,102 +506,130 @@
   margin: 0;
 }
 
-/* Detalle del objeto seleccionado */
-.mo-detalle {
-  width: 100%;
+/* ─── Detalle del objeto — estructura idéntica a xuxedex ─── */
+
+/* Header con nombre y líneas decorativas — igual que .xdex-detalle__header */
+.mo-detalle__header {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  animation: mo-aparecer 0.2s ease;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
-/* Imagen grande en el panel de detalle */
-.mo-detalle__ilustracion {
+/* Líneas decorativas — igual que .xdex-detalle__linea */
+.mo-detalle__linea {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #ffd49a);
+  border-radius: 999px;
+}
+
+.mo-detalle__linea:last-child {
+  background: linear-gradient(to left, transparent, #ffd49a);
+}
+
+/* Nombre del objeto — igual que .xdex-detalle__nombre */
+.mo-detalle__nombre {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #3b2101;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+}
+
+/* Imagen circular con fondo de color — igual que .xdex-detalle__imagen-wrap */
+.mo-detalle__imagen-wrap {
+  width: 100%;
   display: flex;
   justify-content: center;
-  padding: 16px 0 8px;
+}
+
+.mo-detalle__imagen-fondo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff8f0;
+}
+
+/* Fondo según tipo de objeto */
+.mo-detalle__imagen-fondo--xuxe {
+  background: #fff8e1;
+}
+
+.mo-detalle__imagen-fondo--vacuna {
+  background: #ebf8ff;
 }
 
 .mo-detalle__img {
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   object-fit: contain;
   display: block;
   animation: mo-aparecer 0.25s ease;
 }
 
-/* Tarjeta de información */
-.mo-detalle__card {
-  background: #fafafa;
-  border-radius: 18px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.mo-detalle__cabecera {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.mo-detalle__nombre {
-  font-size: 1rem;
-  font-weight: 800;
-  color: #3b2101;
-  margin: 0;
-}
-
-.mo-detalle__cantidad {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #888;
-}
-
-/* Etiquetas de tipo/categoría/efecto */
-.mo-detalle__etiquetas {
+/* Badges de características — igual que .xdex-detalle__badges */
+.mo-detalle__badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  justify-content: center;
 }
 
-.mo-etiqueta {
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 8px;
+/* Badge base — igual que .xdex-badge */
+.mo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
   line-height: 1;
+  background: #f4f3f3;
+  color: #555;
 }
 
-.mo-etiqueta--no-apilable {
-  background: #f3e5f5;
-  color: #7b1fa2;
+/* Cantidad */
+.mo-badge--cantidad {
+  background: #fff8f0;
+  color: #92400e;
+  border: 1px solid #ffd49a;
 }
 
-.mo-etiqueta--apilable {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-.mo-etiqueta--vacuna {
-  background: #e3f2fd;
-  color: #1565c0;
-}
-
-.mo-etiqueta--xuxe {
+/* Tipo xuxe */
+.mo-badge--xuxe {
   background: #fff8e1;
   color: #f57f17;
 }
 
-.mo-etiqueta--efecto {
-  background: #fce4ec;
-  color: #c62828;
+/* Tipo vacuna */
+.mo-badge--vacuna {
+  background: #ebf8ff;
+  color: #2b6cb0;
 }
 
+/* Apilable */
+.mo-badge--apilable {
+  background: #f0fff4;
+  color: #276749;
+}
+
+/* No apilable */
+.mo-badge--no-apilable {
+  background: #faf5ff;
+  color: #553c9a;
+}
+
+/* Fecha de adquisición — igual que .xdex-detalle__fecha */
 .mo-detalle__fecha {
-  font-size: 0.82rem;
-  color: #aaa;
+  font-size: 0.9rem;
+  color: #666;
   margin: 0;
   text-align: center;
 }
@@ -654,9 +638,10 @@
   color: #3b2101;
 }
 
+/* Botón borrar objeto */
 .mo-btn-eliminar {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   background: #e53935;
   color: white;
   border: none;
@@ -665,55 +650,104 @@
   font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
   box-shadow: 0 3px 10px rgba(229, 57, 53, 0.25);
 }
 
 .mo-btn-eliminar:hover {
   background: #c62828;
+  transform: translateY(-1px);
 }
 
-/* ANIMACIONES */
-
-.mo-card {
-  animation: mo-aparecer 0.3s ease both;
+.mo-btn-eliminar:focus-visible {
+  outline: 3px solid #e53935;
+  outline-offset: 2px;
 }
 
-.mo-grid .mo-card:nth-child(1) {
-  animation-delay: 0s;
+/* ─── Diálogo de confirmación ─── */
+
+.dialogo-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
 }
 
-.mo-grid .mo-card:nth-child(2) {
-  animation-delay: 0.04s;
+.dialogo-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 44px;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
 }
 
-.mo-grid .mo-card:nth-child(3) {
-  animation-delay: 0.08s;
+.dialogo-box h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3b2101;
+  margin-bottom: 12px;
 }
 
-.mo-grid .mo-card:nth-child(4) {
-  animation-delay: 0.12s;
+.dialogo-box p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 28px;
+  line-height: 1.6;
 }
 
-.mo-grid .mo-card:nth-child(5) {
-  animation-delay: 0.16s;
+.dialogo-botones {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
 }
 
-.mo-grid .mo-card:nth-child(6) {
-  animation-delay: 0.2s;
+.btn-borrar {
+  width: 100%;
+  padding: 13px;
+  background-color: #e74c3c;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
-.mo-grid .mo-card:nth-child(7) {
-  animation-delay: 0.24s;
+.btn-borrar:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
 }
 
-.mo-grid .mo-card:nth-child(8) {
-  animation-delay: 0.28s;
+.btn-descartar {
+  padding: 13px 28px;
+  background-color: transparent;
+  color: #555;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 1.5px solid #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.mo-grid .mo-card:nth-child(9) {
-  animation-delay: 0.32s;
+.btn-descartar:hover {
+  background-color: #f5f5f5;
 }
+
+/* ─── ANIMACIONES ─── */
 
 @keyframes mo-girar {
   to {
@@ -726,7 +760,6 @@
     opacity: 0;
     transform: translateY(10px) scale(0.97);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -736,7 +769,7 @@
 @media (prefers-reduced-motion: reduce) {
   .mo-card,
   .mo-spinner,
-  .mo-detalle {
+  .mo-detalle__img {
     animation: none;
   }
 
@@ -745,7 +778,7 @@
   }
 }
 
-/* RESPONSIVE */
+/* ─── RESPONSIVE ─── */
 
 @media (max-width: 820px) {
   .mo-panel {
@@ -755,10 +788,6 @@
   .mo-panel__der {
     position: static;
     order: -1;
-  }
-
-  .mant-header {
-    padding: 14px 20px;
   }
 
   .mo-main {
@@ -779,197 +808,7 @@
     padding: 16px 14px;
   }
 
-  .mo-detalle__ilustracion {
-    font-size: 4rem;
+  .mo-detalle__nombre {
+    font-size: 1.2rem;
   }
-}
-/* BOTÓN "USAR EN XUXEMON" (solo para vacunas)*/
-
-.mo-btn-vacuna {
-  width: 100%;
-  padding: 12px;
-  background: #4a90e2;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s ease;
-  box-shadow: 0 3px 10px rgba(74, 144, 226, 0.25);
-}
-
-.mo-btn-vacuna:hover {
-  background: #2f78c5;
-}
-
-/* MODAL SELECTOR DE XUXEMONS*/
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  padding: 16px;
-}
-
-.modal-box {
-  background: #fff;
-  border-radius: 20px;
-  width: 100%;
-  max-width: 480px;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  animation: mo-aparecer 0.2s ease;
-}
-
-.modal-box__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 24px 16px;
-  border-bottom: 1px solid #f0eeee;
-  flex-shrink: 0;
-}
-
-.modal-box__titulo {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #3b2101;
-  margin: 0;
-}
-
-.modal-box__cerrar {
-  background: none;
-  border: none;
-  color: #aaa;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    color 0.15s,
-    background 0.15s;
-  flex-shrink: 0;
-}
-
-.modal-box__cerrar:hover {
-  color: #3b2101;
-  background: #f4f3f3;
-}
-
-.modal-box__cerrar:focus-visible {
-  outline: 3px solid #ffaa4a;
-  outline-offset: 2px;
-}
-
-.modal-box__body {
-  overflow-y: auto;
-  padding: 16px 24px 24px;
-  flex: 1;
-}
-
-/* Lista de Xuxemons enfermos */
-
-.modal-xuxemon-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.modal-xuxemon-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: #fafafa;
-  border: 1.5px solid #f0eeee;
-  border-radius: 14px;
-  padding: 12px 14px;
-  transition: border-color 0.15s;
-}
-
-.modal-xuxemon-item:hover {
-  border-color: #ffd49a;
-}
-
-.modal-xuxemon-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.modal-xuxemon-img {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  object-fit: contain;
-  background: #f0eeee;
-  flex-shrink: 0;
-}
-
-.modal-xuxemon-img--placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-}
-
-.modal-xuxemon-datos {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.modal-xuxemon-nombre {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #3b2101;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.modal-xuxemon-nivel {
-  font-size: 0.76rem;
-  color: #aaa;
-  font-weight: 600;
-}
-
-.modal-xuxemon-btn {
-  flex-shrink: 0;
-  padding: 8px 18px;
-  background: #ffaa4a;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.modal-xuxemon-btn:hover {
-  background: #e8962e;
-}
-
-.modal-xuxemon-btn:focus-visible {
-  outline: 3px solid #ffaa4a;
-  outline-offset: 2px;
 }
