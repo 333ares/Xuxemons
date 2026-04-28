@@ -35,7 +35,7 @@ class AdminController extends Controller
                 ], 400);
             }
 
-            // Añadimos el xuxemon 
+            // Añadimos el xuxemon
             $xuxemonUsuario = Xuxemons::create([
                 'name' => $xuxemon->name,
                 'type' => $xuxemon->type,
@@ -387,22 +387,20 @@ class AdminController extends Controller
 
     public function getConfigDiaria(Request $request)
     {
-        if ($request->user()->id === 1) {
-            $configXuxes = ConfigXuxes::first();
-            $configXuxemon = ConfigXuxemon::first();
+        $configXuxes   = ConfigXuxes::first();
+        $configXuxemon = ConfigXuxemon::first();
 
-            return response()->json([
-                'xuxes' => [
-                    'hora' => $configXuxes->hora,
-                    'cantidad' => $configXuxes->cantidad,
-                    'ultima_entrega' => $configXuxes->ultima_entrega
-                ],
-                'xuxemons' => [
-                    'hora' => $configXuxemon->hora,
-                    'ultima_entrega' => $configXuxemon->ultima_entrega
-                ]
-            ], 200);
-        }
+        return response()->json([
+            'xuxes' => [
+                'hora'          => $configXuxes->hora,
+                'cantidad'      => $configXuxes->cantidad,
+                'ultima_entrega' => $configXuxes->ultima_entrega
+            ],
+            'xuxemons' => [
+                'hora'          => $configXuxemon->hora,
+                'ultima_entrega' => $configXuxemon->ultima_entrega
+            ]
+        ], 200);
     }
 
     public function configAlimentar(Request $request)

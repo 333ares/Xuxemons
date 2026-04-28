@@ -64,7 +64,6 @@
   gap: 20px;
 }
 
-/* Icono de notificación con punto rojo */
 .header-badge {
   position: relative;
   color: #888;
@@ -438,6 +437,76 @@
   gap: 6px;
 }
 
+/* Subtítulo de grupo (Solicitudes de amistad / Peticiones de batalla) */
+.actividad-subtitulo {
+  font-size: 0.85rem; /* antes probablemente heredaba valores distintos */
+  font-weight: 700;
+  color: #555;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Badge numérico junto al subtítulo */
+.actividad-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffaa4a;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 99px;
+  padding: 0 5px;
+}
+
+/* Nombre dentro de cada fila de actividad */
+.actividad-nombre {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+}
+
+/* Texto cuando no hay elementos */
+.actividad-vacia {
+  font-size: 0.85rem;
+  color: #bbb;
+  text-align: center;
+  padding: 8px 0;
+  margin: 0;
+}
+
+/* Separación entre los dos grupos */
+.actividad-grupo + .actividad-grupo {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Avatar de actividad — mismo tamaño que el resto del dashboard */
+.actividad-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.actividad-avatar-naranja {
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+}
+
 .btn-aceptar {
   background: #dcfce7;
   color: #166534;
@@ -666,6 +735,14 @@
 
 .slot-lleno:hover {
   transform: scale(1.15);
+}
+
+.slot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+  display: block;
 }
 
 /* BATALLA */

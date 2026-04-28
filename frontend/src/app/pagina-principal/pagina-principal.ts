@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../services/auth';
 import { Nav } from '../shared/nav/nav';
 
@@ -72,11 +72,11 @@ export class PaginaPrincipal implements OnInit {
   solicitudesBatalla: SolicitudBatalla[] = [];
 
   // Xuxemon destacado (primer xuxemon sano del usuario)
-  xuxemon: { nombre: string; tipo: string; tamano: string } | null = null;
+  xuxemon: { nombre: string; tipo: string; tamano: string; imagen: string } | null = null;
 
   // Mochila
   mochila = { ocupados: 0, total: 20 };
-  mochilaSlots: { ocupado: boolean; tipo: string; emoji: string }[] = [];
+  mochilaSlots: { ocupado: boolean; tipo: string; imagen: string }[] = [];
 
   // Lista de amigos
   amigos: Amigo[] = [];
@@ -84,7 +84,10 @@ export class PaginaPrincipal implements OnInit {
   // Estado de carga
   cargando = true;
 
-  constructor(private authService: Auth) {}
+  constructor(
+    private authService: Auth,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.calcularFechaHoy();
@@ -109,15 +112,17 @@ export class PaginaPrincipal implements OnInit {
     });
   }
 
-  private emojiObjeto(tipo: string, nombre: string): string {
-    if (tipo === 'vacuna') return '💉';
-    const mapaXuxe: Record<string, string> = {
-      xocolatina: '🍫',
-      piruleta: '🍭',
-      gominola: '🍬',
-      caramel: '🍡',
+  private imagenObjeto(tipo: string, nombre: string): string {
+
+    const mapaExcepciones: Record<string, string> = {
+      caramel: 'caramelo',
+      gominola: 'caramelo',
     };
-    return mapaXuxe[nombre] ?? '🍬';
+
+    const slug =
+      mapaExcepciones[nombre.toLowerCase()] ?? nombre.toLowerCase().replace(/[\s\-_]+/g, '');
+
+    return `chuches/${slug}.png`;
   }
 
   // Carga de datos
@@ -173,6 +178,8 @@ export class PaginaPrincipal implements OnInit {
           nombre: x.name,
           tipo: this.capitalizarPrimeraLetra(x.type),
           tamano: this.tamanoCastellano(x.size),
+          // La ruta sigue la convención animales/{nombre_en_minúsculas}.png
+          imagen: `animales/${x.name.toLowerCase()}.png`,
         };
       }
     }
@@ -185,25 +192,39 @@ export class PaginaPrincipal implements OnInit {
       next: (res) => {
         if (res.message !== 'success') return;
 
-        const objetos: any[] = res.objetos?.data ?? [];
         const totalObjetos: number = res.total ?? 0;
+        const totalPaginas: number = res.objetos?.last_page ?? 1;
 
         this.mochila.ocupados = totalObjetos;
         this.mochilaSlots = [];
 
-        for (const obj of objetos) {
-          const cantidad = obj.stackable ? obj.amount : 1;
-          for (let i = 0; i < cantidad && this.mochilaSlots.length < 20; i++) {
-            this.mochilaSlots.push({
-              ocupado: true,
-              tipo: obj.stackable ? 'apilable' : 'no-apilable',
-              emoji: this.emojiObjeto(obj.type, obj.name),
-            });
-          }
+        // Procesamos la primera página
+        this.procesarObjetosMochila(res.objetos?.data ?? []);
+
+        // Si hay más páginas, las cargamos todas
+        const peticiones = [];
+        for (let pagina = 2; pagina <= totalPaginas; pagina++) {
+          peticiones.push(
+            this.authService.obtenerMochila(pagina).subscribe({
+              next: (r2) => {
+                if (r2.message === 'success') {
+                  this.procesarObjetosMochila(r2.objetos?.data ?? []);
+                }
+                // Rellenamos vacíos al final de la última página
+                if (
+                  this.mochilaSlots.filter((s) => s.ocupado).length === Math.min(totalObjetos, 20)
+                ) {
+                  this.rellenarSlotsVacios();
+                }
+              },
+              error: () => {},
+            }),
+          );
         }
 
-        while (this.mochilaSlots.length < 20) {
-          this.mochilaSlots.push({ ocupado: false, tipo: '', emoji: '' });
+        // Si solo hay una página, rellenamos directamente
+        if (totalPaginas === 1) {
+          this.rellenarSlotsVacios();
         }
       },
       error: (err) => {
@@ -211,13 +232,32 @@ export class PaginaPrincipal implements OnInit {
           this.mochilaSlots = Array.from({ length: 20 }, () => ({
             ocupado: false,
             tipo: '',
-            emoji: '',
+            imagen: '',
           }));
         } else {
           console.error('Error al cargar la mochila:', err);
         }
       },
     });
+  }
+
+  private procesarObjetosMochila(objetos: any[]): void {
+    for (const obj of objetos) {
+      const cantidad = obj.stackable ? obj.amount : 1;
+      for (let i = 0; i < cantidad && this.mochilaSlots.length < 20; i++) {
+        this.mochilaSlots.push({
+          ocupado: true,
+          tipo: obj.stackable ? 'apilable' : 'no-apilable',
+          imagen: this.imagenObjeto(obj.type, obj.name),
+        });
+      }
+    }
+  }
+
+  private rellenarSlotsVacios(): void {
+    while (this.mochilaSlots.length < 20) {
+      this.mochilaSlots.push({ ocupado: false, tipo: '', imagen: '' });
+    }
   }
 
   private cargarSolicitudesAmistad(): void {
@@ -311,15 +351,15 @@ export class PaginaPrincipal implements OnInit {
 
   // Acciones de solicitudes de batalla
 
-  aceptarBatalla(reto: SolicitudBatalla): void {
-    this.authService.aceptarRetoBatalla(reto.id).subscribe({
-      next: () => {
-        this.solicitudesBatalla = this.solicitudesBatalla.filter((r) => r.id !== reto.id);
-        // TODO: redirigir a la pantalla de batalla cuando esté implementada
-      },
-      error: (err) => console.error('Error al aceptar el reto:', err),
-    });
-  }
+ aceptarBatalla(reto: SolicitudBatalla): void {
+  this.authService.aceptarRetoBatalla(reto.id).subscribe({
+    next: () => {
+      this.solicitudesBatalla = this.solicitudesBatalla.filter((r) => r.id !== reto.id);
+      this.router.navigate(['/batalla']);
+    },
+    error: (err) => console.error('Error al aceptar el reto:', err),
+  });
+}
 
   rechazarBatalla(reto: SolicitudBatalla): void {
     this.authService.rechazarRetoBatalla(reto.id).subscribe({
@@ -340,5 +380,9 @@ export class PaginaPrincipal implements OnInit {
   private tamanoCastellano(size: string): string {
     const mapa: Record<string, string> = { s: 'Pequeño', m: 'Mediano', g: 'Grande' };
     return mapa[size] ?? size;
+  }
+
+  luchar(): void {
+    this.router.navigate(['/batalla']);
   }
 }

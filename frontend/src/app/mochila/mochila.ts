@@ -57,7 +57,7 @@ export class Mochila implements OnInit {
   // Diálogo de borrado
   mostrarDialogoBorrar: boolean = false;
 
-  constructor(private auth: Auth) { }
+  constructor(private auth: Auth) {}
 
   ngOnInit(): void {
     this.cargarUsuario();
@@ -132,9 +132,14 @@ export class Mochila implements OnInit {
   }
 
   // Coger la imagen correcta del objeto
- getImagenItem(nombre: string): string {
-    const slug = nombre.toLowerCase().replace(/[\s\-_]+/g, '');
-    return `/chuches/${slug}.png`;
+  getImagenItem(nombre: string, tipo?: string): string {
+    const mapaExcepciones: Record<string, string> = {
+      caramel: 'caramelo',
+      gominola: 'caramelo',
+    };
+    const slug =
+      mapaExcepciones[nombre.toLowerCase()] ?? nombre.toLowerCase().replace(/[\s\-_]+/g, '');
+    return `chuches/${slug}.png`;
   }
 
   formatearFecha(fecha?: string): string {

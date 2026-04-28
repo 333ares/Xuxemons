@@ -8,24 +8,6 @@
       </div>
     </div>
     <div class="header-right">
-      <button class="header-badge" type="button" aria-label="Notificaciones">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
-        <span class="badge-dot" aria-label="Tienes notificaciones nuevas"></span>
-      </button>
       <div class="header-user">
         <img
           src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
@@ -537,10 +519,16 @@
                   role="listitem"
                   [class.slot-lleno]="slot.ocupado"
                   [class.slot-item-apilable]="slot.tipo === 'apilable'"
-                  [attr.aria-label]="slot.ocupado ? 'Slot ocupado: ' + slot.emoji : 'Slot vacío'"
+                  [attr.aria-label]="slot.ocupado ? 'Slot ocupado: ' + slot.imagen : 'Slot vacío'"
                 >
                   @if (slot.ocupado) {
-                    <span class="slot-emoji" aria-hidden="true">{{ slot.emoji }}</span>
+                    <!-- En el slot de la mochila del dashboard -->
+                    <img
+                      [src]="slot.imagen"
+                      alt="Objeto"
+                      class="slot-img"
+                      (error)="$any($event.target).src = 'chuches/caramelo.png'"
+                    />
                   }
                 </div>
               }
@@ -559,7 +547,12 @@
           @if (xuxemon) {
             <div class="batalla-avatar-wrapper">
               <div class="batalla-avatar-bg">
-                <img src="animales/boohoot.png" alt="{{ xuxemon.nombre }}" class="boohoot" />
+                <img
+                  [src]="xuxemon.imagen"
+                  [alt]="xuxemon.nombre"
+                  class="boohoot"
+                  (error)="$any($event.target).src = 'animales/boohoot.png'"
+                />
               </div>
             </div>
             <div class="batalla-info">
@@ -570,7 +563,7 @@
               </div>
               <p class="batalla-sub">¿Listo para una batalla rápida?</p>
             </div>
-            <button class="btn-luchar">
+            <button class="btn-luchar" (click)="luchar()">
               <svg
                 width="16"
                 height="16"
