@@ -456,18 +456,11 @@ class AdminController extends Controller
 
     public function getConfigAlimentar(Request $request)
     {
-        if ($request->user()->id === 1) {
-            $config = ConfigAlimentar::first();
+        $config = ConfigAlimentar::first();
 
-            return response()->json([
-                'message' => 'success',
-                'config' => $config
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'error',
-                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
-            ], 400);
-        }
+        return response()->json([
+            'message' => 'success',
+            'config'  => $config
+        ], 200);
     }
 }
