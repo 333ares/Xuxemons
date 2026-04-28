@@ -191,4 +191,9 @@ export class Mochila implements OnInit {
       },
     });
   }
+
+  capitalizarTipo(tipo: string): string {
+    if (!tipo) return '';
+    return tipo.charAt(0).toUpperCase() + tipo.slice(1);
+  }
 }

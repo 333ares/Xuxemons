@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ICONS } from '../shared/icons';
 import { Nav } from '../shared/nav/nav';
 import { Auth } from '../services/auth';
+import { forkJoin } from 'rxjs';
 
 export interface Xuxemon {
   id: number;
@@ -439,11 +440,38 @@ export class Xuxedex implements OnInit {
     this.errorVacunas = '';
     this.vacunasEnMochila = [];
 
+    // Cargamos página 1 para saber cuántas páginas hay en total
     this.auth.obtenerMochila(1).subscribe({
       next: (res) => {
-        const todos = res.objetos?.data ?? res.objetos ?? [];
-        this.vacunasEnMochila = todos.filter((item: any) => item.type === 'vacuna');
-        this.cargandoVacunas = false;
+        const ultimaPagina: number = res.objetos?.last_page ?? 1;
+        const vacunasPagina1 = (res.objetos?.data ?? []).filter(
+          (item: any) => item.type === 'vacuna',
+        );
+
+        if (ultimaPagina <= 1) {
+          this.vacunasEnMochila = vacunasPagina1;
+          this.cargandoVacunas = false;
+          return;
+        }
+
+        // Pedimos el resto de páginas en paralelo con forkJoin
+        const peticiones = Array.from({ length: ultimaPagina - 1 }, (_, i) =>
+          this.auth.obtenerMochila(i + 2),
+        );
+
+        forkJoin(peticiones).subscribe({
+          next: (resultados: any[]) => {
+            const vacunasResto = resultados.flatMap((r) =>
+              (r.objetos?.data ?? []).filter((item: any) => item.type === 'vacuna'),
+            );
+            this.vacunasEnMochila = [...vacunasPagina1, ...vacunasResto];
+            this.cargandoVacunas = false;
+          },
+          error: (err) => {
+            this.errorVacunas = err.error?.errors ?? 'No se pudieron cargar las vacunas.';
+            this.cargandoVacunas = false;
+          },
+        });
       },
       error: (err) => {
         this.errorVacunas = err.error?.errors ?? 'No se pudieron cargar las vacunas.';
