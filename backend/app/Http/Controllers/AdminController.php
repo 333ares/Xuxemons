@@ -240,7 +240,7 @@ class AdminController extends Controller
                 $user->xuxemons = Xuxemons::where('user_id', $user->id)->count();
                 $user->objetos = Mochila::where('user_id', $user->id)->sum('amount');
                 return $user;
-            });
+            })->values();
 
             // Datos generales
             $numUsuarios = $usuarios->count();
