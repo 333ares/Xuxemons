@@ -8,113 +8,6 @@
       </a>
     </div>
     <div class="header-right">
-      <!-- Botón de notificaciones con panel desplegable -->
-      <div class="notif-wrapper">
-        <button
-          class="header-badge"
-          type="button"
-          aria-label="Notificaciones"
-          [attr.aria-expanded]="mostrarNotificaciones"
-          (click)="toggleNotificaciones()"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-          @if (notificacionesNuevas) {
-            <span class="badge-dot" aria-label="Tienes notificaciones nuevas"></span>
-          }
-        </button>
-
-        <!-- Panel de notificaciones -->
-        @if (mostrarNotificaciones) {
-          <div
-            class="notif-panel"
-            role="region"
-            aria-label="Panel de notificaciones"
-            (click)="$event.stopPropagation()"
-          >
-            <div class="notif-panel__header">
-              <span class="notif-panel__titulo">Notificaciones</span>
-              <button
-                class="notif-panel__cerrar"
-                type="button"
-                aria-label="Cerrar notificaciones"
-                (click)="cerrarNotificaciones()"
-              >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            </div>
-
-            <!-- Recompensas diarias -->
-            <div class="notif-seccion">
-              <p class="notif-seccion__etiqueta">Recompensas diarias</p>
-              <div class="notif-item">
-                <span class="notif-item__icono" aria-hidden="true">🍬</span>
-                <div class="notif-item__contenido">
-                  <span class="notif-item__titulo">Xuxes del día</span>
-                  <span class="notif-item__desc"
-                    >Recibes xuxes cada día de forma automática. ¡Úsalas para alimentar a tus
-                    Xuxemons!</span
-                  >
-                </div>
-              </div>
-              <div class="notif-item">
-                <span class="notif-item__icono" aria-hidden="true">🐾</span>
-                <div class="notif-item__contenido">
-                  <span class="notif-item__titulo">Xuxemon del día</span>
-                  <span class="notif-item__desc"
-                    >Una vez al día puedes recibir un nuevo Xuxemon aleatorio asignado por el
-                    administrador.</span
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- Recordatorio de vacunas si algún Xuxemon está enfermo -->
-            @if (xuxemons.some(estaEnfermo.bind(this))) {
-              <div class="notif-seccion notif-seccion--alerta">
-                <p class="notif-seccion__etiqueta">Atención</p>
-                <div class="notif-item">
-                  <span class="notif-item__icono" aria-hidden="true">🤒</span>
-                  <div class="notif-item__contenido">
-                    <span class="notif-item__titulo">Tienes Xuxemons enfermos</span>
-                    <span class="notif-item__desc"
-                      >Selecciona un Xuxemon enfermo y usa una vacuna desde la mochila para
-                      curarlo.</span
-                    >
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
-        }
-      </div>
-
       <div class="header-user">
         <img
           src="https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg"
@@ -485,13 +378,25 @@
               class="xdex-btn-feed"
               type="button"
               (click)="abrirConfirmacionAlimentar()"
-              [disabled]="cargandoFeed"
-              [attr.aria-label]="'Dar una xuxe a ' + xuxemonSeleccionado.name"
+              [disabled]="cargandoFeed || xuxemonSeleccionado.size === 'g'"
+              [attr.aria-label]="
+                xuxemonSeleccionado.size === 'g'
+                  ? xuxemonSeleccionado.name + ' ya está en el nivel máximo'
+                  : 'Dar una xuxe a ' + xuxemonSeleccionado.name
+              "
+              [attr.title]="
+                xuxemonSeleccionado.size === 'g'
+                  ? xuxemonSeleccionado.name + ' ya está en el nivel máximo y no necesita más xuxes'
+                  : null
+              "
               [class.xdex-btn-feed--cargando]="cargandoFeed"
+              [class.xdex-btn-feed--maximo]="xuxemonSeleccionado.size === 'g'"
             >
               @if (cargandoFeed) {
                 <span class="xdex-feed-spinner" aria-hidden="true"></span>
                 Dando xuxe...
+              } @else if (xuxemonSeleccionado.size === 'g') {
+                🏆 Nivel máximo
               } @else {
                 🍬 Dar xuxe
               }

@@ -35,7 +35,7 @@ class AdminController extends Controller
                 ], 400);
             }
 
-            // Añadimos el xuxemon 
+            // Añadimos el xuxemon
             $xuxemonUsuario = Xuxemons::create([
                 'name' => $xuxemon->name,
                 'type' => $xuxemon->type,
@@ -387,22 +387,20 @@ class AdminController extends Controller
 
     public function getConfigDiaria(Request $request)
     {
-        if ($request->user()->id === 1) {
-            $configXuxes = ConfigXuxes::first();
-            $configXuxemon = ConfigXuxemon::first();
+        $configXuxes   = ConfigXuxes::first();
+        $configXuxemon = ConfigXuxemon::first();
 
-            return response()->json([
-                'xuxes' => [
-                    'hora' => $configXuxes->hora,
-                    'cantidad' => $configXuxes->cantidad,
-                    'ultima_entrega' => $configXuxes->ultima_entrega
-                ],
-                'xuxemons' => [
-                    'hora' => $configXuxemon->hora,
-                    'ultima_entrega' => $configXuxemon->ultima_entrega
-                ]
-            ], 200);
-        }
+        return response()->json([
+            'xuxes' => [
+                'hora'          => $configXuxes->hora,
+                'cantidad'      => $configXuxes->cantidad,
+                'ultima_entrega' => $configXuxes->ultima_entrega
+            ],
+            'xuxemons' => [
+                'hora'          => $configXuxemon->hora,
+                'ultima_entrega' => $configXuxemon->ultima_entrega
+            ]
+        ], 200);
     }
 
     public function configAlimentar(Request $request)
@@ -458,18 +456,11 @@ class AdminController extends Controller
 
     public function getConfigAlimentar(Request $request)
     {
-        if ($request->user()->id === 1) {
-            $config = ConfigAlimentar::first();
+        $config = ConfigAlimentar::first();
 
-            return response()->json([
-                'message' => 'success',
-                'config' => $config
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'error',
-                'errors' => 'No tienes suficientes permisos para ejecutar esta función'
-            ], 400);
-        }
+        return response()->json([
+            'message' => 'success',
+            'config'  => $config
+        ], 200);
     }
 }
