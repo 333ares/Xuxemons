@@ -13,7 +13,6 @@ import { Auth } from '../services/auth';
   styleUrl: './estadisticas.css',
 })
 export class Estadisticas implements OnInit {
-
   //  KPIs globales (vienen de GET /listarUsuarios)
   totalUsuarios: number = 0;
   totalXuxemons: number = 0;
@@ -48,16 +47,14 @@ export class Estadisticas implements OnInit {
     this.cargarEstadisticas();
     this.cargarTasasInfeccion();
   }
-
   cargarEstadisticas(): void {
     this.authService.listarUsuarios().subscribe({
       next: (res) => {
-        this.totalUsuarios          = res.totalUsuarios ?? 0;
-        this.totalXuxemons          = res.totalXuxemons ?? 0;
-        this.totalXuxemonsEnfermos  = res.totalXuxemonsEnfermos ?? 0;
-        this.totalObjetos           = res.totalObjetos ?? 0;
+        this.totalUsuarios = res.totalUsuarios ?? 0;
+        this.totalXuxemons = res.totalXuxemons ?? 0;
+        this.totalXuxemonsEnfermos = res.totalXuxemonsEnfermos ?? 0;
+        this.totalObjetos = res.totalObjetos ?? 0;
 
-        // Salud global: qué porcentaje de Xuxemons está enfermo
         if (this.totalXuxemons > 0) {
           this.porcentajeEnfermos = Math.round(
             (this.totalXuxemonsEnfermos / this.totalXuxemons) * 100,
@@ -65,7 +62,6 @@ export class Estadisticas implements OnInit {
           this.porcentajeSanos = 100 - this.porcentajeEnfermos;
         }
 
-        // Medias por usuario (redondeadas a 1 decimal)
         if (this.totalUsuarios > 0) {
           this.mediaXuxemonsPorUsuario =
             Math.round((this.totalXuxemons / this.totalUsuarios) * 10) / 10;
@@ -73,16 +69,20 @@ export class Estadisticas implements OnInit {
             Math.round((this.totalObjetos / this.totalUsuarios) * 10) / 10;
         }
 
-        // Top 5 ordenados descendentemente por xuxemons
         this.topUsuarios = [...(res.usuarios ?? [])]
           .sort((a: any, b: any) => b.xuxemons - a.xuxemons)
           .slice(0, 5);
 
         this.cargando = false;
       },
-      error: () => {
-        // Si el token ha expirado o no tiene permisos, volvemos al login
-        this.router.navigate(['/login']);
+      error: (err) => {
+        this.cargando = false; // ← sin esto el spinner nunca desaparece
+        // Solo redirigir al login si el token realmente ha caducado (401)
+        if (err?.status === 401) {
+          this.router.navigate(['/login']);
+        } else {
+          this.errorCarga = true; // muestra el error en pantalla, no echa al usuario
+        }
       },
     });
   }
@@ -91,9 +91,9 @@ export class Estadisticas implements OnInit {
     this.authService.obtenerTasasInfeccion().subscribe({
       next: (res) => {
         if (res?.config) {
-          this.porcentajeBajon      = res.config.porcentaje_bajon      ?? 0;
+          this.porcentajeBajon = res.config.porcentaje_bajon ?? 0;
           this.porcentajeSobredosis = res.config.porcentaje_sobredosis ?? 0;
-          this.porcentajeAtracon    = res.config.porcentaje_atracon    ?? 0;
+          this.porcentajeAtracon = res.config.porcentaje_atracon ?? 0;
           // El resto de probabilidad corresponde a no enfermar
           this.porcentajeSinEnfermedad =
             100 - this.porcentajeBajon - this.porcentajeSobredosis - this.porcentajeAtracon;
