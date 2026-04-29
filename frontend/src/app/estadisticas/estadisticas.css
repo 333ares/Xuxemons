@@ -8,18 +8,18 @@
   font-family: var(--font-body);
 }
 
-/*  Cabecera (idéntica a parametros.html)  */
-
-.stats-header {
+/* Cabecera — igual que parametros-admin */
+.parametros-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(244, 243, 243, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 32px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #ebebeb;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  padding: 14px 40px;
 }
 
 .header-left {
@@ -35,15 +35,16 @@
 }
 
 .logo-img {
-  height: 36px;
-  width: auto;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
 }
 
 .logo-text {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.3rem;
+  font-weight: 800;
   color: #3b2101;
+  letter-spacing: -0.5px;
 }
 
 .header-right {
@@ -53,35 +54,51 @@
 }
 
 .btn-volver {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  background-color: transparent;
-  border: 1.5px solid #d1d1d1;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #444;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #888;
   text-decoration: none;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #e5e5e5;
+  background: white;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .btn-volver:hover {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  color: #fff;
+  border-color: #ffaa4a;
+  color: #e8962e;
 }
 
 .admin-chip {
-  background-color: #ede9fe;
-  color: #5b21b6;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 5px 14px;
-  border-radius: 20px;
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 99px;
 }
 
+.header-user {
+  display: flex;
+  align-items: center;
+}
+
+.header-avatar-placeholder {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffaa4a, #ff8c00);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffaa4a;
+}
 /*  Main  */
 
 .stats-main {
@@ -116,7 +133,9 @@
 }
 
 @keyframes girar {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /*  Título de sección  */
@@ -162,7 +181,9 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
-  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
 }
 
 .kpi-card:hover {
@@ -351,8 +372,12 @@
   flex-shrink: 0;
 }
 
-.leyenda-dot--sanos   { background-color: #FFAA4A; }
-.leyenda-dot--enfermos { background-color: #fca5a5; }
+.leyenda-dot--sanos {
+  background-color: #ffaa4a;
+}
+.leyenda-dot--enfermos {
+  background-color: #fca5a5;
+}
 
 /*  Barras de infección  */
 
@@ -401,10 +426,18 @@
   min-width: 4px; /* Para que sea visible cuando el % es 0 */
 }
 
-.barra-fill--verde    { background-color: #4ade80; }
-.barra-fill--amarillo { background-color: #facc15; }
-.barra-fill--naranja  { background-color: #FFAA4A; }
-.barra-fill--rojo     { background-color: #f87171; }
+.barra-fill--verde {
+  background-color: #4ade80;
+}
+.barra-fill--amarillo {
+  background-color: #facc15;
+}
+.barra-fill--naranja {
+  background-color: #ffaa4a;
+}
+.barra-fill--rojo {
+  background-color: #f87171;
+}
 
 .infeccion-nota {
   font-size: 0.82rem;
@@ -508,10 +541,22 @@
   font-weight: 700;
 }
 
-.medalla--oro    { background-color: #fef08a; color: #78350f; }
-.medalla--plata  { background-color: #e2e8f0; color: #475569; }
-.medalla--bronce { background-color: #fed7aa; color: #92400e; }
-.medalla--resto  { background-color: #f4f4f4; color: #888; }
+.medalla--oro {
+  background-color: #fef08a;
+  color: #78350f;
+}
+.medalla--plata {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+.medalla--bronce {
+  background-color: #fed7aa;
+  color: #92400e;
+}
+.medalla--resto {
+  background-color: #f4f4f4;
+  color: #888;
+}
 
 /* Badge de número de xuxemons */
 .num-badge {
@@ -539,8 +584,14 @@
 /*  Animación de entrada  */
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .stats-contenido {
