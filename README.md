@@ -3,7 +3,7 @@
 > Aplicación web gamificada donde los jugadores coleccionan criaturas llamadas Xuxemons, las hacen crecer con xuxes, gestionan su inventario e interactúan con otros jugadores mediante amigos, batallas y chat.
 
 **Desarrollado por:** Olaya | Ares | Deivid  
-**Ciclo:** CFGS Desenvolupament d'Aplicacions Web — iLERNA
+**Ciclo:** CFGS Desenvolupament d'Aplicacions Web - iLERNA
 
 ---
 
@@ -152,9 +152,9 @@ docker-compose down -v
 
 La documentación completa del proyecto está disponible en la raíz del repositorio:
 
-- `Guia_tecnica.pdf` — Arquitectura, modelo de datos y casos de uso
-- `Manual_usuario.pdf` — Guía de uso para usuarios no técnicos
+- `Guia_tecnica.pdf` - Arquitectura, modelo de datos y casos de uso
+- `Manual_usuario.pdf` - Guía de uso para usuarios no técnicos
 
 ---
 
-*Proyecto desarrollado como repte final del CFGS DAW en iLERNA — Olaya | Ares | Deivid*
+*Proyecto desarrollado como repte final del CFGS DAW en iLERNA - Olaya | Ares | Deivid*
