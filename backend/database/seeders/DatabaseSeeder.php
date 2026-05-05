@@ -15,13 +15,13 @@ class DatabaseSeeder extends Seeder
             XuxemonsInfoSeeder::class,
         ]);
 
-        $this->call([
+        /*$this->call([
             ConfigXuxemonSeeder::class,
         ]);
 
         $this->call([
             ConfigXuxesSeeder::class,
-        ]);
+        ]);*/
 
         $this->call([
             ConfigAlimentarSeeder::class,
