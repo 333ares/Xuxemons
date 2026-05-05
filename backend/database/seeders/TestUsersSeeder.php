@@ -54,54 +54,57 @@ class TestUsersSeeder extends Seeder
                 'type'        => $info->type,
                 'size'        => $size,
                 'sickness'    => $sickness,
-                'xuxes_count' => rand(0, 30),
+                'xuxes_count' => 0,
                 'user_id'     => $user->id,
             ]);
         };
 
         // 3. Asignar xuxemons a cada usuario
+        $makeXuxemon($users[0], 'Tux', 'm');
+        $makeXuxemon($users[0], 'Meekmeek', 's');
+        $makeXuxemon($users[1], 'Dolly', 'g');
+
         $makeXuxemon($users[1], 'Ladybug', 's');
         $makeXuxemon($users[1], 'Mocha', 'm');
         $makeXuxemon($users[1], 'Beeboo', 's');
-        $makeXuxemon($users[1], 'Dolly', 'l');
+        $makeXuxemon($users[1], 'Dolly', 'g');
 
         $makeXuxemon($users[2], 'Tux', 'm');
         $makeXuxemon($users[2], 'Chopper', 's');
 
-        $makeXuxemon($users[3], 'Flipper', 'l');
+        $makeXuxemon($users[3], 'Flipper', 'g');
         $makeXuxemon($users[3], 'Posón', 'm');
         $makeXuxemon($users[3], 'Rajoy', 's');
 
-        $makeXuxemon($users[4], 'Ron', 'l');
+        $makeXuxemon($users[4], 'Ron', 'g');
         $makeXuxemon($users[4], 'Meekmeek', 's');
         $makeXuxemon($users[4], 'Megalo', 'm');
 
         $makeXuxemon($users[5], 'Chapapá', 's');
         $makeXuxemon($users[5], 'Avecrem', 'm');
 
-        $makeXuxemon($users[6], 'Deskangoo', 'l');
+        $makeXuxemon($users[6], 'Deskangoo', 'g');
         $makeXuxemon($users[6], 'Pollis', 's');
         $makeXuxemon($users[6], 'Oreo', 'm');
 
         $makeXuxemon($users[7], 'Shelly', 's');
         $makeXuxemon($users[7], 'Catua', 'm');
-        $makeXuxemon($users[7], 'Bambino', 'l');
+        $makeXuxemon($users[7], 'Bambino', 'g');
         $makeXuxemon($users[7], 'Quakko', 's');
 
         $makeXuxemon($users[8], 'Otto', 'm');
         $makeXuxemon($users[8], 'Torcas', 's');
 
-        $makeXuxemon($users[9], 'Murcimurci', 'l');
+        $makeXuxemon($users[9], 'Murcimurci', 'g');
         $makeXuxemon($users[9], 'Apleki', 's');
         $makeXuxemon($users[9], 'Eldientes', 'm');
 
         // 4. Mochila
         $items = [
-            ['type' => 'Xuxe', 'name' => 'redondos', 'stackable' => true, 'amount' => 2],
-            ['type' => 'Xuxe', 'name' => 'algodon', 'stackable' => true, 'amount' => 5],
-            ['type' => 'Xuxe', 'name' => 'caramelo', 'stackable' => true, 'amount' => 3],
-            ['type' => 'Vacuna', 'name' => 'inxulina', 'stackable' => false, 'amount' => 1],
-            ['type' => 'Vacuna', 'name' => 'macedonia', 'stackable' => false, 'amount' => 1],
+            ['type' => 'xuxe', 'name' => 'algodon', 'stackable' => true, 'amount' => 3],
+            ['type' => 'xuxe', 'name' => 'caramelo', 'stackable' => true, 'amount' => 2],
+            ['type' => 'vacuna', 'name' => 'inxulina', 'stackable' => false, 'amount' => 1],
+            ['type' => 'vacuna', 'name' => 'macedonia', 'stackable' => false, 'amount' => 1],
         ];
 
         foreach ($users as $i => $user) {
