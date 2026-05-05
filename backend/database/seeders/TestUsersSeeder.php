@@ -85,7 +85,7 @@ class TestUsersSeeder extends Seeder
 
         $makeXuxemon($users[7], 'Shelly', 's');
         $makeXuxemon($users[7], 'Catua', 'm');
-        $makeXuxemon($users[7], 'Bambino', 'l',);
+        $makeXuxemon($users[7], 'Bambino', 'l');
         $makeXuxemon($users[7], 'Quakko', 's');
 
         $makeXuxemon($users[8], 'Otto', 'm');
@@ -97,11 +97,11 @@ class TestUsersSeeder extends Seeder
 
         // 4. Mochila
         $items = [
-            ['type' => 'comida', 'name' => 'redondos', 'stackable' => true, 'amount' => 2],
-            ['type' => 'comida', 'name' => 'algodon', 'stackable' => true, 'amount' => 5],
-            ['type' => 'medicina', 'name' => 'caramelo', 'stackable' => true, 'amount' => 3],
-            ['type' => 'medicina', 'name' => 'inxulina', 'stackable' => false, 'amount' => 1],
-            ['type' => 'especial', 'name' => 'macedonia', 'stackable' => false, 'amount' => 1],
+            ['type' => 'Xuxe', 'name' => 'redondos', 'stackable' => true, 'amount' => 2],
+            ['type' => 'Xuxe', 'name' => 'algodon', 'stackable' => true, 'amount' => 5],
+            ['type' => 'Xuxe', 'name' => 'caramelo', 'stackable' => true, 'amount' => 3],
+            ['type' => 'Vacuna', 'name' => 'inxulina', 'stackable' => false, 'amount' => 1],
+            ['type' => 'Vacuna', 'name' => 'macedonia', 'stackable' => false, 'amount' => 1],
         ];
 
         foreach ($users as $i => $user) {
