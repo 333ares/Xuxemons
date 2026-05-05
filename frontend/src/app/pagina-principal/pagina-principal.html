@@ -619,18 +619,9 @@
               <div class="amigo-row">
                 <div class="amigo-avatar-wrapper">
                   <div class="amigo-avatar" aria-hidden="true">{{ a.nombre.charAt(0) }}</div>
-                  <span
-                    class="amigo-status"
-                    [class.online]="a.online"
-                    [attr.aria-label]="
-                      a.nombre + (a.online ? ' está en línea' : ' está desconectado')
-                    "
-                  >
-                  </span>
                 </div>
                 <div class="amigo-info">
                   <span class="amigo-nombre">{{ a.nombre }}</span>
-                  <span class="amigo-estado">{{ a.online ? 'En línea' : 'Desconectado' }}</span>
                 </div>
                 <button
                   class="btn-retar"

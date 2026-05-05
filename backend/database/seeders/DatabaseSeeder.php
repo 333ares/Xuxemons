@@ -26,8 +26,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ConfigAlimentarSeeder::class,
         ]);
+
         $this->call([
             AdminSeeder::class,
+        ]);
+        
+        $this->call([
+            TestUsersSeeder::class,
         ]);
     }
 }
