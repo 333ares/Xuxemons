@@ -64,7 +64,7 @@ php artisan jwt:secret
 **3. Levantar los contenedores**
 
 ```bash
-docker-compose up -d --build
+docker-compose up --build
 ```
 
 **4. Acceder a la aplicación**
@@ -131,7 +131,7 @@ docker-compose up -d --build
 
 ```bash
 # Levantar la aplicación
-docker-compose up -d --build
+docker-compose up --build
 
 # Parar los contenedores
 docker-compose down
