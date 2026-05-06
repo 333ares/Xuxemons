@@ -37,8 +37,8 @@ services:
       TZ: Europe/Madrid
     command: >
       bash -c " curl -sS https://getcomposer.org/installer | php --
-      --install-dir=/usr/local/bin --filename=composer && composer install &&
-      php artisan migrate:fresh --seed --force && apache2-foreground "
+      --install-dir=/usr/local/bin --filename=composer  && composer install &&
+      php artisan migrate && php artisan db:seed && apache2-foreground "
 
   frontend:
     container_name: xuxemons_angular

@@ -65,8 +65,7 @@ class XuxemonsInfoSeeder extends Seeder
         ];
 
         foreach ($xuxemons as $x) {
-            XuxemonsInfo::create($x);
+            XuxemonsInfo::firstOrCreate(['name' => $x['name']], $x);
         }
     }
 }
-

@@ -27,11 +27,11 @@ class TestUsersSeeder extends Seeder
             ['public_id' => '#TEST0004', 'name' => 'Pol', 'surname' => 'Ferrer', 'email' => 'pol@test.com'],
             ['public_id' => '#TEST0005', 'name' => 'Laia', 'surname' => 'Camps', 'email' => 'laia@test.com'],
             ['public_id' => '#TEST0006', 'name' => 'Jordi', 'surname' => 'Vila', 'email' => 'jordi@test.com'],
-            ['public_id' => '#TEST0007', 'name' => 'Núria', 'surname' => 'Mas', 'email' => 'nuria@test.com'],
+            ['public_id' => '#TEST0007', 'name' => 'Nuria', 'surname' => 'Mas', 'email' => 'nuria@test.com'],
             ['public_id' => '#TEST0008', 'name' => 'Marc', 'surname' => 'Pons', 'email' => 'marc@test.com'],
             ['public_id' => '#TEST0009', 'name' => 'Carla', 'surname' => 'Roca', 'email' => 'carla@test.com'],
             ['public_id' => '#TEST0010', 'name' => 'Biel', 'surname' => 'Compte', 'email' => 'biel@test.com'],
-            ['public_id' => '#TEST0011', 'name' => 'Júlia', 'surname' => 'Esteve', 'email' => 'julia@test.com'],
+            ['public_id' => '#TEST0011', 'name' => 'Julia', 'surname' => 'Esteve', 'email' => 'julia@test.com'],
         ];
 
         $users = [];
@@ -49,14 +49,14 @@ class TestUsersSeeder extends Seeder
         $makeXuxemon = function (User $user, string $name, string $size, ?string $sickness = null) use ($xuxemons) {
             $info = $xuxemons->get($name);
             if (!$info) return;
-            Xuxemons::create([
-                'name'        => $name,
-                'type'        => $info->type,
-                'size'        => $size,
-                'sickness'    => $sickness,
-                'xuxes_count' => 0,
-                'user_id'     => $user->id,
-            ]);
+            Xuxemons::firstOrCreate(
+                ['name' => $name, 'user_id' => $user->id, 'size' => $size],
+                [
+                    'type'        => $info->type,
+                    'sickness'    => $sickness,
+                    'xuxes_count' => 0,
+                ]
+            );
         };
 
         // 3. Asignar xuxemons a cada usuario
@@ -107,11 +107,14 @@ class TestUsersSeeder extends Seeder
             ['type' => 'vacuna', 'name' => 'macedonia', 'stackable' => false, 'amount' => 1],
         ];
 
+        // Cada usuario recibe entre 2 y 4 tipos de ítems
         foreach ($users as $i => $user) {
-            // Cada usuario recibe entre 2 y 4 tipos de ítems
             $userItems = array_slice($items, 0, rand(2, 4));
             foreach ($userItems as $item) {
-                Mochila::create(array_merge($item, ['user_id' => $user->id]));
+                Mochila::firstOrCreate(
+                    ['user_id' => $user->id, 'name' => $item['name']],
+                    $item
+                );
             }
         }
 
